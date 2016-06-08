@@ -6,20 +6,14 @@ $this->load->view ( 'common/header', array (
 ));
 ?>
 	<div id="body">
-		<nav class="navbar navbar-inverse">
-		<div class="container">
-		  <div class="navbar-header">
-			<a class="navbar-brand" href="#">用户管理</a>
-		  </div>
-		  <div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-			  <li class="active"><a href="#">所有用户</a></li>
-			  <li><a href="#about">添加</a></li>
-			</ul>
-		  </div>
-		</div>
-      </nav>
-	<div class="col-md-12">
+	<div class="col-sm-3">
+	  <div class="list-group">
+		<a href="index" class="list-group-item active">用户列表</a>
+		<a href="add" class="list-group-item">添加用户</a>
+		<a href="#" class="list-group-item">用户编辑</a>
+	  </div>
+	</div>
+	<div class="col-sm-9">
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -37,7 +31,7 @@ $this->load->view ( 'common/header', array (
 					<td><?php echo $obj->name ?></td>
 					<td><?php echo $obj->role_id?></td>
 					<td><?php echo $obj->status ?></td>
-				<td><button type="button" class="btn btn-xs btn-success">编辑</button></td>
+					<td><a href="edit?id=<?php echo $obj->id ?>"><button type="button" class="btn btn-xs btn-success">编辑</button></a></td>
 				</tr>
 			<?php endforeach ?>
 			</tbody>
