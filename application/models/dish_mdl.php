@@ -1,11 +1,12 @@
 <?php	
-class Order_mdl extends NB_Model {
+class Dish_mdl extends NB_Model {
 	
-	const T_NAME = 't_order';
+	const T_NAME = 't_dish';
 
 	static $status = array (
 		0 => '正常',
-		1 => '冻结',
+		1 => '已下架',
+		2 => '未上架',
 	);
 
 	/**********************************************************
@@ -32,5 +33,6 @@ class Order_mdl extends NB_Model {
 		}
 		return $res;
 	}
+
 
 }

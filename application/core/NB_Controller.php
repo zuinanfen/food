@@ -127,6 +127,33 @@ class NB_Controller extends CI_Controller {
 		return $output;
 	}
 	
+	protected function output_json ($data = array(), $return = FALSE) {
+		$output = null;
+	
+		if (!isset($data['_ret'])) {
+			$data['_ret'] = $this->_ret;
+		}
+	
+		if (!isset($data['_time'])) {
+			$data['_time'] = date('Y-m-d H:i:s');
+		}
+	
+		if (!isset($data['_log'])) {
+			$data['_log'] = $this->_log;
+		}
+	
+		if (!isset($data['_debug'])) {
+			$data['_debug'] = $this->_debug;
+		}
+		
+
+		if ($return)
+			$output = json_encode($data);
+		else {
+			$this->output->set_content_type ('application/json')->set_output(json_encode($data));
+		}
+		return $output;
+	}
 	protected function set_error ($ret, $log = '') {
 		$this->_ret = $ret;
 		$this->_log = $log;
@@ -218,6 +245,9 @@ class NB_Controller extends CI_Controller {
 				break;
 			case 'date':
 				return strtotime($str)? date('Y-m-d H:i:s', strtotime($str)) : NULL;
+				break;
+			case 'json':
+				return preg_match("/^[^<>]+$/u",$str)? $str : NULL;
 				break;
 			case 'normal':
 			default:

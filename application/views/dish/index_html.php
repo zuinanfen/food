@@ -1,16 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view ( 'common/header', array (
-	'title' => '用户管理' ,
-	'funcname'=> 'welcome/message'
+	'title' => '菜单管理' ,
+	'funcname'=> 'dish'
 ));
 ?>
 	<div id="body">
 	<div class="col-sm-3">
 	  <div class="list-group">
-		<a href="index" class="list-group-item active">用户列表</a>
-		<a href="add" class="list-group-item">添加用户</a>
-		<a href="#" class="list-group-item disabled">用户编辑</a>
+		<a href="index" class="list-group-item active">菜单列表</a>
+		<a href="add" class="list-group-item">添加菜单</a>
+		<a href="#" class="list-group-item disabled">菜单编辑</a>
 	  </div>
 	</div>
 	<div class="col-sm-9 table-responsive">
@@ -18,8 +18,10 @@ $this->load->view ( 'common/header', array (
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>姓名</th>
-					<th>角色ID</th>
+					<th>菜品名称</th>
+					<th>价格</th>
+					<th>排序</th>
+					<th>定制项</th>
 					<th>状态</th>
 					<th>操作</th>
 				</tr>
@@ -29,12 +31,14 @@ $this->load->view ( 'common/header', array (
 				<tr>
 					<td><?php echo $obj->id ?></td>
 					<td><?php echo $obj->name ?></td>
-					<td><?php echo isset($role_list[$obj->role_id])? $role_list[$obj->role_id]->name : '未分配'?></td>
+					<td><?php echo $obj->price ?></td>
+					<td><?php echo $obj->sort ?></td>
+					<td><?php echo $obj->custom ?></td>
 					<td class="<?php if($obj->status==0): ?>success<?php else:?>danger<?php endif?>"><?php echo $status_list[$obj->status]?></td>
 					<td>
 						<a href="edit?id=<?php echo $obj->id?>"><button type="button" class="btn btn-xs btn-primary">编辑</button></a>
-						<?php if($obj->status!=0): ?><button type="button" class="btn btn-xs btn-success" rel="status_on" val="<?php echo $obj->id?>">激活</button></a><?php endif ?>
-						<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-danger" rel="status_off" val="<?php echo $obj->id?>">冻结</button></a><?php endif ?>
+						<?php if($obj->status!=0): ?><button type="button" class="btn btn-xs btn-success" rel="status_on" val="<?php echo $obj->id?>">上架</button></a><?php endif ?>
+						<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-danger" rel="status_off" val="<?php echo $obj->id?>">下架</button></a><?php endif ?>
 					</td>
 				</tr>
 			<?php endforeach ?>

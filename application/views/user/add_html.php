@@ -10,13 +10,13 @@ $this->load->view ( 'common/header', array (
 	  <div class="list-group">
 		<a href="index" class="list-group-item">用户列表</a>
 		<a href="add" class="list-group-item active">添加用户</a>
-		<a href="#" class="list-group-item">用户编辑</a>
+		<a href="#" class="list-group-item disabled">用户编辑</a>
 	  </div>
 	</div>
 	<div class="col-sm-9">
 		<div class="panel panel-default">
 			<div class="panel-body">
-<form class="form-horizontal">
+<div class="form-horizontal">
   <div class="form-group">
 	<label for="name" class="col-sm-2 control-label">姓名：</label>
 	<div class="col-sm-7">
@@ -32,22 +32,41 @@ $this->load->view ( 'common/header', array (
   <div class="form-group">
 	<label for="role" class="col-sm-2 control-label">角色：</label>
 	<div class="col-sm-7">
-		<select class="form-control" id="role">
-			<option>未分配</option> 
+		<select class="form-control" id="role_id">
+			<option value="0">未分配</option> 
 			<?php foreach ($role_list as $obj ): ?>
-			<option><?php echo $obj->name?></option> 
+			<option value="<?php echo $obj->id?>"><?php echo $obj->name?></option> 
 			<?php endforeach; ?>
 		</select>
 	</div>
   </div>
   <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-7">
-	  <button type="submit" class="btn btn-default">添加</button>
+	  <button id="submit" class="btn btn-primary">添加</button>
 	</div>
   </div>
-</form>
+</div>
 			</div>
 		</div>
 	</div>
 	</div>
+<script>
+$(function(){
+	$('#submit').click(function(){
+		$.post('insert', {
+			name:$('#name').val(),
+			password:$('#password1').val(),
+			role_id:$('#role_id').val(),
+			status:1
+		}, function(data){
+			if (data._ret == 0) {
+				alert('添加成功');
+				location.href = 'index';
+			} else {
+				alert("添加失败，原因："+data._log);
+			}
+		});
+	});
+});
+</script>
 <?php $this->load->view ( 'common/footer' )?> 

@@ -48,6 +48,26 @@ abstract class NB_Model extends CI_Model {
 		return $this->db->replace(static::T_NAME, $obj); 
 	}
 
+	public function list_all($return_by_id=false) {
+		$res = array();
+
+		$this->db->from(static::T_NAME);
+		$query = $this->db->get();
+		if($query && $query->num_rows() > 0){ 
+			$res = $query->result_object();
+		}   
+
+		if ($return_by_id) {
+			$res_new = array();
+			foreach ($res as $obj) {
+				$res_new[$obj->id] = $obj;
+			}
+			return $res_new;
+		} else {
+			return $res;
+		}
+	}
+
 	// ================ private functions ================
 	
 	protected function get_cache_table ($tablename) {
