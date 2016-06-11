@@ -17,10 +17,10 @@ $this->load->view ( 'common/header', array (
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>菜品名称</th>
-					<th>价格</th>
-					<th>排序</th>
-					<th>定制项</th>
+					<th>来源</th>
+					<th>桌号</th>
+					<th>下单时间</th>
+					<th>内容</th>
 					<th>状态</th>
 					<th>操作</th>
 				</tr>
