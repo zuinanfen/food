@@ -23,8 +23,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '';
 
+//$config['base_url'] = '';
+$config['base_url'] = $_SERVER['HTTP_HOST'];
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -513,4 +514,4 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 #
 #CDN地址
-$config['cdn_host'] = 'http://localhost/food';
+$config['cdn_host'] = 'http://'.$config['base_url'];
