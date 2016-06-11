@@ -57,6 +57,7 @@ $this->load->view ( 'common/header', array (
   <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-7">
 	  <button id="submit" class="btn btn-primary">编辑</button>
+	  <button id="back" class="btn btn-warning">返回</button>
 	</div>
   </div>
 </div>
@@ -67,6 +68,9 @@ $this->load->view ( 'common/header', array (
 <script>
 $(function(){
 	$('#status').val('<?php echo $detail->status?>');
+	$('#back').click(function(){
+		history.go(-1);
+	});
 	$('#submit').click(function(){
 		var custom_list = {};
 		$('input[rel="custom"]').each(function(){

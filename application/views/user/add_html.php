@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view ( 'common/header', array (
 	'title' => '用户编辑' ,
-	'funcname'=> 'welcome/message'
+	'funcname'=> 'user'
 ));
 ?>
 	<div id="body">
@@ -43,6 +43,7 @@ $this->load->view ( 'common/header', array (
   <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-7">
 	  <button id="submit" class="btn btn-primary">添加</button>
+	  <button id="back" class="btn btn-warning">返回</button>
 	</div>
   </div>
 </div>
@@ -52,6 +53,9 @@ $this->load->view ( 'common/header', array (
 	</div>
 <script>
 $(function(){
+	$('#back').click(function(){
+		history.go(-1);
+	});
 	$('#submit').click(function(){
 		$.post('insert', {
 			name:$('#name').val(),

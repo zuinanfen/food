@@ -73,48 +73,73 @@ CREATE TABLE `t_dish` (
 
 LOCK TABLES `t_dish` WRITE;
 /*!40000 ALTER TABLE `t_dish` DISABLE KEYS */;
-INSERT INTO `t_dish` VALUES (1,0,'醉南粉',24.00,9,2,'{\"去除可选项\":\"葱|香菜|芝麻22\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'2016-06-10 18:46:27','2016-06-11 08:43:17'),(2,0,'醉南粉',24.00,9,1,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-10 19:54:21'),(3,0,'醉南粉',24.00,9,1,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-10 19:54:27'),(4,0,'',0.00,0,0,'',0,'0000-00-00 00:00:00','2016-06-10 19:54:32'),(5,0,'醉南粉',24.00,9,1,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-10 19:55:50');
+INSERT INTO `t_dish` VALUES (1,0,'醉南粉',24.00,9,0,'{\"去除可选项\":\"葱|香菜|芝麻22\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'2016-06-10 18:46:27','2016-06-11 22:34:27'),(2,0,'醉南粉',24.00,9,0,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-11 22:34:28'),(3,0,'醉南粉',24.00,9,1,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-10 19:54:27'),(4,0,'',0.00,0,0,'',0,'0000-00-00 00:00:00','2016-06-10 19:54:32'),(5,0,'醉南粉',24.00,9,1,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-10 19:55:50');
 /*!40000 ALTER TABLE `t_dish` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_order_dish`
+-- Table structure for table `t_dish_option`
 --
 
-DROP TABLE IF EXISTS `t_order_dish`;
+DROP TABLE IF EXISTS `t_dish_option`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `t_order_dish` (
+CREATE TABLE `t_dish_option` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `order_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `dish_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `order_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `order_user` int(10) unsigned NOT NULL DEFAULT '0',
-  `oper` int(10) unsigned NOT NULL DEFAULT '0',
-  `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `mtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `dish_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，菜单ID',
+  `option_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，属性ID',
+  `oper` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，操作人ID',
+  `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `mtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  KEY `order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `dish` (`dish_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `t_order_dish`
+-- Dumping data for table `t_dish_option`
 --
 
-LOCK TABLES `t_order_dish` WRITE;
-/*!40000 ALTER TABLE `t_order_dish` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_order_dish` ENABLE KEYS */;
+LOCK TABLES `t_dish_option` WRITE;
+/*!40000 ALTER TABLE `t_dish_option` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_dish_option` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_order_info`
+-- Table structure for table `t_option`
 --
 
-DROP TABLE IF EXISTS `t_order_info`;
+DROP TABLE IF EXISTS `t_option`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `t_order_info` (
+CREATE TABLE `t_option` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT '选项名称',
+  `price` decimal(16,2) NOT NULL DEFAULT '0.00' COMMENT '加价',
+  `oper` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，操作人ID',
+  `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `mtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_option`
+--
+
+LOCK TABLES `t_option` WRITE;
+/*!40000 ALTER TABLE `t_option` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_option` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_order`
+--
+
+DROP TABLE IF EXISTS `t_order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_order` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '类型',
   `src` tinyint(4) NOT NULL DEFAULT '0' COMMENT '订单来源',
@@ -140,12 +165,42 @@ CREATE TABLE `t_order_info` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `t_order_info`
+-- Dumping data for table `t_order`
 --
 
-LOCK TABLES `t_order_info` WRITE;
-/*!40000 ALTER TABLE `t_order_info` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_order_info` ENABLE KEYS */;
+LOCK TABLES `t_order` WRITE;
+/*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_order_dish`
+--
+
+DROP TABLE IF EXISTS `t_order_dish`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_order_dish` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `order_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，订单ID',
+  `dish_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，菜单ID',
+  `order_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '下单时间',
+  `order_user` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，下单人ID',
+  `oper` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，操作人ID',
+  `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `mtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  KEY `order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_order_dish`
+--
+
+LOCK TABLES `t_order_dish` WRITE;
+/*!40000 ALTER TABLE `t_order_dish` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_order_dish` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -207,7 +262,7 @@ CREATE TABLE `t_user` (
 
 LOCK TABLES `t_user` WRITE;
 /*!40000 ALTER TABLE `t_user` DISABLE KEYS */;
-INSERT INTO `t_user` VALUES (1,'test','',3,1,0,'2016-06-04 19:20:11','2016-06-10 14:14:34'),(2,'test222','',4,0,0,'2016-06-04 19:20:12','2016-06-10 14:14:50'),(3,'test','',0,0,0,'2016-06-04 19:20:14','2016-06-09 23:28:04'),(4,'test','',2,1,0,'2016-06-04 20:28:31','2016-06-10 14:14:26'),(5,'test','',0,1,0,'2016-06-04 20:28:32','2016-06-09 23:26:51'),(6,'test','',1,0,0,'2016-06-07 22:18:41','2016-06-09 23:27:58'),(7,'AAA','',0,0,0,'2016-06-09 22:41:27','2016-06-09 23:37:34'),(8,'BBB','',1,0,0,'2016-06-09 22:42:42','2016-06-09 22:42:42'),(9,'CCC','',0,0,0,'2016-06-09 23:37:57','2016-06-09 23:37:57'),(26,'CYY','123456',0,1,0,'2016-06-10 00:40:35','2016-06-10 00:40:35'),(27,'CY222','123456',0,1,0,'2016-06-10 00:41:13','2016-06-10 00:41:13'),(28,'CYY3','123456',3,1,0,'2016-06-10 00:42:03','2016-06-10 00:42:03');
+INSERT INTO `t_user` VALUES (1,'test','',3,0,0,'2016-06-04 19:20:11','2016-06-11 22:26:28'),(2,'test222','',4,1,0,'2016-06-04 19:20:12','2016-06-11 22:26:38'),(3,'test','',0,0,0,'2016-06-04 19:20:14','2016-06-11 22:34:32'),(4,'test','',2,0,0,'2016-06-04 20:28:31','2016-06-11 22:34:32'),(5,'test','',0,0,0,'2016-06-04 20:28:32','2016-06-11 22:26:35'),(6,'test','',1,0,0,'2016-06-07 22:18:41','2016-06-09 23:27:58'),(7,'AAA','',0,0,0,'2016-06-09 22:41:27','2016-06-09 23:37:34'),(8,'BBB','',1,0,0,'2016-06-09 22:42:42','2016-06-09 22:42:42'),(9,'CCC','',0,0,0,'2016-06-09 23:37:57','2016-06-09 23:37:57'),(26,'CYY','123456',0,1,0,'2016-06-10 00:40:35','2016-06-10 00:40:35'),(27,'CY222','123456',0,1,0,'2016-06-10 00:41:13','2016-06-10 00:41:13'),(28,'CYY3','123456',3,1,0,'2016-06-10 00:42:03','2016-06-10 00:42:03');
 /*!40000 ALTER TABLE `t_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -220,4 +275,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-11 21:25:04
+-- Dump completed on 2016-06-11 23:22:19
