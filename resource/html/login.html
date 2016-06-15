@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>醉南粉</title>
+	<link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css" />
+	<link rel="stylesheet" href="../css/signin.css" type="text/css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-signin">
+        <h2 class="form-signin-heading">请登录</h2>
+        <label for="inputEmail" class="sr-only">用户名</label>
+        <input id="name" class="form-control" placeholder="用户名" required autofocus>
+        <label for="inputPassword" class="sr-only">密码</label>
+        <input type="password" id="password" class="form-control" placeholder="密码" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> 记住用户名
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" id="submit">登录</button>
+      </div>
+    </div> <!-- /container -->
+<script src="../js/jquery-2.2.4.min.js"></script>
+<script src="../js/jquery.md5.js"></script>
+<script>
+$(function(){
+	$('#submit').click(function(){
+		$.post('/index.php/logon/get_user', {
+			name:$('#name').val(),
+			password:$.md5($('#name').val().toUpperCase()+$('#password').val()),
+		}, function(data){
+			if (data._ret == 0) {
+				location.href = data.location? data.location : '/index.php/user/index';
+			} else {
+				alert("登录失败，原因："+data._log);
+			}
+		});
+	});
+});
+</script>
+	</body>
+</html>

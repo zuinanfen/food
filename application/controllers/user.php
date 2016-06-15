@@ -39,8 +39,21 @@ class User extends NB_Controller {
 	public function insert ()
 	{
 		$obj = $this->user_mdl->gen_new();
-		$name = $this->post("name"); if (isset($name) && !empty($name)) $obj->name = $name;
-		$password = $this->post("password"); if (isset($password) && !empty($password)) $obj->password = $password;
+
+		$name = $this->post("name"); 
+		if (empty($name)) {
+			$this->set_error(static::RET_WRONG_INPUT, "错误的参数NAME");	
+			return $this->output_json();
+		}
+		$obj->name = strtoupper($name);
+
+		$password = $this->post("password");
+		if (empty($password)) {
+			$this->set_error(static::RET_WRONG_INPUT, "错误的参数PASSWORD");	
+			return $this->output_json();
+		}
+		$obj->password = md5($obj->name.$password);
+
 		$role_id = $this->post("role_id"); if (isset($role_id) && $role_id>=0) $obj->role_id = intval($role_id);
 		$status = $this->post("status"); if (isset($status) && $status>=0) $obj->status = intval($status);
 
@@ -62,18 +75,25 @@ class User extends NB_Controller {
 			return $this->output_json();
 		}
 
-		$password = $this->post("password");
-		if (isset($password) && !empty($password)) {
-			if ( $password != $obj->password ) {
-				$this->set_error(static::RET_ERROR_DATA, "原始密码错误");	
-				return $this->output_json();
-			} else {
-				$newpassword = $this->post("newpassword"); if (isset($newpassword) && !empty($newpassword)) $obj->password = $newpassword;
-			}
-		}
-		$name = $this->post("name"); if (isset($name) && !empty($name)) $obj->name = $name;
+		$old_name = $obj->name;
+		$name = $this->post("name"); if (isset($name) && !empty($name)) $obj->name = strtoupper($name);
 		$role_id = $this->post("role_id"); if (isset($role_id) && $role_id>=0) $obj->role_id = intval($role_id);
 		$status = $this->post("status"); if (isset($status) && $status>=0) $obj->status = intval($status);
+		$password = $this->post("password");
+		if (isset($name) && !empty($name) && isset($password) && !empty($password)) {
+			if ( md5($old_name.$password) != $obj->password ) {
+				$this->set_error(static::RET_ERROR_DATA, "原始密码错误");	
+				return $this->output_json();
+			}
+
+			$newpassword = $this->post("newpassword"); 
+			if (empty($newpassword)) {
+				$this->set_error(static::RET_WRONG_INPUT, "错误的参数NEWPASSWORD");	
+				return $this->output_json();
+			}
+
+			$obj->password = md5($obj->name.$newpassword);
+		}
 
 		$this->user_mdl->set($obj);
 		$this->output_json();

@@ -28,6 +28,8 @@ class NB_Controller extends CI_Controller {
 	const DEBUG_WARN = 0x2;
 	const DEBUG_ERROR = 0x3;
 
+	const LOGON_SESSION_NAME = 'NBFOOD';
+
 	public function reflection_api() {
 		$data = array ();
 	
@@ -55,10 +57,13 @@ class NB_Controller extends CI_Controller {
 		$this->ajax_log = Logger::factory ( Logger::AJAX_LOG ); // 专门用于记录ajax调用耗时，及内存消耗。
 		$this->load->helper ( 'heartbeat' );
 
+		if (!$this->check_logon () && !$this->check_access ()) {
+			exit('not login');
+		}   
+
 		$this->read_params();
     }
     
-	
 	public function __destruct() {
 		if (isset ( $_SERVER ['REQUEST_URI'] ) and isset ( $_SERVER ['HTTP_X_REQUESTED_WITH'] ) and $_SERVER ['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
 			$this->benchmark->mark ( 'request_end' );
@@ -75,7 +80,37 @@ class NB_Controller extends CI_Controller {
 			$this->ajax_log->log ('request_time:' . date ( 'Y-m-d H:i:s' ) . '|request_uri:' . $requst_uri . '|elapsed_time:' . $elapsed_time . '|memory_use:' . $memory_use . "\n" );
         }
 	}
-	
+
+	protected function check_access () {
+		if (in_array ( $this->router->method, $this->_allow_access )) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	protected function check_logon () {
+		@session_start();
+		// 更新session防止被回收
+		if (! isset ( $_SESSION ['_last_access'] ) || ($_SERVER ['REQUEST_TIME'] - $_SESSION ['_last_access']) > 60)
+			$_SESSION ['_last_access'] = $_SERVER ['REQUEST_TIME'];
+
+		if (isset($_SESSION[static::LOGON_SESSION_NAME]) and isset($_SESSION[static::LOGON_SESSION_NAME]->id)) {
+			$this->_user = $_SESSION[static::LOGON_SESSION_NAME];
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	protected function set_logon ($user) {
+		@session_start();
+		$_SESSION[static::LOGON_SESSION_NAME] = $user;
+	}
+
+	protected function set_logout () {
+		@session_start();
+		unset($_SESSION[static::LOGON_SESSION_NAME]);
+	}
+
 	protected function output_data ($data = array(), $view = '', $return = FALSE) {
 		$output = null;
 		if (!empty($view)) {

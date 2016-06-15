@@ -2,10 +2,25 @@
 class Order_mdl extends NB_Model {
 	
 	const T_NAME = 't_order';
-
-	static $status = array (
-		0 => '正常',
-		1 => '冻结',
+	
+	static $status = array(
+		0 => '待处理',
+		1 => '制作中',
+		2 => '已上菜'
+	);
+	static $src_type = array(
+		0 => '堂食',
+		1 => '百度外卖',
+		2 => '美团外卖',
+		3 => '电话订餐',
+		9 => '其他',
+	);
+	static $pay_type = array(
+		0 => '现金',
+		1 => '支付宝',
+		2 => '微信',
+		3 => '外卖App',
+		9 => '其他',
 	);
 
 	/**********************************************************
