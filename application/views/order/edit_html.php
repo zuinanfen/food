@@ -106,7 +106,7 @@ $this->load->view ( 'common/header', array (
 </div>
 <script>
 $(function(){
-	$('#src_type').val('<?php echo $detail->src_type?>');
+	$('#src_type').val('<?php echo $detail->src?>');
 	$('#pay_type').val('<?php echo $detail->pay_type?>');
 	$('#status').val('<?php echo $detail->status?>');
 	$('#back').click(function(){
