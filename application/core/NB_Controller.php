@@ -58,7 +58,7 @@ class NB_Controller extends CI_Controller {
 		$this->load->helper ( 'heartbeat' );
 
 		if (!$this->check_logon () && !$this->check_access ()) {
-			exit('not login');
+			exit('not logon');
 		}   
 
 		$this->read_params();
