@@ -6,34 +6,41 @@ class Order extends NB_Controller {
 	function __construct () {
 		parent::__construct();
 		$this->load->model('order_mdl');
+		$this->load->model('user_mdl');
 	}
 
 	public function index () {
 		$order_list = $this->order_mdl->list_all();
+		$user_list = $this->user_mdl->list_by_roleid(array(3), TRUE);
 		$this->output_data(array(
 			'list' => $order_list,
 			'src_type' => Order_mdl::$src_type,
 			'status_list' => Order_mdl::$status,
+			'user_list' => $user_list,
 		));
 	}
 	public function edit () {
 		$id = $this->get('id', 'num');
 		$order_detail = $this->order_mdl->get($id);
-
+		$user_list = $this->user_mdl->list_by_roleid(array(3));
 		$this->output_data(array(
 			'detail' => $order_detail,
 			'src_type' => Order_mdl::$src_type,
 			'pay_type' => Order_mdl::$pay_type,
 			'status_list' => Order_mdl::$status,
+			'user_list' => $user_list,
 		));
 	}
 
 	public function add () {
 		$this->load->model('custom_mdl');
+		$user_list = $this->user_mdl->list_by_roleid(array(3));
 		$this->output_data(array(
 			'src_type' => Order_mdl::$src_type,
 			'pay_type' => Order_mdl::$pay_type,
 			'status_list' => Order_mdl::$status,
+			'user_list' => $user_list,
+			'user' => $this->_user
 		));
 	}
 

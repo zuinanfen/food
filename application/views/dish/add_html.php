@@ -1,15 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view ( 'common/header', array (
-	'title' => '菜单编辑' ,
+	'title' => '添加菜单' ,
 	'funcname'=> 'dish'
 ));
 ?>
 <div class="col-sm-3 col-md-2 sidebar">
 	<ul class="nav nav-sidebar">
-		<li><a href="index">菜单列表</a></li>
+		<li><a href="index">菜单管理</a></li>
 		<li class="active"><a href="add">添加菜单</a></li>
-		<li class="disabled"><a href="#">菜单编辑</a></li>
+		<li><a href="../option/index">定制项管理</a></li>
+		<li><a href="../option/add">添加定制项</a></li>
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -21,34 +22,38 @@ $this->load->view ( 'common/header', array (
 			<div class="form-horizontal">
 			  <div class="form-group">
 				<label for="name" class="col-sm-2 control-label">菜品名称：</label>
-				<div class="col-sm-7">
+				<div class="col-sm-5">
 				  <input type="text" class="form-control" id="name" placeholder="例如：牛肉粉">
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="price" class="col-sm-2 control-label">单价：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 				  <input type="text" class="form-control" id="price" placeholder="例如：10.0">
 				</div>
-				<label class="col-sm-2 control-label">元</label>
+				<label class="col-sm-1 control-label">元</label>
 			  </div>
 			  <div class="form-group">
 				<label for="sort" class="col-sm-2 control-label">排序：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 				  <input type="text" class="form-control" id="sort" placeholder="数值越大越靠前">
 				</div>
 			  </div>
-			  <?php foreach ($custom_list as $obj): ?>
 			  <div class="form-group">
-			  <label for="custom" class="col-sm-2 control-label"><?php echo $obj->name?>：</label>
+				<label class="col-sm-2 control-label">可用定制项：</label>
 				<div class="col-sm-7">
-				<input type="text" class="form-control" rel="custom" val="<?php echo $obj->name?>" placeholder="竖线分隔，例如：<?php echo $obj->ex?>">
+					<div class="row">
+						<?php foreach ($option_list as $i=>$obj): if($i>0&&$i%4==0)echo'</div><div class="row">'; ?>
+						<label class="col-sm-3"><?php echo $obj->name?>：
+							<input type="checkbox" name="option" value="<?php echo $obj->id?>">
+						</label>
+						<?php endforeach?>
+					</div>
 				</div>
 			  </div>
-			  <?php endforeach?>
 			  <div class="form-group">
 				<label for="status" class="col-sm-2 control-label">状态：</label>
-				<div class="col-sm-7">
+				<div class="col-sm-3">
 					<select class="form-control" id="status">
 						<?php foreach ($status_list as $id=>$name): ?>
 						<option value="<?php echo $id?>"><?php echo $name?></option> 
@@ -72,16 +77,15 @@ $(function(){
 		history.go(-1);
 	});
 	$('#submit').click(function(){
-		var custom_list = {};
-		$('input[rel="custom"]').each(function(){
-			custom_list[$(this).attr('val')] = $(this).val();
+		var option_list = [];
+		$('input[name="option"]:checked').each(function(){
+			option_list.push($(this).val());
 		});
-		//console.log(custom_list);	
 		$.post('insert', {
 			name:$('#name').val(),
 			price:$('#price').val(),
 			sort:$('#sort').val(),
-			custom:JSON.stringify(custom_list),
+			option:JSON.stringify(option_list),
 			status:$('#status').val()
 		}, function(data){
 			if (data._ret == 0) {

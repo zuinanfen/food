@@ -9,7 +9,6 @@ $this->load->view ( 'common/header', array (
 	<ul class="nav nav-sidebar">
 		<li class="active"><a href="index">用户列表</a></li>
 		<li><a href="add">添加用户</a></li>
-		<li class="disabled"><a href="#">用户编辑</a></li>
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -28,7 +27,7 @@ $this->load->view ( 'common/header', array (
 			<tr>
 				<td><?php echo $obj->id ?></td>
 				<td><?php echo $obj->name ?></td>
-				<td><?php echo isset($role_list[$obj->role_id])? $role_list[$obj->role_id]->name : '未分配'?></td>
+				<td><?php echo isset($role_list[$obj->role_id])? $role_list[$obj->role_id] : '未分配'?></td>
 				<td>
 					<?php if($obj->status==1): ?><button type="button" class="btn btn-xs btn-danger" rel="status_on" val="<?php echo $obj->id?>">未激活</button></a><?php endif ?>
 					<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-success" rel="status_off" val="<?php echo $obj->id?>">已激活</button></a><?php endif ?>

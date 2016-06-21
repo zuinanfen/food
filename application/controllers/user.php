@@ -6,15 +6,13 @@ class User extends NB_Controller {
 	function __construct () {
 		parent::__construct();
 		$this->load->model('user_mdl');
-		$this->load->model('role_mdl');
 	}
 
 	public function index () {
 		$user_list = $this->user_mdl->list_all();
-		$role_list = $this->role_mdl->list_all(true);
 		$this->output_data(array(
 			'list' => $user_list,
-			'role_list' => $role_list,
+			'role_list' => User_mdl::$role_id,
 			'status_list' => User_mdl::$status,
 		));
 	}
@@ -22,17 +20,15 @@ class User extends NB_Controller {
 		$id = $this->get('id', 'num');
 		$user_detail = $this->user_mdl->get($id);
 
-		$role_list = $this->role_mdl->list_all(true);
 		$this->output_data(array(
 			'detail' => $user_detail,
-			'role_list' => $role_list
+			'role_list' => User_mdl::$role_id,
 		));
 	}
 
 	public function add () {
-		$role_list = $this->role_mdl->list_all(true);
 		$this->output_data(array(
-			'role_list' => $role_list
+			'role_list' => User_mdl::$role_id,
 		));
 	}
 

@@ -19,6 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	  </div>
 	  <div class="navbar-collapse collapse">
 		<ul class="nav navbar-nav">
+		<li <?php if($funcname=='index'):?>class="active"<?php endif?>><a href="#">经营状况</a></li>
 		<li <?php if($funcname=='user'):?>class="active"<?php endif?>><a href="../user/index">用户</a></li>
 		<li <?php if($funcname=='dish'):?>class="active"<?php endif?>><a href="../dish/index">菜单</a></li>
 		<li <?php if($funcname=='order'):?>class="active"<?php endif?>><a href="../order/index">订单</a></li>

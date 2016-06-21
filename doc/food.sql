@@ -1,3 +1,4 @@
+set names utf8;
 -- MySQL dump 10.16  Distrib 10.1.13-MariaDB, for osx10.6 (i386)
 --
 -- Host: localhost    Database: food
@@ -16,34 +17,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `t_custom`
---
-
-DROP TABLE IF EXISTS `t_custom`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `t_custom` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '' COMMENT '名称',
-  `ex` varchar(64) NOT NULL DEFAULT '',
-  `oper` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，操作人ID',
-  `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `mtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_custom`
---
-
-LOCK TABLES `t_custom` WRITE;
-/*!40000 ALTER TABLE `t_custom` DISABLE KEYS */;
-INSERT INTO `t_custom` VALUES (1,'去除可选项','葱|香菜|芝麻',0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(2,'多加可选项','葱|香菜|粉',0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(3,'少加可选项','葱|香菜|粉',0,'0000-00-00 00:00:00','0000-00-00 00:00:00');
-/*!40000 ALTER TABLE `t_custom` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `t_dish`
 --
 
@@ -57,14 +30,14 @@ CREATE TABLE `t_dish` (
   `price` decimal(16,2) NOT NULL DEFAULT '0.00' COMMENT '单价',
   `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态',
-  `custom` text NOT NULL COMMENT '定制菜单',
+  `option` varchar(256) NOT NULL DEFAULT '' COMMENT '定制菜单',
   `oper` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，操作人ID',
   `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `mtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
   PRIMARY KEY (`id`),
   KEY `sort` (`sort`),
   KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +46,7 @@ CREATE TABLE `t_dish` (
 
 LOCK TABLES `t_dish` WRITE;
 /*!40000 ALTER TABLE `t_dish` DISABLE KEYS */;
-INSERT INTO `t_dish` VALUES (1,0,'醉南粉',24.00,9,0,'{\"去除可选项\":\"葱|香菜|芝麻22\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'2016-06-10 18:46:27','2016-06-11 22:34:27'),(2,0,'醉南粉',24.00,9,0,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-11 22:34:28'),(3,0,'醉南粉',24.00,9,1,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-10 19:54:27'),(4,0,'',0.00,0,0,'',0,'0000-00-00 00:00:00','2016-06-10 19:54:32'),(5,0,'醉南粉',24.00,9,1,'{\"去除可选项\":\"葱|香菜|芝麻\",\"多加可选项\":\"葱|香菜|粉\",\"少加可选项\":\"葱|香菜|粉\"}',0,'0000-00-00 00:00:00','2016-06-10 19:55:50');
+INSERT INTO `t_dish` VALUES (1,0,'牛肉粉',20.01,0,0,'[\"1\",\"2\",\"3\",\"5\",\"6\",\"7\",\"8\"]',0,'2016-06-18 01:00:42','2016-06-18 01:16:44'),(2,0,'醉南粉',22.00,0,0,'[\"1\",\"2\",\"5\",\"6\"]',0,'2016-06-18 01:03:40','2016-06-18 01:03:40'),(3,0,'这是个名字很长的菜，看看会怎样',99999.00,9,0,'[\"3\",\"4\"]',0,'2016-06-18 16:35:08','2016-06-18 16:35:08'),(4,0,'打包盒',0.10,0,0,'[]',0,'2016-06-20 18:23:20','2016-06-20 18:23:20');
 /*!40000 ALTER TABLE `t_dish` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,11 +89,12 @@ CREATE TABLE `t_option` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '选项名称',
   `price` decimal(16,2) NOT NULL DEFAULT '0.00' COMMENT '加价',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `oper` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，操作人ID',
   `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `mtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,6 +103,7 @@ CREATE TABLE `t_option` (
 
 LOCK TABLES `t_option` WRITE;
 /*!40000 ALTER TABLE `t_option` DISABLE KEYS */;
+INSERT INTO `t_option` VALUES (1,'加粉',-0.50,0,0,'2016-06-17 21:47:41','2016-06-17 22:09:35'),(2,'少香菜',-0.10,0,0,'2016-06-17 22:11:57','2016-06-17 22:11:57'),(3,'加牛肉',10.00,0,0,'2016-06-17 22:12:12','2016-06-17 22:12:12'),(4,'加个名字长点的看看效果',999.00,0,0,'2016-06-17 22:25:44','2016-06-17 22:25:44'),(5,'少牛肉',-5.00,0,0,'2016-06-17 22:27:06','2016-06-17 22:27:06'),(6,'少粉',-2.00,0,0,'2016-06-17 22:27:21','2016-06-17 22:27:21'),(7,'多咸菜',0.00,0,0,'2016-06-17 22:27:48','2016-06-17 22:27:48'),(8,'少咸菜',0.00,0,0,'2016-06-17 22:27:56','2016-06-17 22:27:56'),(9,'加辣',0.00,0,0,'2016-06-19 12:43:57','2016-06-19 12:43:57');
 /*!40000 ALTER TABLE `t_option` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -149,6 +124,7 @@ CREATE TABLE `t_order` (
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态',
   `dish_list` varchar(1024) NOT NULL DEFAULT '' COMMENT '点菜列表，json',
   `dish_num` int(11) NOT NULL DEFAULT '0' COMMENT '点菜总数',
+  `seat_num` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '就餐人数',
   `remark` text NOT NULL,
   `amount` decimal(16,2) NOT NULL DEFAULT '0.00' COMMENT '总价',
   `discount` decimal(16,2) NOT NULL DEFAULT '0.00' COMMENT '折扣',
@@ -161,7 +137,7 @@ CREATE TABLE `t_order` (
   KEY `type` (`type`),
   KEY `status` (`status`),
   KEY `order_user` (`order_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,6 +146,7 @@ CREATE TABLE `t_order` (
 
 LOCK TABLES `t_order` WRITE;
 /*!40000 ALTER TABLE `t_order` DISABLE KEYS */;
+INSERT INTO `t_order` VALUES (1,0,0,'1','2016-06-14 12:01:02',1,0,'',0,0,'222',0.00,0.00,0,100.00,0,'2016-06-14 23:13:57','2016-06-14 23:13:57');
 /*!40000 ALTER TABLE `t_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -204,37 +181,6 @@ LOCK TABLES `t_order_dish` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_role`
---
-
-DROP TABLE IF EXISTS `t_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `t_role` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '类型',
-  `name` varchar(64) NOT NULL DEFAULT '' COMMENT '名称',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态',
-  `oper` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '外键，操作人ID',
-  `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `mtime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '修改时间',
-  PRIMARY KEY (`id`),
-  KEY `type` (`type`),
-  KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `t_role`
---
-
-LOCK TABLES `t_role` WRITE;
-/*!40000 ALTER TABLE `t_role` DISABLE KEYS */;
-INSERT INTO `t_role` VALUES (1,0,'系统管理员',0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(2,0,'厨师',0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(3,0,'点菜员',0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(4,0,'上菜员',0,0,'0000-00-00 00:00:00','0000-00-00 00:00:00');
-/*!40000 ALTER TABLE `t_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `t_user`
 --
 
@@ -253,7 +199,7 @@ CREATE TABLE `t_user` (
   PRIMARY KEY (`id`),
   KEY `role_id` (`role_id`),
   KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +208,7 @@ CREATE TABLE `t_user` (
 
 LOCK TABLES `t_user` WRITE;
 /*!40000 ALTER TABLE `t_user` DISABLE KEYS */;
-INSERT INTO `t_user` VALUES (1,'test','',3,0,0,'2016-06-04 19:20:11','2016-06-11 22:26:28'),(2,'test222','',4,1,0,'2016-06-04 19:20:12','2016-06-11 22:26:38'),(3,'test','',0,0,0,'2016-06-04 19:20:14','2016-06-11 22:34:32'),(4,'test','',2,0,0,'2016-06-04 20:28:31','2016-06-11 22:34:32'),(5,'test','',0,0,0,'2016-06-04 20:28:32','2016-06-11 22:26:35'),(6,'test','',1,0,0,'2016-06-07 22:18:41','2016-06-09 23:27:58'),(7,'AAA','',0,0,0,'2016-06-09 22:41:27','2016-06-09 23:37:34'),(8,'BBB','',1,0,0,'2016-06-09 22:42:42','2016-06-09 22:42:42'),(9,'CCC','',0,0,0,'2016-06-09 23:37:57','2016-06-09 23:37:57'),(26,'CYY','123456',0,1,0,'2016-06-10 00:40:35','2016-06-10 00:40:35'),(27,'CY222','123456',0,1,0,'2016-06-10 00:41:13','2016-06-10 00:41:13'),(28,'CYY3','123456',3,1,0,'2016-06-10 00:42:03','2016-06-10 00:42:03');
+INSERT INTO `t_user` VALUES (1,'FELIX','cdb52c63ddef6815c27a569bc04ceeb6',1,0,0,'2016-06-15 22:24:07','2016-06-15 23:11:23'),(2,'TEST','22b75d6007e06f4a959d1b1d69b4c4bd',2,0,0,'2016-06-15 22:38:30','2016-06-15 23:11:23'),(3,'TEST2','f68337eb380b5f5161807535c29da0a6',3,1,0,'2016-06-18 09:53:12','2016-06-18 09:59:09'),(4,'TEST3','ffb9e559fb466f3e3d9919ddf377ee06',3,1,0,'2016-06-18 10:12:11','2016-06-18 10:12:11');
 /*!40000 ALTER TABLE `t_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -275,4 +221,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-11 23:22:19
+-- Dump completed on 2016-06-21 16:10:45

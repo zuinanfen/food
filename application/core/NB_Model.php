@@ -69,6 +69,16 @@ abstract class NB_Model extends CI_Model {
 	}
 
 	// ================ private functions ================
+	protected function array2map($res, $key='id') {
+		$res_new = array();
+		foreach ($res as $obj) {
+			if (isset($obj->$key)) {
+				$res_new[$obj->$key] = $obj;
+			}
+		}
+
+		return $res_new;
+	}
 	
 	protected function get_cache_table ($tablename) {
 		return $tablename.'_cache';

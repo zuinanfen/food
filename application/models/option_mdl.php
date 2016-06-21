@@ -1,12 +1,11 @@
 <?php	
-class Dish_mdl extends NB_Model {
+class Option_mdl extends NB_Model {
 	
-	const T_NAME = 't_dish';
+	const T_NAME = 't_option';
 
 	static $status = array (
 		0 => '正常',
-		1 => '已下架',
-		2 => '未上架',
+		1 => '禁用',
 	);
 
 	/**********************************************************
@@ -19,7 +18,6 @@ class Dish_mdl extends NB_Model {
 		$this->db->from(self::T_NAME);
 		if (!empty($status))
 			$this->db->where_in('status',$status);
-		$this->db->order_by('sort','DESC');
 		$query = $this->db->get();
 		if($query && $query->num_rows() > 0){ 
 			$res = $query->result_object();
@@ -34,6 +32,5 @@ class Dish_mdl extends NB_Model {
 		}
 		return $res;
 	}
-
 
 }

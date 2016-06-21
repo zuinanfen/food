@@ -9,7 +9,6 @@ $this->load->view ( 'common/header', array (
 	<ul class="nav nav-sidebar">
 		<li><a href="index">订单列表</a></li>
 		<li class="active"><a href="add">添加订单</a></li>
-		<li class="disabled"><a href="#">订单编辑</a></li>
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -21,7 +20,7 @@ $this->load->view ( 'common/header', array (
 			<div class="form-horizontal">
 			  <div class="form-group">
 				<label for="src" class="col-sm-2 control-label">订单来源：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 					<select class="form-control col-sm-2" id="src">
 						<?php foreach ($src_type as $id=>$name): ?>
 						<option value="<?php echo $id?>"><?php echo $name?></option> 
@@ -31,31 +30,39 @@ $this->load->view ( 'common/header', array (
 			  </div>
 			  <div class="form-group">
 				<label for="table_id" class="col-sm-2 control-label">桌号：</label>
-				<div class="col-sm-5">
-				  <input type="text" class="form-control" id="table_id" placeholder="" >
+				<div class="col-sm-3">
+				  <input type="text" class="form-control" id="table_id" placeholder="例如：1" >
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="order_time" class="col-sm-2 control-label">下单时间 ：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 				<input type="text" class="form-control" id="order_time" placeholder="" >
 				</div>
 			  </div>
 			  <div class="form-group">
-				<label for="order_user" class="col-sm-2 control-label">点菜员：</label>
-				<div class="col-sm-5">
-				<input type="text" class="form-control" id="order_user" placeholder="" >
+				<label for="order_user" class="col-sm-2 control-label">点餐员：</label>
+				<div class="col-sm-3">
+					<?php if(empty($user_list)): ?>
+					<label class="control-label">暂无点餐员，请先添加</label>
+					<?php else: ?>
+					<select class="form-control" id="order_user">
+						<?php foreach ($user_list as $obj): ?>
+						<option value="<?php echo $obj->id?>"><?php echo $obj->name?></option> 
+						<?php endforeach; ?>
+					</select>
+					<?php endif ?>
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="discount" class="col-sm-2 control-label">折扣：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 				<input type="text" class="form-control" id="discount" placeholder="" >
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="pay_type" class="col-sm-2 control-label">支付类型：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 					<select class="form-control col-sm-2" id="pay_type">
 						<?php foreach ($pay_type as $id=>$name): ?>
 						<option value="<?php echo $id?>"><?php echo $name?></option> 
@@ -65,19 +72,19 @@ $this->load->view ( 'common/header', array (
 			  </div>
 			  <div class="form-group">
 				<label for="pay_amount" class="col-sm-2 control-label">支付金额：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 				<input type="text" class="form-control" id="pay_amount" placeholder="" >
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="remark" class="col-sm-2 control-label">备注：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 				<input type="text" class="form-control" id="remark" placeholder="" >
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="role" class="col-sm-2 control-label">状态：</label>
-				<div class="col-sm-5">
+				<div class="col-sm-3">
 					<select class="form-control" id="status">
 						<?php foreach ($status_list as $id=>$name): ?>
 						<option value="<?php echo $id?>"><?php echo $name?></option> 
@@ -97,6 +104,7 @@ $this->load->view ( 'common/header', array (
 </div>
 <script>
 $(function(){
+	<?php if($user->role_id==3):?>$('#order_user').val(<?php echo $user->id?>);<?php endif ?>
 	$('#back').click(function(){
 		history.go(-1);
 	});

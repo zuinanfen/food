@@ -9,7 +9,6 @@ $this->load->view ( 'common/header', array (
 	<ul class="nav nav-sidebar">
 		<li class="active"><a href="index">订单列表</a></li>
 		<li><a href="add">添加订单</a></li>
-		<li class="disabled"><a href="#">订单编辑</a></li>
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -20,7 +19,7 @@ $this->load->view ( 'common/header', array (
 				<th>来源</th>
 				<th>台号</th>
 				<th>下单时间</th>
-				<th>点菜员</th>
+				<th>点餐员</th>
 				<th>菜单内容</th>
 				<th>总金额</th>
 				<th>状态</th>
@@ -34,7 +33,7 @@ $this->load->view ( 'common/header', array (
 				<td><?php echo $src_type[$obj->src] ?></td>
 				<td><?php echo $obj->table_id ?></td>
 				<td><?php echo $obj->order_time ?></td>
-				<td><?php echo $obj->order_user ?></td>
+				<td><?php echo isset($user_list[$obj->order_user])? $user_list[$obj->order_user]->name : '未知'?></td>
 				<td><?php echo $obj->dish_list ?></td>
 				<td><?php echo $obj->amount ?></td>
 				<td>

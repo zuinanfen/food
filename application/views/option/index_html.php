@@ -1,16 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view ( 'common/header', array (
-	'title' => '菜单管理' ,
-	'funcname'=> 'dish'
+	'title' => '定制项管理' ,
+	'funcname'=> 'option'
 ));
 ?>
 <div class="col-sm-3 col-md-2 sidebar">
 	<ul class="nav nav-sidebar">
-		<li class="active"><a href="index">菜单管理</a></li>
-		<li><a href="add">添加菜单</a></li>
-		<li><a href="../option/index">定制项管理</a></li>
-		<li><a href="../option/add">添加定制项</a></li>
+		<li><a href="../dish/index">菜单管理</a></li>
+		<li><a href="../dish/add">添加菜单</a></li>
+		<li class="active"><a href="index">定制项管理</a></li>
+		<li><a href="add">添加定制项</a></li>
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -18,10 +18,8 @@ $this->load->view ( 'common/header', array (
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>菜品名称</th>
-				<th>价格</th>
-				<th>排序</th>
-				<th>可用定制项</th>
+				<th>定制项名称</th>
+				<th>价格（元）</th>
 				<th>状态</th>
 				<th>操作</th>
 			</tr>
@@ -31,12 +29,10 @@ $this->load->view ( 'common/header', array (
 			<tr>
 				<td><?php echo $obj->id ?></td>
 				<td><?php echo $obj->name ?></td>
-				<td><?php echo $obj->price ?></td>
-				<td><?php echo $obj->sort ?></td>
-				<td><?php echo $obj->option?></td>
+				<td><?php echo ($obj->price>=0?'+ ':'- ') . abs($obj->price) ?></td>
 				<td>
-					<?php if($obj->status!=0): ?><button type="button" class="btn btn-xs btn-danger" rel="status_on" val="<?php echo $obj->id?>">未上架</button></a><?php endif ?>
-					<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-success" rel="status_off" val="<?php echo $obj->id?>">已上架</button></a><?php endif ?>
+					<?php if($obj->status!=0): ?><button type="button" class="btn btn-xs btn-danger" rel="status_on" val="<?php echo $obj->id?>">禁用</button></a><?php endif ?>
+					<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-success" rel="status_off" val="<?php echo $obj->id?>">正常</button></a><?php endif ?>
 				</td>
 				<td>
 					<a href="edit?id=<?php echo $obj->id?>"><button type="button" class="btn btn-xs btn-primary">编辑</button></a>

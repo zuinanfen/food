@@ -7,9 +7,8 @@ $this->load->view ( 'common/header', array (
 ?>
 <div class="col-sm-3 col-md-2 sidebar">
 	<ul class="nav nav-sidebar">
-		<li><a href="index">用户列表</a></li>
+		<li class="active"><a href="index">用户列表</a></li>
 		<li><a href="add">添加用户</a></li>
-		<li class="active"><a href="#">用户编辑</a></li>
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -21,29 +20,28 @@ $this->load->view ( 'common/header', array (
 			<div class="form-horizontal">
 			  <div class="form-group">
 				<label for="name" class="col-sm-2 control-label">姓名：</label>
-				<div class="col-sm-7">
-				  <input type="text" class="form-control" id="name" placeholder="张三" value="<?php echo $detail->name ?>">
+				<div class="col-sm-5">
+				  <input type="text" class="form-control" id="name" value="<?php echo $detail->name ?>">
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="password1" class="col-sm-2 control-label" value="">原始密码：</label>
-				<div class="col-sm-7">
+				<div class="col-sm-5">
 				  <input type="password" class="form-control" id="password1" placeholder="可以不填">
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="password1" class="col-sm-2 control-label" value="">新密码：</label>
-				<div class="col-sm-7">
+				<div class="col-sm-5">
 				  <input type="password" class="form-control" id="password2" placeholder="可以不填">
 				</div>
 			  </div>
 			  <div class="form-group">
 				<label for="role_id" class="col-sm-2 control-label">角色：</label>
-				<div class="col-sm-7">
+				<div class="col-sm-5">
 					<select class="form-control" id="role_id">
-						<option value="0">未分配</option> 
-						<?php foreach ($role_list as $obj ): ?>
-						<option value="<?php echo $obj->id?>"><?php echo $obj->name?></option> 
+						<?php foreach ($role_list as $id=>$name): ?>
+						<option value="<?php echo $id?>"><?php echo $name?></option> 
 						<?php endforeach; ?>
 					</select>
 				</div>
