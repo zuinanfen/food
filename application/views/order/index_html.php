@@ -8,7 +8,6 @@ $this->load->view ( 'common/header', array (
 <div class="col-sm-3 col-md-2 sidebar">
 	<ul class="nav nav-sidebar">
 		<li class="active"><a href="index">订单列表</a></li>
-		<li><a href="add">添加订单</a></li>
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -34,7 +33,11 @@ $this->load->view ( 'common/header', array (
 				<td><?php echo $obj->table_id ?></td>
 				<td><?php echo $obj->order_time ?></td>
 				<td><?php echo isset($user_list[$obj->order_user])? $user_list[$obj->order_user]->name : '未知'?></td>
-				<td><?php echo $obj->dish_list ?></td>
+				<td>
+					<?php $order_dish = @json_decode($obj->dish_list); if ($order_dish) foreach($order_dish as $id=>$o): ?>
+					<?php echo $dish_list[$id]->name?>✖️<?php echo $o->num ?><br/>
+					<?php endforeach; ?>
+				</td>
 				<td><?php echo $obj->amount ?></td>
 				<td>
 					<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-danger" name="status" rel=0 val="<?php echo $obj->id?>">未处理</button></a><?php endif ?>

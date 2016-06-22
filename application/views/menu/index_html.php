@@ -17,7 +17,7 @@ $this->load->view ( 'common/h5_top', array (
 <table class="table table-condensed">
 	<thead>
 		<tr class="success">
-			<th>桌号：</th><th><input id="order_table_id" size="10"></th><th>人数：</th><th><input id="order_seat_num" max-length=3 size="3"></th>
+			<th>桌号：</th><td><input id="order_table_id" size="10"></td><th>人数：</th><td><input id="order_seat_num" max-length=3 size="3"></td>
 		</tr>
 	<tr>
 		<th colspan="2">菜名</th>
@@ -29,7 +29,7 @@ $this->load->view ( 'common/h5_top', array (
 	<?php foreach($list as $obj): ?>
 	<tr class="warning" rel="dish_list" val="<?php echo$obj->id ?>">
 		<td colspan="2"><strong rel="name"><?php echo $obj->name?></strong></td>
-		<td nowrap=nowrap rel=""><?php echo $obj->price?></td>
+		<td nowrap=nowrap rel="price" val="<?php echo $obj->price ?>"><?php echo $obj->price?></td>
 		<td nowrap=nowrap>
 				<span class="glyphicon glyphicon-minus"></span>
 				<input rel="num" size="1" maxlength="3" value="0">
@@ -42,7 +42,7 @@ $this->load->view ( 'common/h5_top', array (
 			<div>
 			<?php foreach ($option as $i=>$id): if($i>0&&$i%4==0)echo'</div><div>'; ?>
 			<label><small><?php echo $option_list[$id]->name?></small>
-				<input type="checkbox" name="option" value="<?php echo $option_list[$id]->id?>">
+				<input type="checkbox" name="option" value="<?php echo $option_list[$id]->id?>" price="<?php echo $option_list[$id]->price?>">
 			</label>
 			<?php endforeach?>
 			</div>
@@ -59,6 +59,18 @@ $this->load->view ( 'common/h5_top', array (
 	<p>&copy; 2016 醉南粉餐饮有限管理公司.</p>
 </footer>
 <script>
+var update_dish_price = function() {
+	$('tr[rel="dish_list"]').each(function(){
+		var self = $(this);
+		var price = self.find('td[rel=price]').attr('val') * 1;
+		self.next().find('input[name="option"]:checked').each(function(){
+			price += ($(this).attr('price')*1);
+		});
+		if (price<0)price = 0;
+		self.find('td[rel=price]').html(Math.round(price*100)/100);
+	});
+};
+
 $(function(){
 	var order_table_id = '';
 	var order_seat_num = 0;
@@ -82,7 +94,12 @@ $(function(){
 				tr.next().find('input[name="option"]').filter(function(){return obj.option.indexOf($(this).val())>=0}).attr('checked', true);
 			}
 		});
+		update_dish_price();
 	}
+
+	$('input[name="option"]').click(function(){
+		update_dish_price();
+	});
 
 	$('.glyphicon-plus').click(function(){
 		var num = $(this).prev().val();
@@ -106,6 +123,7 @@ $(function(){
 			order_dish[id] = {
 				id:id,
 				num:$(this).find('input[rel=num]').val(),
+				price:$(this).find('td[rel=price]').html(),
 				option:function(){
 					var dish_option = [];
 					self.next().find('input[name="option"]:checked').each(function(){

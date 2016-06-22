@@ -23,10 +23,10 @@ $this->load->view ( 'common/h5_top', array (
 	</thead>
 	<tbody>
 	<?php foreach($cart_list as $id=>$obj): if(isset($dish_list[$id])): ?>
-	<tr class="warning" rel="dish_list" val="<?php echo $id ?>">
+	<tr class="warning" rel="dish_list" val="<?php echo $id ?>" price="<?php echo $obj->price?>">
 		<td colspan="3"><strong rel="name"><?php echo $dish_list[$id]->name?></strong>
 			<?php if($obj->option): ?>
-			（<?php foreach ($obj->option as $i=>$id): if($i>0&&$i%4==0)echo'</div><div>'; ?>
+			（<?php foreach ($obj->option as $i=>$id):?>
 				<small><?php echo $option_list[$id]->name?></small>
 			<?php endforeach?>）
 			<?php endif?>
@@ -38,6 +38,7 @@ $this->load->view ( 'common/h5_top', array (
 		</td>
 	</tr>
 	<?php endif;endforeach ?>
+	<tr class="active"><th>备注：</th><td colspan="3"><textarea id="remark" class="col-xs-12"></textarea></td></tr>
 	</tbody>
 	<tfoot>
 		<tr><td colspan="4" class="h5 text-right">
@@ -48,7 +49,7 @@ $this->load->view ( 'common/h5_top', array (
 <div class="marketing clearfix">
 	<div class="pull-right">
 		<button id="submit" type="button" class="btn btn-warning btn-lg">下单</button>
-		<button id="submit" type="button" class="btn btn-default btn-lg">返回</button>
+		<button id="back" type="button" class="btn btn-default btn-lg">返回</button>
 	</div>
 </div>
 <footer class="footer">
@@ -58,7 +59,6 @@ $this->load->view ( 'common/h5_top', array (
 $(function(){
 	var order_dish = {};
 	var amount = 0;
-	var dish_list = <?php echo json_encode($dish_list) ?>;
 	if ($.fn.cookie('order_table_id')) {
 		$('#order_table_id').html($.fn.cookie('order_table_id'));
 	}
@@ -74,10 +74,18 @@ $(function(){
 			}
 			var tr = $('tr[rel="dish_list"][val="'+id+'"]');
 			tr.find('input[rel=num]').val(obj.num);
-			amount += dish_list[id].price * obj.num;
+			amount += tr.attr('price') * obj.num;
 		});
 		$('#amount').html(amount);
+	} else {
+		alert('餐盘为空，请先点餐')
+		location.href = 'index';
+		return;
 	}
+
+	$('#back').click(function(){
+		history.go(-1);
+	});
 
 	$('.glyphicon-plus').click(function(){
 		var num = $(this).prev().val();
@@ -93,38 +101,46 @@ $(function(){
 	});
 
 	$('#submit').click(function(){
-		var amount = 0;
+		var dish_num = 0;
 		$('tr[rel=dish_list]').each(function(){
 			var self = $(this);
 			var id = self.attr('val');
-			amount += $(this).find('input[rel=num]').val();
-			order_dish[id] = {
-				id:id,
-				num:$(this).find('input[rel=num]').val(),
-			};
-			if(order_dish[id].num<=0) {
+			var num = self.find('input[rel=num]').val();
+			if(num<=0) {
 				delete order_dish[id];
+			} else {
+				order_dish[id] = {
+					id:id,
+					num:$(this).find('input[rel=num]').val(),
+					option:order_dish[id].option
+				};
+				dish_num += num;
 			}
 		});
 		//console.log(order_dish);
-		alert("下单成功");
-		location.href = 'cart';
-		/*
-		$.post('add', {
+		if (dish_num <= 0) {
+			alert('餐盘为空，请先点餐');
+			location.href = 'index';
+			return;
+		}
+		
+		$.post('../order/insert', {
 			src:0,
-			table_id:0,
-			seat_num:0,
-			dish_list:order_dish,
-			dish_num:amount,
-			remark:''
+			table_id:$('#order_table_id').html(),
+			seat_num:$('#order_seat_num').html(),
+			dish_list:JSON.stringify(order_dish),
+			dish_num:dish_num,
+			amount:amount,
+			remark:$('#remark').val()
 		}, function(data){
 			if (data._ret == 0) {
-				alert('保存成功');
+				$.fn.cookie('order_dish', null);
+				alert('下单成功');
 				location.href = 'index';
 			} else {
 				alert("保存失败，原因："+data._log);
 			}
-		})*/
+		})
 	});
 });
 </script>

@@ -8,7 +8,6 @@ $this->load->view ( 'common/header', array (
 <div class="col-sm-3 col-md-2 sidebar">
 	<ul class="nav nav-sidebar">
 		<li class="active"><a href="index">订单列表</a></li>
-		<li><a href="add">添加订单</a></li>
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -46,15 +45,26 @@ $this->load->view ( 'common/header', array (
 				<input type="text" class="form-control" id="order_user" placeholder="" value="<?php echo $detail->order_user?>">
 				</div>
 			  </div>
-			  <?php if (!empty($detail->dish_list)) foreach ($detail->dish_list as $obj): ?>
 			  <div class="form-group">
-			  <label for="dish" class="col-sm-2 control-label"><?php echo $obj->name?>：</label>
+				<label class="col-sm-2 control-label">点菜列表</label>
 				<div class="col-sm-7">
-				<input type="text" class="form-control" rel="dish_price" val="<?php echo $obj->price?>" value="<?php echo $num?>">
-				<input type="text" class="form-control" rel="dish_custom" value="<?php echo $custom?>">
+					<table class="table table-bordered table-condensed">
+			  <?php if (!empty($detail->dish_list)):$dish = json_decode($detail->dish_list); foreach ($dish as $obj): ?>
+					<tr>
+						<td><?php echo $dish_list[$obj->id]->name?></td>
+						<td><?php if (isset($obj->option)): ?>
+							<?php foreach ($obj->option as $i=>$id):?>
+								<small><?php echo $option_list[$id]->name?></small>
+							<?php endforeach?>
+							<?php endif?>
+						</td>
+						<td>✖️<?php echo $obj->num?></td>
+						<td><?php echo $obj->amount?>元</td>
+					</tr>
+			  <?php endforeach;endif?>
+					</table>
 				</div>
 			  </div>
-			  <?php endforeach?>
 			  <div class="form-group">
 				<label for="discount" class="col-sm-2 control-label">折扣：</label>
 				<div class="col-sm-5">
@@ -112,10 +122,6 @@ $(function(){
 		history.go(-1);
 	});
 	$('#submit').click(function(){
-		var custom_list = {};
-		$('input[rel="custom"]').each(function(){
-			custom_list[$(this).attr('val')] = $(this).val();
-		});
 		//console.log(custom_list);	
 		$.post('set', {
 			id:<?php echo $detail->id?>,

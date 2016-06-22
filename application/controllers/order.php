@@ -7,40 +7,36 @@ class Order extends NB_Controller {
 		parent::__construct();
 		$this->load->model('order_mdl');
 		$this->load->model('user_mdl');
+		$this->load->model('dish_mdl');
+		$this->load->model('option_mdl');
 	}
 
 	public function index () {
 		$order_list = $this->order_mdl->list_all();
 		$user_list = $this->user_mdl->list_by_roleid(array(3), TRUE);
+		$dish_list = $this->dish_mdl->list_all(TRUE);
 		$this->output_data(array(
 			'list' => $order_list,
 			'src_type' => Order_mdl::$src_type,
 			'status_list' => Order_mdl::$status,
 			'user_list' => $user_list,
+			'dish_list' => $dish_list,
 		));
 	}
 	public function edit () {
 		$id = $this->get('id', 'num');
 		$order_detail = $this->order_mdl->get($id);
 		$user_list = $this->user_mdl->list_by_roleid(array(3));
+		$dish_list = $this->dish_mdl->list_all(TRUE);
+		$option_list = $this->option_mdl->list_all(TRUE);
 		$this->output_data(array(
 			'detail' => $order_detail,
 			'src_type' => Order_mdl::$src_type,
 			'pay_type' => Order_mdl::$pay_type,
 			'status_list' => Order_mdl::$status,
 			'user_list' => $user_list,
-		));
-	}
-
-	public function add () {
-		$this->load->model('custom_mdl');
-		$user_list = $this->user_mdl->list_by_roleid(array(3));
-		$this->output_data(array(
-			'src_type' => Order_mdl::$src_type,
-			'pay_type' => Order_mdl::$pay_type,
-			'status_list' => Order_mdl::$status,
-			'user_list' => $user_list,
-			'user' => $this->_user
+			'dish_list' => $dish_list,
+			'option_list' => $option_list
 		));
 	}
 
@@ -54,11 +50,16 @@ class Order extends NB_Controller {
 		$status = $this->post("status", 'integer'); if (isset($status) && $status>=0) $obj->status = $status;
 		$dish_list = $this->post("dish_list", 'json'); if (isset($dish_list) && !empty($dish_list)) $obj->dish_list = $dish_list;
 		$dish_num = $this->post("dish_num", 'integer'); if (isset($dish_num) && $dish_num>=0) $obj->dish_num = $dish_num;
+		$seat_num = $this->post("seat_num", 'integer'); if (isset($seat_num) && $seat_num>=0) $obj->seat_num = $seat_num;
 		$remark = $this->post("remark"); if (isset($remark) && !empty($remark)) $obj->remark = $remark;
 		$amount = $this->post("amount", 'money'); if (isset($amount) && $amount>=0) $obj->amount = $amount;
 		$pay_amount = $this->post("pay_amount", 'money'); if (isset($pay_amount) && $pay_amount>=0) $obj->pay_amount = $pay_amount;
 		$discount = $this->post("discount", 'number'); if (isset($discount) && $discount>=0) $obj->discount = $discount;
 		$pay_type = $this->post("pay_type", 'integer'); if (isset($pay_amount) && $pay_amount>=0) $obj->pay_amount = $pay_amount;
+
+		if (!$order_time) {
+			$obj->order_time = date('Y-m-d H:i:s');
+		}
 
 		$this->order_mdl->set($obj);
 		$this->output_json();

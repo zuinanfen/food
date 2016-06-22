@@ -22,6 +22,9 @@ class Menu extends NB_Controller {
 
 	public function cart () {
 		$order_dish = @json_decode($_COOKIE['order_dish']);
+		if(empty($order_dish)){
+			$order_dish = array();
+		}
 		$dish_list = $this->dish_mdl->list_by_status(array(0), TRUE);
 		$option_list = $this->option_mdl->list_all(TRUE);
 
