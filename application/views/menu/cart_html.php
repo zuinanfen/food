@@ -17,7 +17,22 @@ $this->load->view ( 'common/h5_top', array (
 <table class="table table-condensed">
 	<thead>
 		<tr class="success">
-			<th>桌号：</th><th id="order_table_id"></th><th>人数：</th><th id="order_seat_num"></th>
+			<th>
+				<select id="order_src" disabled=disabled>
+					<?php foreach ($src_type as $id=>$name): ?>
+					<option value="<?php echo $id?>"><?php echo $name?></option> 
+					<?php endforeach; ?>
+				</select>
+			</th>
+			<th colspan="4" nowrap=nowrap>
+				<div id="order_table_seat" rel="order_table" class="show">
+					桌号：<span id="order_table_id" size="3">
+					人数：<span id="order_seat_num"></span>
+				</div>
+				<div id="order_table_takeout" rel="order_table" class="hide">
+					用户：<span id="order_table_id" ></span>
+				</div>
+			</th>
 		</tr>
 	<tr>
 	</thead>
@@ -38,10 +53,10 @@ $this->load->view ( 'common/h5_top', array (
 		</td>
 	</tr>
 	<?php endif;endforeach ?>
-	<tr class="active"><th>备注：</th><td colspan="3"><textarea id="remark" class="col-xs-12"></textarea></td></tr>
+	<tr class="active"><th colspan="1">备注：</th><td colspan="4"><textarea id="remark" class="col-xs-12"></textarea></td></tr>
 	</tbody>
 	<tfoot>
-		<tr><td colspan="4" class="h5 text-right">
+		<tr><td colspan="5" class="h5 text-right">
 			总金额：<span id="amount">0</span> 元
 		</td></tr>
 	</tfoot>
@@ -59,6 +74,9 @@ $this->load->view ( 'common/h5_top', array (
 $(function(){
 	var order_dish = {};
 	var amount = 0;
+	if ($.fn.cookie('order_src')) {
+		$('#order_src').val($.fn.cookie('order_src'));
+	}
 	if ($.fn.cookie('order_table_id')) {
 		$('#order_table_id').html($.fn.cookie('order_table_id'));
 	}
@@ -125,7 +143,7 @@ $(function(){
 		}
 		
 		$.post('../order/insert', {
-			src:0,
+			src:$('#order_src').val(),
 			table_id:$('#order_table_id').html(),
 			seat_num:$('#order_seat_num').html(),
 			dish_list:JSON.stringify(order_dish),
@@ -135,6 +153,9 @@ $(function(){
 		}, function(data){
 			if (data._ret == 0) {
 				$.fn.cookie('order_dish', null);
+				$.fn.cookie('order_src', null);
+				$.fn.cookie('order_table_id', null);
+				$.fn.cookie('order_seat_num', null);
 				alert('下单成功');
 				location.href = 'index';
 			} else {

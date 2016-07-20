@@ -7,6 +7,7 @@ class Menu extends NB_Controller {
 		parent::__construct();
 		$this->load->model('dish_mdl');
 		$this->load->model('option_mdl');
+		$this->load->model('order_mdl');
 	}
 
 	public function index ()
@@ -16,6 +17,7 @@ class Menu extends NB_Controller {
 
 		$this->output_data(array(
 			'list' => $dish_list,
+			'src_type' => Order_mdl::$src_type,
 			'option_list' => $option_list
 		));
 	}
@@ -31,6 +33,7 @@ class Menu extends NB_Controller {
 		$this->output_data(array(
 			'cart_list' => $order_dish,
 			'dish_list' => $dish_list,
+			'src_type' => Order_mdl::$src_type,
 			'option_list' => $option_list
 		));
 	}

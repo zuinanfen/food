@@ -66,7 +66,7 @@ $(function(){
 		});
 	};
 
-	$("button[name='status']").click(function(){set_status($(this).attr('val'), ()$(this).attr('rel')+1)%3)});
+	$("button[name='status']").click(function(){set_status($(this).attr('val'), ($(this).attr('rel')+1)%3)});
 });
 </script>
 <?php $this->load->view ( 'common/footer' )?> 
