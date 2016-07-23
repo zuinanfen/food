@@ -7,6 +7,7 @@ class Dish extends NB_Controller {
 		parent::__construct();
 		$this->load->model('dish_mdl');
 		$this->load->model('option_mdl');
+		$this->load->model('dishoption_mdl');
 	}
 
 	public function index () {
@@ -31,9 +32,10 @@ class Dish extends NB_Controller {
 	public function edit () {
 		$id = $this->get('id', 'num');
 		$dish_detail = $this->dish_mdl->get($id);
-		$option_list = $this->option_mdl->list_all();
-
+		$option_list = $this->dishoption_mdl->list_by_dish($id);
+		// var_dump($option_list);
 		$this->output_data(array(
+			'dish_id'  => $id,
 			'detail' => $dish_detail,
 			'status_list' => Dish_mdl::$status,
 			'option_list' => $option_list

@@ -41,13 +41,29 @@ $this->load->view ( 'common/header', array (
 			  </div>
 			  <div class="form-group">
 				<label class="col-sm-2 control-label">可用定制项：</label>
-				<div class="col-sm-7">
+				<div class="col-sm-5">
 					<div class="row">
-						<?php foreach ($option_list as $i=>$obj): if($i>0&&$i%4==0)echo'</div><div class="row">';?>
-						<label class="col-sm-3"><?php echo $obj->name?>：
-							<input type="checkbox"  name="option" value="<?php echo $obj->id?>">
-						</label>
-						<?php endforeach?>
+					<table class="table table-striped table-condensed">
+						<thead>
+						<tr>
+							<th>名称</th>
+							<th>价格（元）</th>
+							<th>操作 <button type="button" data-toggle="modal" data-target="#addOptionModal" id="addOption" class="btn btn-xs btn-info">添加</button></th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php foreach($option_list as $obj){?>
+						<tr>
+						<td><?php echo $obj['name']?></td>
+						<td><?php echo ($obj['price']>=0?'+ ':'- ') . abs($obj['price']) ?></td>
+						<td>
+							<a href="edit?id=2"><button type="button" class="btn btn-xs btn-primary">编辑</button></a>
+							<a href="edit?id=2"><button type="button" class="btn btn-xs btn-danger">删除</button></a>
+						</td>
+						</tr>
+						<?php }?>
+						</tbody>
+						</table>
 					</div>
 				</div>
 			  </div>
@@ -71,8 +87,45 @@ $this->load->view ( 'common/header', array (
 		</div>
 	</div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="addOptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">选项配置</h4>
+      </div>
+      <div class="modal-body form-horizontal" >
+      	<div class="form-group">
+			<label for="name" class="col-sm-3 control-label">选项名称：</label>
+			<div class="col-sm-5">
+				<input type="text" class="form-control" id="option-name" value=""  />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="name" class="col-sm-3 control-label">价格增减：</label>
+			<div class="col-sm-5">
+				<input type="text" class="form-control" id="option-price" value=""  />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="name" class="col-sm-3 control-label">排序：</label>
+			<div class="col-sm-5">
+				<input type="text" class="form-control" id="option-sort" value=""  />
+			</div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="addOption-save">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
 <script>
 $(function(){
+	var dishId = '<?php echo $dish_id?>';
 	var option = <?php echo $detail->option?>;
 	$('#status').val('<?php echo $detail->status?>');
 	$('input[name="option"]').each(function(){
@@ -103,6 +156,26 @@ $(function(){
 				alert("编辑失败，原因："+data._log);
 			}
 		});
+	});
+	$('#addOptionModal').on('shown.bs.modal', function () {
+	 	
+	});
+	$('#addOption-save').click(function(){
+		$.post('/dishoption/add', {
+			id: dishId,
+			name:$('#option-name').val(),
+			price:$('#option-price').val(),
+			sort:$('#option-sort').val()
+		}, function(data){
+			if (data._ret == 0) {
+				alert('编辑成功');
+				window.location.reload();
+			} else {
+				alert("编辑失败，原因："+data._log);
+			}
+		});
+
+
 	});
 });
 </script>
