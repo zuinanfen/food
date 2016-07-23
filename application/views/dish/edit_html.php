@@ -48,6 +48,7 @@ $this->load->view ( 'common/header', array (
 						<tr>
 							<th>名称</th>
 							<th>价格（元）</th>
+							<th>排序</th>
 							<th>操作 <button type="button" data-toggle="modal" data-target="#addOptionModal" id="addOption" class="btn btn-xs btn-info">添加</button></th>
 						</tr>
 						</thead>
@@ -56,9 +57,10 @@ $this->load->view ( 'common/header', array (
 						<tr>
 						<td><?php echo $obj['name']?></td>
 						<td><?php echo ($obj['price']>=0?'+ ':'- ') . abs($obj['price']) ?></td>
+						<td><?php echo $obj['sort']?></td>
 						<td>
-							<a href="edit?id=2"><button type="button" class="btn btn-xs btn-primary">编辑</button></a>
-							<a href="edit?id=2"><button type="button" class="btn btn-xs btn-danger">删除</button></a>
+							<button onclick="editOption('<?php echo $obj['id']?>')" type="button" class="btn btn-xs btn-primary">编辑</button>
+							<button onclick="delOption('<?php echo $obj['id']?>')" type="button" class="btn btn-xs btn-danger">删除</button>
 						</td>
 						</tr>
 						<?php }?>
@@ -114,6 +116,7 @@ $this->load->view ( 'common/header', array (
 				<input type="text" class="form-control" id="option-sort" value=""  />
 			</div>
 		</div>
+		<input type="hidden" id="option-id" value=""  />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -161,22 +164,47 @@ $(function(){
 	 	
 	});
 	$('#addOption-save').click(function(){
-		$.post('/dishoption/add', {
-			id: dishId,
+		var optionData = {
 			name:$('#option-name').val(),
 			price:$('#option-price').val(),
 			sort:$('#option-sort').val()
-		}, function(data){
+		}
+		var optionId = $('#option-id').val();
+		if(optionId.length>0){ //假如id不为空，则编辑
+			optionData.optionId = optionId;
+			optionId.status = 'edit';
+		}else{
+			optionData.status = 'del';
+		}
+		$.post('/dishoption/edit', optionData, function(data){
 			if (data._ret == 0) {
-				alert('编辑成功');
+				alert('操作成功');
 				window.location.reload();
 			} else {
-				alert("编辑失败，原因："+data._log);
+				alert("操作失败！"+data._log);
 			}
 		});
 
 
 	});
 });
+function editOption(optionId){
+	$.post('/dishoption/getDetail', {
+			optionId: optionId
+		}, function(data){
+			if (data._ret == 0) {
+				var detail = data.detail;
+				$('#option-name').val(detail.name);
+				$('#option-price').val(detail.price);
+				$('#option-sort').val(detail.sort);
+				$('#option-id').val(detail.id);
+			} else {
+				alert("系统异常，请联系管理员！");
+			}
+		});
+	$('#addOptionModal').modal('show',function () {
+	 	alert(11);
+	});
+}
 </script>
 <?php $this->load->view ( 'common/footer' )?> 

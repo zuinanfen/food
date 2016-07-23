@@ -6,46 +6,58 @@ class Dishoption extends NB_Controller {
 	function __construct () {
 		parent::__construct();
 		$this->load->model('option_mdl');
+		$this->load->model('dishoption_mdl');
 	}
 
-	public function index () {
-		$option_list = $this->option_mdl->list_all();
-		$this->output_data(array(
-			'list' => $option_list,
-			'status_list' => Option_mdl::$status,
-		));
-	}
+	// public function index () {
+	// 	$option_list = $this->option_mdl->list_all();
+	// 	$this->output_data(array(
+	// 		'list' => $option_list,
+	// 		'status_list' => Option_mdl::$status,
+	// 	));
+	// }
 	public function edit () {
-		$id = $this->get('id', 'num');
-		$option_detail = $this->option_mdl->get($id);
+		$status = $this->input->post('status');
+	}
+	public function getDetail () {
+		$optionId = $this->input->post('optionId');
+		$option_detail = $this->dishoption_mdl->get($optionId);
 
-		$this->output_data(array(
-			'detail' => $option_detail,
-			'status_list' => Option_mdl::$status,
+		$this->output_json(array(
+			'detail' => $option_detail
 		));
 	}
 
 	public function add () {
-		$obj = $this->option_mdl->gen_new();
-		if (isset($this->post('name')) && !empty($this->post('name'))){
-			$obj->name = $this->post('name');
+		$obj = $this->dishoption_mdl->gen_new();
+		$name = $this->input->post('name');
+		$price = $this->input->post('price');
+		$sort = $this->input->post('sort');
+		$dish_id = $this->input->post('dish_id');
+		if (isset($dish_id)&&!empty($dish_id)){
+			$obj->dish_id = $dish_id;
+		}else{
+			$this->set_error(static::RET_WRONG_INPUT, '系统出错，请联系开发人员');	
+			return $this->output_json();
+		}
+		if (isset($name)&&!empty($name)){
+			$obj->name = $name;
 		}else{
 			$this->set_error(static::RET_WRONG_INPUT, '选项名称不能为空');	
 			return $this->output_json();
 		}
-		if (isset($this->post('price')) && !empty($this->post('price'))){
-			$obj->price = $this->post('price');
+		if (isset($price)&&!empty($price)){
+			$obj->price = $price;
 		}else{
 			$this->set_error(static::RET_WRONG_INPUT, '价格增减必须填数字');	
 			return $this->output_json();
 		}
-		if (isset($this->post('sort')) && !empty($this->post('sort'))){
-			$obj->sort = $this->post('sort');
+		if (isset($sort)&&!empty($sort)){
+			$obj->sort = $sort;
 		}else{
 			$this->set_error(static::RET_WRONG_INPUT, '排序必须为整数');	
 			return $this->output_json();
 		}
-
 		$this->dishoption_mdl->set($obj);
 		$this->output_json();
 	}
