@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Order extends NB_Controller {
 
+	protected $_allow_role = array(1);
 	function __construct () {
 		parent::__construct();
 		$this->load->model('order_mdl');
@@ -12,7 +13,7 @@ class Order extends NB_Controller {
 	}
 
 	public function index () {
-		$order_list = $this->order_mdl->list_all();
+		$order_list = $this->order_mdl->list_by_status();
 		$user_list = $this->user_mdl->list_by_roleid(array(3), TRUE);
 		$dish_list = $this->dish_mdl->list_all(TRUE);
 		$this->output_data(array(

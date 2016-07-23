@@ -35,7 +35,7 @@ $(function(){
 			password:$.md5($('#name').val().toUpperCase()+$('#password').val()),
 		}, function(data){
 			if (data._ret == 0) {
-				location.href = data.location? data.location : '/index.php/user/index';
+				location.href = data.location? data.location : '';
 			} else {
 				alert("登录失败，原因："+data._log);
 			}
