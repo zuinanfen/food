@@ -44,7 +44,7 @@ class Logon extends NB_Controller {
 				$url = '/index.php/user/index';
 				break;
 			case 2:
-				$url = '/index.php/order/serving';
+				$url = '/index.php/serve/index';
 				break;
 			case 3:
 				$url = '/index.php/menu/index';

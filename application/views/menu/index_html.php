@@ -43,7 +43,7 @@ $this->load->view ( 'common/h5_top', array (
 	</thead>
 	<tbody>
 	<?php foreach($list as $obj): ?>
-	<tr class="warning" rel="dish_list" val="<?php echo$obj->id ?>">
+	<tr class="warning" rel="dish_list" val="<?php echo $obj->id ?>">
 		<td colspan="3"><strong rel="name"><?php echo $obj->name?></strong></td>
 		<td nowrap=nowrap rel="price" val="<?php echo $obj->price ?>"><?php echo $obj->price?></td>
 		<td nowrap=nowrap>
@@ -52,19 +52,6 @@ $this->load->view ( 'common/h5_top', array (
 				<span class="glyphicon glyphicon-plus"></span>
 		</td>
 	</tr>
-	<?php if($obj->option):$option = json_decode($obj->option, TRUE); ?>
-	<tr>
-		<td colspan="5">
-			<div>
-			<?php foreach ($option as $i=>$id): if($i>0&&$i%4==0)echo'</div><div>'; ?>
-			<label><small><?php echo $option_list[$id]->name?></small>
-				<input type="checkbox" name="option" value="<?php echo $option_list[$id]->id?>" price="<?php echo $option_list[$id]->price?>">
-			</label>
-			<?php endforeach?>
-			</div>
-		</td>
-	</tr>
-	<?php endif?>
 	<?php endforeach ?>
 	</tbody>
 </table>
@@ -87,6 +74,10 @@ var update_dish_price = function() {
 		self.find('td[rel=price]').html(Math.round(price*100)/100);
 	});
 };
+var get_option = function(dish_id){
+	var option = [{id:1,name:'AA',price:2.34,sort:1},{id:2,name:'BB',price:-12.34,sort:9}];
+	return option;
+}
 
 $('input[name="option"]').click(function(){
 	update_dish_price();
@@ -96,12 +87,31 @@ $('.glyphicon-plus').click(function(){
 	var num = $(this).prev().val();
 	if (num<99) {
 		$(this).prev().val(parseInt(num)+1);
+		if (num==0) {
+		//显示附加项
+			var dish = $(this).parent().parent();
+			var option = get_option(dish.val());
+			if (option.length > 0) {
+				var optionStr = '<tr><td colspan="5"><div>';
+				for (var i=0;i<option.length;i++) {
+					var v = option[i];
+					if (i>0&&i%4==0) optionStr+='</div></div>';
+					optionStr+='<label><small>'+v.name+'</small>';
+					optionStr+='<input type="checkbox" name="option" value="'+v.id+'" price="'+v.price+'"></label>';
+				}
+				optionStr+='</div></td></tr>';
+				$(optionStr).insertAfter(dish);
+			}
+		}
 	}
 });
 $('.glyphicon-minus').click(function(){
 	var num = $(this).next().val();
 	if (num>0) {
 		$(this).next().val(parseInt(num)-1);
+		if (num==1) {
+		//隐藏附加项
+		}
 	}
 });
 
@@ -125,7 +135,7 @@ $('#submit').click(function(){
 		var self = $(this);
 		var id = self.attr('val');
 		order_dish[id] = {
-		id:id,
+			id:id,
 			num:$(this).find('input[rel=num]').val(),
 				price:$(this).find('td[rel=price]').html(),
 				option:function(){
