@@ -16,9 +16,6 @@ class Dishoption extends NB_Controller {
 	// 		'status_list' => Option_mdl::$status,
 	// 	));
 	// }
-	public function edit () {
-		$status = $this->input->post('status');
-	}
 	public function getDetail () {
 		$optionId = $this->input->post('optionId');
 		$option_detail = $this->dishoption_mdl->get($optionId);
@@ -28,7 +25,7 @@ class Dishoption extends NB_Controller {
 		));
 	}
 
-	public function add () {
+	public function edit () {
 		$obj = $this->dishoption_mdl->gen_new();
 		$name = $this->input->post('name');
 		$price = $this->input->post('price');
@@ -46,7 +43,7 @@ class Dishoption extends NB_Controller {
 			$this->set_error(static::RET_WRONG_INPUT, '选项名称不能为空');	
 			return $this->output_json();
 		}
-		if (isset($price)&&!empty($price)){
+		if(is_numeric($price)){
 			$obj->price = $price;
 		}else{
 			$this->set_error(static::RET_WRONG_INPUT, '价格增减必须填数字');	
@@ -57,6 +54,10 @@ class Dishoption extends NB_Controller {
 		}else{
 			$this->set_error(static::RET_WRONG_INPUT, '排序必须为整数');	
 			return $this->output_json();
+		}
+		$optionId = $this->input->post('optionId');
+		if(!empty($optionId)){
+			$obj->id = $optionId;
 		}
 		$this->dishoption_mdl->set($obj);
 		$this->output_json();

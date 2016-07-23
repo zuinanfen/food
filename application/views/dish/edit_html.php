@@ -56,7 +56,7 @@ $this->load->view ( 'common/header', array (
 						<?php foreach($option_list as $obj){?>
 						<tr>
 						<td><?php echo $obj['name']?></td>
-						<td><?php echo ($obj['price']>=0?'+ ':'- ') . abs($obj['price']) ?></td>
+						<td><?php echo $obj['price'] ?></td>
 						<td><?php echo $obj['sort']?></td>
 						<td>
 							<button onclick="editOption('<?php echo $obj['id']?>')" type="button" class="btn btn-xs btn-primary">编辑</button>
@@ -167,16 +167,16 @@ $(function(){
 		var optionData = {
 			name:$('#option-name').val(),
 			price:$('#option-price').val(),
-			sort:$('#option-sort').val()
+			sort:$('#option-sort').val(),
+			dish_id:dishId
 		}
 		var optionId = $('#option-id').val();
 		if(optionId.length>0){ //假如id不为空，则编辑
 			optionData.optionId = optionId;
-			optionId.status = 'edit';
 		}else{
-			optionData.status = 'del';
+			optionData.optionId = '';
 		}
-		$.post('/dishoption/edit', optionData, function(data){
+		$.post('../dishoption/edit', optionData, function(data){
 			if (data._ret == 0) {
 				alert('操作成功');
 				window.location.reload();
@@ -189,7 +189,7 @@ $(function(){
 	});
 });
 function editOption(optionId){
-	$.post('/dishoption/getDetail', {
+	$.post('../dishoption/getDetail', {
 			optionId: optionId
 		}, function(data){
 			if (data._ret == 0) {
