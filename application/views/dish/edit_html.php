@@ -176,7 +176,7 @@ $(function(){
 		}else{
 			optionData.status = 'del';
 		}
-		$.post('/dishoption/edit', optionData, function(data){
+		$.post('../dishoption/edit', optionData, function(data){
 			if (data._ret == 0) {
 				alert('操作成功');
 				window.location.reload();
@@ -189,7 +189,7 @@ $(function(){
 	});
 });
 function editOption(optionId){
-	$.post('/dishoption/getDetail', {
+	$.post('../dishoption/getDetail', {
 			optionId: optionId
 		}, function(data){
 			if (data._ret == 0) {

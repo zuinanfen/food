@@ -12,6 +12,7 @@ function pr($arr){
 
 class NB_Controller extends CI_Controller {
 	protected $_allow_access = array (); // access without logon
+	protected $_allow_role = array (); // access role
 	protected $_of;
 	protected $_ret = 0;
 	protected $_log = '';
@@ -61,6 +62,10 @@ class NB_Controller extends CI_Controller {
 			exit('not logon');
 		}   
 
+		if (!$this->check_privilege()) {
+			exit('no privilege');
+		}   
+
 		$this->read_params();
     }
     
@@ -79,6 +84,13 @@ class NB_Controller extends CI_Controller {
 			;
 			$this->ajax_log->log ('request_time:' . date ( 'Y-m-d H:i:s' ) . '|request_uri:' . $requst_uri . '|elapsed_time:' . $elapsed_time . '|memory_use:' . $memory_use . "\n" );
         }
+	}
+
+	protected function check_privilege () {
+		if (empty($this->_allow_role) or in_array($this->_user->role_id, $this->_allow_role)) {
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 	protected function check_access () {

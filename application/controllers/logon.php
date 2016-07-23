@@ -38,8 +38,28 @@ class Logon extends NB_Controller {
 		//登录成功
 		$this->set_logon($obj);	
 
+		//根据角色选择首页
+		switch ($obj->role_id) {
+			case 1:
+				$url = '/index.php/user/index';
+				break;
+			case 2:
+				$url = '/index.php/order/serving';
+				break;
+			case 3:
+				$url = '/index.php/menu/index';
+				break;
+			case 4:
+				$url = '/index.php/order/serving';
+				break;
+			default:
+				$url = '';
+				break;
+		}
+
 		$this->output_json(array(
-			'detail' => $obj
+			'detail' => $obj,
+			'location' => $url
 		));
 	}
 }

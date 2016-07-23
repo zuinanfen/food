@@ -40,9 +40,9 @@ $this->load->view ( 'common/header', array (
 				</td>
 				<td><?php echo $obj->amount ?></td>
 				<td>
-					<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-danger" name="status" rel=0 val="<?php echo $obj->id?>">未处理</button></a><?php endif ?>
-					<?php if($obj->status==1): ?><button type="button" class="btn btn-xs btn-warning" name="status" rel=1 val="<?php echo $obj->id?>">制作中</button></a><?php endif ?>
-					<?php if($obj->status==2): ?><button type="button" class="btn btn-xs btn-success" name="status" rel=2 val="<?php echo $obj->id?>">已上菜</button></a><?php endif ?>
+					<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-danger" name="status" rel=0 val="<?php echo $obj->id?>"><?php echo $status_list[0]?></button></a><?php endif ?>
+					<?php if($obj->status==1): ?><button type="button" class="btn btn-xs btn-warning" name="status" rel=1 val="<?php echo $obj->id?>"><?php echo $status_list[1]?></button></a><?php endif ?>
+					<?php if($obj->status==2): ?><button type="button" class="btn btn-xs btn-success" name="status" rel=2 val="<?php echo $obj->id?>"><?php echo $status_list[2]?></button></a><?php endif ?>
 				</td>
 				<td>
 					<a href="edit?id=<?php echo $obj->id?>"><button type="button" class="btn btn-xs btn-primary">编辑</button></a>

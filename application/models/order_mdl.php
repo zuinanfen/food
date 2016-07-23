@@ -5,8 +5,8 @@ class Order_mdl extends NB_Model {
 	
 	static $status = array(
 		0 => '待处理',
-		1 => '制作中',
-		2 => '已上菜'
+		1 => '已上菜',
+		2 => '已结账'
 	);
 	static $src_type = array(
 		0 => '堂食',
@@ -33,6 +33,7 @@ class Order_mdl extends NB_Model {
 		$this->db->from(self::T_NAME);
 		if (!empty($status))
 			$this->db->where_in('status',$status);
+		$this->db->order_by('order_time', 'DESC');
 		$query = $this->db->get();
 		if($query && $query->num_rows() > 0){ 
 			$res = $query->result_object();
