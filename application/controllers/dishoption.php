@@ -6,7 +6,7 @@ class Dishoption extends NB_Controller {
 	protected $_allow_role = array(1);
 	function __construct () {
 		parent::__construct();
-		$this->load->model('option_mdl');
+		// $this->load->model('option_mdl');
 		$this->load->model('dishoption_mdl');
 	}
 
@@ -24,6 +24,20 @@ class Dishoption extends NB_Controller {
 		$this->output_json(array(
 			'detail' => $option_detail
 		));
+	}
+
+	public function del(){
+		$id = $this->input->post('optionId');
+		$dish_id = $this->input->post('dish_id');
+		if (!isset($id)|| empty($id)){
+			$this->set_error(static::RET_WRONG_INPUT, '系统出错，请联系开发人员');	
+			return $this->output_json();
+		}
+		$option_detail = $this->dishoption_mdl->get($id);
+		$option_detail->status = 1;
+
+		$this->dishoption_mdl->set($option_detail);
+		$this->output_json();
 	}
 
 	public function edit () {

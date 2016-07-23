@@ -9,8 +9,8 @@ $this->load->view ( 'common/header', array (
 	<ul class="nav nav-sidebar">
 		<li class="active"><a href="index">菜单列表</a></li>
 		<li><a href="add">添加菜单</a></li>
-		<li><a href="../option/index">定制项管理</a></li>
-		<li><a href="../option/add">添加定制项</a></li>
+		<!-- <li><a href="../option/index">定制项管理</a></li>
+		<li><a href="../option/add">添加定制项</a></li> -->
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -54,7 +54,7 @@ $this->load->view ( 'common/header', array (
 						</thead>
 						<tbody>
 						<?php foreach($option_list as $obj){?>
-						<tr>
+						<tr id="option_<?php echo $obj['id']?>">
 						<td><?php echo $obj['name']?></td>
 						<td><?php echo $obj['price'] ?></td>
 						<td><?php echo $obj['sort']?></td>
@@ -127,29 +127,29 @@ $this->load->view ( 'common/header', array (
 </div>
 <!-- Modal -->
 <script>
+var dishId = '<?php echo $dish_id?>';
 $(function(){
-	var dishId = '<?php echo $dish_id?>';
-	var option = <?php echo $detail->option?>;
+	// var option = <?php echo $detail->option?>;
 	$('#status').val('<?php echo $detail->status?>');
-	$('input[name="option"]').each(function(){
-		if(option.indexOf($(this).val()) >= 0) {
-			$(this).attr('checked', true);
-		}
-	});
+	// $('input[name="option"]').each(function(){
+	// 	if(option.indexOf($(this).val()) >= 0) {
+	// 		$(this).attr('checked', true);
+	// 	}
+	// });
 	$('#back').click(function(){
 		history.go(-1);
 	});
 	$('#submit').click(function(){
-		var option_list = [];
-		$('input[name="option"]:checked').each(function(){
-			option_list.push($(this).val());
-		});
+		// var option_list = [];
+		// $('input[name="option"]:checked').each(function(){
+		// 	option_list.push($(this).val());
+		// });
 		$.post('set', {
 			id:<?php echo $detail->id?>,
 			name:$('#name').val(),
 			price:$('#price').val(),
 			sort:$('#sort').val(),
-			option:JSON.stringify(option_list),
+			// option:JSON.stringify(option_list),
 			status:$('#status').val()
 		}, function(data){
 			if (data._ret == 0) {
@@ -160,9 +160,11 @@ $(function(){
 			}
 		});
 	});
+	//添加选项
 	$('#addOptionModal').on('shown.bs.modal', function () {
-	 	
+
 	});
+	//编辑或者是新建成功
 	$('#addOption-save').click(function(){
 		var optionData = {
 			name:$('#option-name').val(),
@@ -178,7 +180,7 @@ $(function(){
 		}
 		$.post('../dishoption/edit', optionData, function(data){
 			if (data._ret == 0) {
-				alert('操作成功');
+				alert('操作成功！');
 				window.location.reload();
 			} else {
 				alert("操作失败！"+data._log);
@@ -189,22 +191,38 @@ $(function(){
 	});
 });
 function editOption(optionId){
+	$('#addOptionModal').modal('show', function () {
+	 	
+	});
+	
 	$.post('../dishoption/getDetail', {
-			optionId: optionId
+		optionId: optionId
+	}, function(data){
+		if (data._ret == 0) {
+			var detail = data.detail;
+			$('#option-name').val(detail.name);
+			$('#option-price').val(detail.price);
+			$('#option-sort').val(detail.sort);
+			$('#option-id').val(detail.id);
+		} else {
+			alert("系统异常，请联系管理员！");
+		}
+	});
+}
+function delOption(optionId){
+	if(confirm('确定要删除该选项吗？')){
+	 	$.post('../dishoption/del', {
+			optionId: optionId,
+			dish_id:dishId
 		}, function(data){
 			if (data._ret == 0) {
-				var detail = data.detail;
-				$('#option-name').val(detail.name);
-				$('#option-price').val(detail.price);
-				$('#option-sort').val(detail.sort);
-				$('#option-id').val(detail.id);
+				alert('删除成功！');
+				$('#option_'+optionId).remove();
 			} else {
 				alert("系统异常，请联系管理员！");
 			}
 		});
-	$('#addOptionModal').modal('show',function () {
-	 	alert(11);
-	});
+	 }
 }
 </script>
 <?php $this->load->view ( 'common/footer' )?> 

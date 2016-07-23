@@ -9,8 +9,8 @@ $this->load->view ( 'common/header', array (
 	<ul class="nav nav-sidebar">
 		<li><a href="index">菜单管理</a></li>
 		<li class="active"><a href="add">添加菜单</a></li>
-		<li><a href="../option/index">定制项管理</a></li>
-		<li><a href="../option/add">添加定制项</a></li>
+		<!-- <li><a href="../option/index">定制项管理</a></li>
+		<li><a href="../option/add">添加定制项</a></li> -->
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -39,18 +39,7 @@ $this->load->view ( 'common/header', array (
 				  <input type="text" class="form-control" id="sort" placeholder="数值越大越靠前">
 				</div>
 			  </div>
-			  <div class="form-group">
-				<label class="col-sm-2 control-label">可用定制项：</label>
-				<div class="col-sm-7">
-					<div class="row">
-						<?php foreach ($option_list as $i=>$obj): if($i>0&&$i%4==0)echo'</div><div class="row">'; ?>
-						<label class="col-sm-3"><?php echo $obj->name?>：
-							<input type="checkbox" name="option" value="<?php echo $obj->id?>">
-						</label>
-						<?php endforeach?>
-					</div>
-				</div>
-			  </div>
+			  
 			  <div class="form-group">
 				<label for="status" class="col-sm-2 control-label">状态：</label>
 				<div class="col-sm-3">
@@ -77,15 +66,15 @@ $(function(){
 		history.go(-1);
 	});
 	$('#submit').click(function(){
-		var option_list = [];
-		$('input[name="option"]:checked').each(function(){
-			option_list.push($(this).val());
-		});
+		// var option_list = [];
+		// $('input[name="option"]:checked').each(function(){
+		// 	option_list.push($(this).val());
+		// });
 		$.post('insert', {
 			name:$('#name').val(),
 			price:$('#price').val(),
 			sort:$('#sort').val(),
-			option:JSON.stringify(option_list),
+			// option:JSON.stringify(option_list),
 			status:$('#status').val()
 		}, function(data){
 			if (data._ret == 0) {

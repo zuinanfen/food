@@ -12,19 +12,19 @@ class Dish extends NB_Controller {
 	}
 
 	public function index () {
-		$dish_list = $this->dish_mdl->list_all();
-		$option_list = $this->option_mdl->list_all(TRUE);
+		$dish_list = $this->dish_mdl->list_all(false,array('sort'=>'desc'));
+		// $option_list = $this->option_mdl->list_all(TRUE);
 		
 		//格式化定制项
-		foreach ($dish_list as $obj) {
-			$option_ids = json_decode($obj->option, TRUE);
-			$option_names = array();
-			foreach ($option_ids as $id) {
-				if (isset($option_list[$id]))
-					$option_names[] = $option_list[$id]->name;
-			}
-			$obj->option = implode(',',$option_names);
-		}
+		// foreach ($dish_list as $obj) {
+		// 	$option_ids = json_decode($obj->option, TRUE);
+		// 	$option_names = array();
+		// 	foreach ($option_ids as $id) {
+		// 		if (isset($option_list[$id]))
+		// 			$option_names[] = $option_list[$id]->name;
+		// 	}
+		// 	$obj->option = implode(',',$option_names);
+		// }
 		$this->output_data(array(
 			'list' => $dish_list,
 			'status_list' => Dish_mdl::$status,
@@ -44,10 +44,10 @@ class Dish extends NB_Controller {
 	}
 
 	public function add () {
-		$option_list = $this->option_mdl->list_all();
+		//$option_list = $this->option_mdl->list_all();
 		$this->output_data(array(
-			'status_list' => Dish_mdl::$status,
-			'option_list' => $option_list
+			'status_list' => Dish_mdl::$status
+			//'option_list' => $option_list
 		));
 	}
 
@@ -58,7 +58,7 @@ class Dish extends NB_Controller {
 		$price = $this->post("price", 'money'); if (isset($price) && $price>0) $obj->price = $price;
 		$sort = $this->post("sort"); if (isset($sort)) $obj->sort= intval($sort);
 		$status = $this->post("status"); if (isset($status) && $status>=0) $obj->status = intval($status);
-		$option = $this->post("option", 'json'); if (isset($option) && !empty($option)) $obj->option = $option;
+		// $option = $this->post("option", 'json'); if (isset($option) && !empty($option)) $obj->option = $option;
 
 		$this->dish_mdl->set($obj);
 		$this->output_json();
@@ -82,7 +82,7 @@ class Dish extends NB_Controller {
 		$price = $this->post("price", 'money'); if (isset($price) && $price>0) $obj->price = $price;
 		$sort = $this->post("sort"); if (isset($sort)) $obj->sort= intval($sort);
 		$status = $this->post("status"); if (isset($status) && $status>=0) $obj->status = intval($status);
-		$option = $this->post("option", 'json'); if (isset($option) && !empty($option)) $obj->option = $option;
+		// $option = $this->post("option", 'json'); if (isset($option) && !empty($option)) $obj->option = $option;
 
 		$this->dish_mdl->set($obj);
 		$this->output_json();

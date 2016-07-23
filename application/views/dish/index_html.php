@@ -9,8 +9,8 @@ $this->load->view ( 'common/header', array (
 	<ul class="nav nav-sidebar">
 		<li class="active"><a href="index">菜单管理</a></li>
 		<li><a href="add">添加菜单</a></li>
-		<li><a href="../option/index">定制项管理</a></li>
-		<li><a href="../option/add">添加定制项</a></li>
+	<!-- 	<li><a href="../option/index">定制项管理</a></li>
+		<li><a href="../option/add">添加定制项</a></li> -->
 	</ul>
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -21,7 +21,6 @@ $this->load->view ( 'common/header', array (
 				<th>菜品名称</th>
 				<th>价格</th>
 				<th>排序</th>
-				<th>可用定制项</th>
 				<th>状态</th>
 				<th>操作</th>
 			</tr>
@@ -33,7 +32,6 @@ $this->load->view ( 'common/header', array (
 				<td><?php echo $obj->name ?></td>
 				<td><?php echo $obj->price ?></td>
 				<td><?php echo $obj->sort ?></td>
-				<td><?php echo $obj->option?></td>
 				<td>
 					<?php if($obj->status!=0): ?><button type="button" class="btn btn-xs btn-danger" rel="status_on" val="<?php echo $obj->id?>">未上架</button></a><?php endif ?>
 					<?php if($obj->status==0): ?><button type="button" class="btn btn-xs btn-success" rel="status_off" val="<?php echo $obj->id?>">已上架</button></a><?php endif ?>

@@ -48,10 +48,14 @@ abstract class NB_Model extends CI_Model {
 		return $this->db->replace(static::T_NAME, $obj); 
 	}
 
-	public function list_all($return_by_id=false) {
+	public function list_all($return_by_id=false, $orderArr=array('id'=>'desc')) {
 		$res = array();
 
 		$this->db->from(static::T_NAME);
+		foreach ($orderArr as $k => $v) {
+			$this->db->order_by($k,$v);
+		}
+		
 		$query = $this->db->get();
 		if($query && $query->num_rows() > 0){ 
 			$res = $query->result_object();
