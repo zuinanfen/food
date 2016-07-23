@@ -28,12 +28,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</ul>
 	  </div>
 	</div>
-	<div class="container-fluid" style="float：right">
-		花满楼
-
-		退出
-
-	</div>
 </nav>
 <div class="container-fluid">
 <div class="row">
