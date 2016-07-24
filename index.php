@@ -1,6 +1,6 @@
 <?php
 //define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
-define('ENVIRONMENT', 'nick');
+define('ENVIRONMENT', 'felix');
 switch (ENVIRONMENT)
 {
 	case 'development':
