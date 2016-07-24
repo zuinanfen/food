@@ -20,12 +20,19 @@ class Dishoption extends NB_Controller {
 	public function getDetail () {
 		$optionId = $this->input->post('optionId');
 		$option_detail = $this->dishoption_mdl->get($optionId);
-
+		pr($option_detail);
 		$this->output_json(array(
 			'detail' => $option_detail
 		));
 	}
+	public function getList(){  //获取菜品的所有附加项
+		$dishId = $this->input->post('dishId');
+		$option_list = $this->dishoption_mdl->list_by_dish($dishId);
+		$this->output_json(array(
+			'list' => $option_list
+		));
 
+	}
 	public function del(){
 		$id = $this->input->post('optionId');
 		$dish_id = $this->input->post('dish_id');

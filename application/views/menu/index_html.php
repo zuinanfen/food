@@ -38,18 +38,16 @@ $this->load->view ( 'common/h5_top', array (
 		<tr>
 			<th colspan="3">菜名</th>
 			<th nowrap=nowrap>单价（元）</th>
-			<th>数量</th>
+			<th>操作</th>
 		</tr>
 	</thead>
 	<tbody>
 	<?php foreach($list as $obj): ?>
-	<tr class="warning" rel="dish_list" val="<?php echo $obj->id ?>">
+	<tr class="warning">
 		<td colspan="3"><strong rel="name"><?php echo $obj->name?></strong></td>
 		<td nowrap=nowrap rel="price" val="<?php echo $obj->price ?>"><?php echo $obj->price?></td>
 		<td nowrap=nowrap>
-				<span class="glyphicon glyphicon-minus"></span>
-				<input rel="num" size="1" maxlength="3" value="0">
-				<span class="glyphicon glyphicon-plus"></span>
+			<button type="button" class="btn btn-s btn-success add_dish" val="<?php echo $obj->id ?>">添加</button>
 		</td>
 	</tr>
 	<?php endforeach ?>
@@ -62,7 +60,11 @@ $this->load->view ( 'common/h5_top', array (
 	<p>&copy; 2016 醉南粉餐饮有限管理公司.</p>
 </footer>
 <script>
-var order_dish = {};
+$('.add_dish').click(function(){
+	var id = $(this).attr('val');
+	Dish.add(id);
+});
+/*var order_dish = {};
 var update_dish_price = function() {
 	$('tr[rel="dish_list"]').each(function(){
 		var self = $(this);
@@ -182,6 +184,9 @@ $(function(){
 		});
 		update_dish_price();
 	}
-});
+});*/
+
+
+
 </script>
 <?php $this->load->view ( 'common/h5_bottom' ); ?>
