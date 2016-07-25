@@ -7,10 +7,10 @@ $this->load->view ( 'common/h5_top', array (
 ?>
 <div class="header clearfix">
 <nav>
-  <ul class="nav nav-pills pull-right">
-	<li role="presentation"><a href="index">我要点餐</a></li>
-	<li role="presentation" class="active"><a href="cart">我的餐盘</a></li>
-	<li role="presentation"><a href="#">关于醉南粉</a></li>
+   <ul class="nav nav-pills pull-right">
+	<li><a href="index">点菜</a></li>
+	<li class="active"><a href="cart">当前订单</a></li>
+	<li><a href="#">订单列表</a></li>
   </ul>
 </nav>
 </div>
@@ -18,7 +18,7 @@ $this->load->view ( 'common/h5_top', array (
 	<thead>
 		<tr class="success">
 			<th>
-				<select id="order_src" disabled=disabled>
+				<select id="order_src">
 					<?php foreach ($src_type as $id=>$name): ?>
 					<option value="<?php echo $id?>"><?php echo $name?></option> 
 					<?php endforeach; ?>
@@ -26,12 +26,10 @@ $this->load->view ( 'common/h5_top', array (
 			</th>
 			<th colspan="4" nowrap=nowrap>
 				<div id="order_table_seat" rel="order_table" class="show">
-					桌号：<span id="order_table_id" size="3">
-					人数：<span id="order_seat_num"></span>
+					桌号：<input rel="table_id" size="3">
+					人数：<input rel="seat_num" max-length=3 size="3">
 				</div>
-				<div id="order_table_takeout" rel="order_table" class="hide">
-					用户：<span id="order_table_id" ></span>
-				</div>
+				
 			</th>
 		</tr>
 	<tr>
@@ -68,10 +66,9 @@ $this->load->view ( 'common/h5_top', array (
 	</div>
 </div>
 <footer class="footer">
-	<p>&copy; 2016 醉南粉餐饮有限管理公司.</p>
 </footer>
 <script>
-$(function(){
+/*$(function(){
 	var order_dish = {};
 	var amount = 0;
 	if ($.fn.cookie('order_src')) {
@@ -163,6 +160,6 @@ $(function(){
 			}
 		})
 	});
-});
+});*/
 </script>
 <?php $this->load->view ( 'common/h5_bottom' ); ?>

@@ -4,7 +4,7 @@
 
 //操作localStorage方法
 var Data = {
-	get: function(key){
+	get: function(key,type){
 		//检测用户是否输入键
 	    if(key==''){
 	        return '';
@@ -12,9 +12,17 @@ var Data = {
 	    if(window.localStorage){
 	        var value = localStorage.getItem(key);
 	        if(value==null||value==''){
-	        	return {};
+	        	if(typeof type !='undefined' && type=='string' ){
+	        		return '';
+	        	}else{
+	        		return {};
+	        	}
 	        }else{
-	        	return JSON.parse(value);
+	        	if(typeof type !='undefined' && type=='string' ){
+	        		return value;
+	        	}else{
+	        		return JSON.parse(value);
+	        	}
 	        }
 	    }else{
 	        return false;
@@ -30,6 +38,18 @@ var Data = {
 	    }else{
 	        return false;
 	    }
+	},
+	del:function(key){
+		localStorage.removeItem(key);
+	},
+	objLength: function(obj){ //获取object length
+		var count = 0;
+		for (var i in obj) {
+		    if (obj.hasOwnProperty(i)) {
+		        count++;
+		    }
+		}
+		return count;
 	}
 
 }
@@ -41,6 +61,13 @@ var Dish = {
 		var key = pre + '_' + new Date().getTime() + '_' + Math.ceil(Math.random()*1000000) ;
 		return key;
 	},
+	//下单页初始化
+	init: function(){
+		Data.del('dish_option_list');
+		var dish_list = Data.get('dish_list');
+		var length = Data.objLength(dish_list);
+		$('#dish_num').find('span').text(length);
+	},
 	add: function(dish_id){  //添加菜品
 		// //step1. 先从离线存储看看该菜品有没有点过
 		// this.dish_list = Data.get('dish_list');
@@ -49,22 +76,41 @@ var Dish = {
 		// }else{   //若该菜品已经被点了，则添加进去
 		// 	this.dish_list[dish_id][] = {};
 		// }
-		var key = this.getKey('dish');
-		this.dish_list[key] = {};
+		this.dish_list = Data.get('dish_list');
+		//菜品名称
+		var dishName = $('#dish_'+dish_id).find('.dishName').text();
+		//菜品价格
+		var dishPrice = $('#dish_'+dish_id).find('.dishPrice').text();
+		var dishKey = this.getKey('dish');
+		this.dish_list[dishKey] = {dishId:dish_id,name:dishName,dishPrice:dishPrice,options:[]};
 		//step2. 将菜品放入列表，并存入离线存储
 		Data.set('dish_list',JSON.stringify(this.dish_list));
 
-		//step3. 获取菜品附加选项
+		
+		//step4. 获取菜品附加选项
 		var option = Dishoption.get(dish_id);
 
-		//step4. 判断选项是否为空，不为空，则弹窗让下单的人选择
+		//step5. 判断选项是否为空，不为空，则弹窗让下单的人选择
 		if(option.length>0){
-			Dishoption.selectOption(dish_id);	
+			Dishoption.selectOption(dish_id,dishKey);	
+		}else{
+			//step3. 生成动画效果
+			this.animate(dish_id);
 		}
 	},
 	del:function(){  //删除菜品
 
 	},
+	animate: function(dish_id){
+		//创建+1
+		var $animateContent = $('<div class="animateNum">+1</div>');
+		$animateContent.insertAfter($('#dish_'+dish_id).find('button'));
+		window.setTimeout(function() {
+            $animateContent.remove()
+        },1000);
+        var dishLength = Data.objLength(this.dish_list);
+		$('#dish_num').find('span').hide().text(dishLength).fadeIn();
+	}
 	
 
 }
@@ -100,30 +146,52 @@ var Dishoption = {
          });
 		return list;
 	},
-	selectOption: function(dish_id){
+	selectOption: function(dish_id,dishKey){ //菜品id和菜品唯一Key
 		this.dish_option_list = Data.get('dish_option_list');
 		if(typeof this.dish_option_list[dish_id] == 'undefined'){
 			return false;
 		}
 		var options = this.dish_option_list[dish_id]; //当前菜品的所有选项
-		var select_options = {}; //选中的需要选项
+		var select_options = []; //选中的需要选项
 
 		var content = '';
-		for (var i=0;i<options.length-1;i++) {
-			console.log(options[i]);
-			content += '<button data-id="'+options[i].id+'" data-name="'+options[i].name+'" data-price="'+options[i].price+'" type="button" class="option-btn btn btn-default btn-m">';
+		var optionsLen = Data.objLength(options);
+		for (var i=0;i<optionsLen;i++) {
+			// console.log(options[i]);
+			// alert(i);
+			content += '<button data-id="'+options[i].id+'" data-name="'+options[i].name+'" data-price="'+options[i].price+'" type="button" class="option-btn btn btn-default btn-sm">';
 			content += ' <span class="option-name">&nbsp;<b>'+options[i].name+'</b>('+options[i].price+')</span></button>';
 		};
+
 		var dialog = $.dialog({
 	        title: '请选择菜品附加选项',
-	        content:'<div style="width:300px;height:150px;">'+content+'</div>',
+	        content:'<div id="option-dialog">'+content+'</div>',
 	        okValue: '确定',
 	        lock: true,
+		    fixed:true,
 	        ok: function () {
-	        	this.content('保存成功，窗口1秒自动关闭').time(1000);
+	        	var $selected = $('#option-dialog').find('.selected');
+	        	if($selected.length>0){
+	        		$selected.each(function(){
+		        		var id = $(this).data('id');
+		        		select_options.push(id);
+		        	});
+		        	var dish_list = Data.get('dish_list'); //离线存储读取已经选中的菜品
+
+		        	dish_list[dishKey].options = select_options;   //将附件选项写进去
+		        	// console.log('xxx',dish_list);
+		        	Data.set('dish_list',JSON.stringify(dish_list)); //写回去离线存储
+	        	}
+
+	        	// this.content('保存成功，窗口自动关闭').time(500);
+	        	this.close();
+		        Dish.animate(dish_id);
+
 		        return false;
 		    },
-		    fixed:true
+		    cancel: function(){
+		    	Dish.animate(dish_id);
+		    }
     	});
     	$('.option-btn').unbind('click').click(function(){
     		var optionId = $(this).data('id');

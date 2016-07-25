@@ -71,7 +71,7 @@ class Dishoption extends NB_Controller {
 			$this->set_error(static::RET_WRONG_INPUT, '价格增减必须填数字');	
 			return $this->output_json();
 		}
-		if (isset($sort)&&!empty($sort)){
+		if (isset($sort)){
 			$obj->sort = $sort;
 		}else{
 			$this->set_error(static::RET_WRONG_INPUT, '排序必须为整数');	

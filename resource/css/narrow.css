@@ -52,12 +52,74 @@ body {
 
 /* Supporting marketing content */
 .marketing {
-  margin: 40px 0;
+  /*margin: 40px 0;*/
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 .marketing p + h4 {
   margin-top: 28px;
 }
+#dish_num{
+  display: inline-block;
+  width: 30%;
+  text-align: center;
 
+}
+#dish_num span{
+  font-size: 32px;
+  font-weight: bold;
+  color: red;
+  vertical-align: middle;
+  margin-left: 3px;
+}
+#dish_num img{
+  width: 33px;
+  height: 33px;
+}
+.animateNum{
+  font-size: 40px;
+  font-weight: bold;;
+  color: red;
+  position: absolute;
+  z-index: 1000000;
+  left:12px;
+  top:-5px;
+  -webkit-animation: flow 1.0s linear;
+}
+@-webkit-keyframes flow {
+  0% {
+    -webkit-transform: rotate(0deg) scale(0.9);
+    opacity: 0.7;
+    top: 5px;
+    left:-8px;
+  }
+  50% {
+    -webkit-transform: rotate(-180deg) scale(0.6);
+    opacity: 0.6;
+    top: 35px;
+    left:-38px;
+  }
+  100% {
+    -webkit-transform: rotate(-360deg) scale(0.4);
+    opacity: 0.4;
+    top: 65px;
+    left:-68px;
+  }
+}
+#option-dialog{
+  width:315px;
+  min-height:100px;
+}
+#option-dialog button{
+  margin:3px;
+}
+#option-dialog button{
+  padding:5px 4px;
+}
+.d-content{
+  padding: 10px 0!important;
+}
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */

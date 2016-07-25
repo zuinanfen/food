@@ -8,15 +8,15 @@ $this->load->view ( 'common/h5_top', array (
 <div class="header clearfix">
 <nav>
   <ul class="nav nav-pills pull-right">
-	<li role="presentation" class="active"><a href="index">我要点餐</a></li>
-	<li role="presentation"><a href="cart">我的餐盘</a></li>
-	<li role="presentation"><a href="#">关于醉南粉</a></li>
+	<li role="presentation" class="active"><a href="index">点菜</a></li>
+	<li role="presentation"><a href="cart">当前订单</a></li>
+	<li role="presentation"><a href="#">订单列表</a></li>
   </ul>
 </nav>
 </div>
-<table class="table table-condensed">
+<table class="table table-condensed" style="padding-bottom:30px;">
 	<thead>
-		<tr class="success">
+		<!--<tr class="success">
 			<th>
 				<select id="order_src">
 						<?php foreach ($src_type as $id=>$name): ?>
@@ -34,7 +34,7 @@ $this->load->view ( 'common/h5_top', array (
 					<input rel="seat_num" value="0" type="hidden">
 				</div>
 			</th>
-		</tr>
+		</tr>-->
 		<tr>
 			<th colspan="3">菜名</th>
 			<th nowrap=nowrap>单价（元）</th>
@@ -43,27 +43,35 @@ $this->load->view ( 'common/h5_top', array (
 	</thead>
 	<tbody>
 	<?php foreach($list as $obj): ?>
-	<tr class="warning">
-		<td colspan="3"><strong rel="name"><?php echo $obj->name?></strong></td>
-		<td nowrap=nowrap rel="price" val="<?php echo $obj->price ?>"><?php echo $obj->price?></td>
-		<td nowrap=nowrap>
-			<button type="button" class="btn btn-s btn-success add_dish" val="<?php echo $obj->id ?>">添加</button>
+	<tr class="warning" id="dish_<?php echo $obj->id ?>">
+		<td colspan="3"><strong class="dishName"><?php echo $obj->name?></strong></td>
+		<td class="dishPrice"><?php echo $obj->price?></td>
+		<td style="position:relative">
+			<button type="button"  class="btn btn-s btn-success add_dish" val="<?php echo $obj->id ?>">添加</button>
 		</td>
 	</tr>
 	<?php endforeach ?>
 	</tbody>
 </table>
 <div class="marketing">
-	<button id="submit" type="button" class="btn btn-warning btn-block">保存至我的餐盘</button>
+	<div id="dish_num"><img src="<?php echo $_cdn_host?>/resource/images/buy.png" /> <span><span> </div>
+	<div style="display:inline-block;width:68%">
+		<a href="cart" ><button type="button" class="btn btn-warning btn-block">查看订单</button></a>
+	</div>
 </div>
 <footer class="footer">
-	<p>&copy; 2016 醉南粉餐饮有限管理公司.</p>
+	<p></p>
 </footer>
 <script>
-$('.add_dish').click(function(){
-	var id = $(this).attr('val');
-	Dish.add(id);
+
+$(document).ready(function(){
+	Dish.init();
+	$('.add_dish').click(function(){
+		var id = $(this).attr('val');
+		Dish.add(id);
+	});
 });
+
 /*var order_dish = {};
 var update_dish_price = function() {
 	$('tr[rel="dish_list"]').each(function(){
