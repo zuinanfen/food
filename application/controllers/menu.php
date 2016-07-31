@@ -21,15 +21,15 @@ class Menu extends NB_Controller {
 	}
 
 	public function cart () {
-		$order_dish = @json_decode($_COOKIE['order_dish']);
-		if(empty($order_dish)){
-			$order_dish = array();
-		}
-		$dish_list = $this->dish_mdl->list_by_status(array(0), TRUE);
+		// $order_dish = @json_decode($_COOKIE['order_dish']);
+		// if(empty($order_dish)){
+		// 	$order_dish = array();
+		// }
+		// $dish_list = $this->dish_mdl->list_by_status(array(0), TRUE);
 
 		$this->output_data(array(
-			'cart_list' => $order_dish,
-			'dish_list' => $dish_list,
+			// 'cart_list' => $order_dish,
+			// 'dish_list' => $dish_list,
 			'src_type' => Order_mdl::$src_type
 		));
 	}

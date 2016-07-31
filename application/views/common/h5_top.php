@@ -12,8 +12,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<!--<script src="<?php echo $_cdn_host?>/resource/js/zepto.min.js"></script>
 	<script src="<?php echo $_cdn_host?>/resource/js/zepto.cookie.min.js"></script>-->
 	<script src="<?php echo $_cdn_host?>/resource/js/jquery-2.2.4.min.js"></script>
-	<script src="<?php echo $_cdn_host?>/resource/js/dish.js"></script>
 	<script src="<?php echo $_cdn_host?>/resource/js/artDialog/jquery.artDialog.min.js?skin=twitter"></script>
+	<script src="<?php echo $_cdn_host?>/resource/js/template-native.js"></script>
+	<script src="<?php echo $_cdn_host?>/resource/js/dish.js"></script>
+	
 </head>
 <body>
 <div class="container-fluid">

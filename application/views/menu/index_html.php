@@ -9,7 +9,7 @@ $this->load->view ( 'common/h5_top', array (
 <nav>
   <ul class="nav nav-pills pull-right">
 	<li role="presentation" class="active"><a href="index">点菜</a></li>
-	<li role="presentation"><a href="cart">当前订单</a></li>
+	<!-- <li role="presentation"><a href="cart">当前订单</a></li> -->
 	<li role="presentation"><a href="#">订单列表</a></li>
   </ul>
 </nav>
@@ -37,7 +37,7 @@ $this->load->view ( 'common/h5_top', array (
 		</tr>-->
 		<tr>
 			<th colspan="3">菜名</th>
-			<th nowrap=nowrap>单价（元）</th>
+			<th nowrap=nowrap>单价</th>
 			<th>操作</th>
 		</tr>
 	</thead>
@@ -56,7 +56,7 @@ $this->load->view ( 'common/h5_top', array (
 <div class="marketing">
 	<div id="dish_num"><img src="<?php echo $_cdn_host?>/resource/images/buy.png" /> <span><span> </div>
 	<div style="display:inline-block;width:68%">
-		<a href="cart" ><button type="button" class="btn btn-warning btn-block">查看订单</button></a>
+		<button type="button" class="btn btn-warning btn-block" id="checkOrder">查看订单</button>
 	</div>
 </div>
 <footer class="footer">
@@ -69,6 +69,14 @@ $(document).ready(function(){
 	$('.add_dish').click(function(){
 		var id = $(this).attr('val');
 		Dish.add(id);
+	});
+	$('#checkOrder').click(function(){
+		var dishNum = $('#dish_num').find('span').text();
+		if(parseInt(dishNum)<1){
+			alert('您还未选择菜品！');
+		}else{
+			window.location.href = 'cart';
+		}
 	});
 });
 

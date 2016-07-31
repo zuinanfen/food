@@ -50,8 +50,21 @@ var Data = {
 		    }
 		}
 		return count;
+	},
+	floatAdd: function accAdd(arg1,arg2){ //浮点运算加法
+	    var r1,r2,m;
+	    try{r1=arg1.toString().split(".")[1].length}catch(e){r1=0}
+	    try{r2=arg2.toString().split(".")[1].length}catch(e){r2=0}
+	    m=Math.pow(10,Math.max(r1,r2))
+	    return (arg1*m+arg2*m)/m
 	}
 
+}
+var Template = {
+	getHtml: function(scriptId, data){
+		var html = template(scriptId ,data);
+		return html;
+	}
 }
 
 
@@ -110,6 +123,31 @@ var Dish = {
         },1000);
         var dishLength = Data.objLength(this.dish_list);
 		$('#dish_num').find('span').hide().text(dishLength).fadeIn();
+	},
+	dataFormat:function(dishData){ //一个菜的数据格式化，将附加选项之类的价格之类的开始算
+		var dishOptions = Dishoption.get(dishData.dishId);
+		var newOptions = [];
+		var newPrice = parseFloat(dishData.dishPrice);
+		// console.log('2222',dishOptions);
+		// $.each(dishOptions,function(k,v){
+		// 	alert(v.id);
+		// 	if($.inArray(v.id,dishData.options)>-1){
+		// 		newOptions.push(v);
+		// 		dishPrice = Data.floatAdd(dishPrice, parseFloat(v.price));
+		// 	}
+		// });
+		for(var i=0;i<dishOptions.length;i++){
+			//if($.inArray(dishOptions[i].id, dishData.options)>-1){
+			if(dishData.options.indexOf(parseInt(dishOptions[i].id))>-1){
+				newOptions.push(dishOptions[i]);
+				newPrice = Data.floatAdd(newPrice, parseFloat(dishOptions[i].price));
+			}
+		}
+		dishData.newPrice = newPrice;
+		dishData.options = newOptions;
+
+		return dishData;
+
 	}
 	
 
@@ -147,11 +185,12 @@ var Dishoption = {
 		return list;
 	},
 	selectOption: function(dish_id,dishKey){ //菜品id和菜品唯一Key
-		this.dish_option_list = Data.get('dish_option_list');
-		if(typeof this.dish_option_list[dish_id] == 'undefined'){
-			return false;
-		}
-		var options = this.dish_option_list[dish_id]; //当前菜品的所有选项
+		// this.dish_option_list = Data.get('dish_option_list');
+		var options = Dishoption.get(dish_id);
+		// if(typeof this.dish_option_list[dish_id] == 'undefined'){
+		// 	return false;
+		// }
+		// var options = this.dish_option_list[dish_id]; //当前菜品的所有选项
 		var select_options = []; //选中的需要选项
 
 		var content = '';
@@ -209,4 +248,113 @@ var Dishoption = {
     	});
 		
 	},
+}
+var Cart = {
+	init: function(){
+		var dish_list = Data.get('dish_list');
+		var length = Data.objLength(dish_list);
+		var data = {list:[]};
+		if(length<1){
+			var html = Template.getHtml('dishListHtml',data);
+			$('#dishList').html(html);
+			return false;
+		}
+		$.each(dish_list,function(k,v){
+		 	//初始化附加选项
+		 	var dishData = Dish.dataFormat(v);
+			var _obj = {
+							id:k,
+							dishId:dishData.dishId,
+							name:dishData.name,
+							dishPrice:dishData.dishPrice,
+							newPrice:dishData.newPrice,
+							options: dishData.options
+						};
+			data.list.push(_obj);
+
+		});
+		console.log(data);
+		var html = Template.getHtml('dishListHtml',data);
+		$('body').delegate('.del_dish','click',function(){
+			var id = $(this).parents('tr').attr('id');
+			if(confirm('确定要删除该菜品？')){
+			 	Cart.delDish(id);
+			}
+		});
+		$('body').delegate('.edit_dish','click',function(){
+			var id = $(this).parents('tr').attr('id');
+			Cart.editDish(id);
+		});
+		$('#dishList').html(html);
+
+	},
+	delDish: function(dishKey){//删除菜品
+		var dish_list = Data.get('dish_list');
+		delete dish_list[dishKey]; 
+		Data.set('dish_list',JSON.stringify(dish_list));
+		$('.'+dishKey).fadeOut();
+	},
+	editDish: function(dishKey){
+		var dish_id = $('#'+dishKey);
+		// var dish_option_list = Data.get('dish_option_list');
+		// if(typeof this.dish_option_list[dish_id] == 'undefined'){
+		// 	return false;
+		// }
+		// var options = this.dish_option_list[dish_id]; //当前菜品的所有选项
+		alert(11);
+		var options = Dishoption.get(dish_id);
+		var select_options = []; //选中的需要选项
+
+		var content = '';
+		var optionsLen = Data.objLength(options);
+		for (var i=0;i<optionsLen;i++) {
+			content += '<button data-id="'+options[i].id+'" data-name="'+options[i].name+'" data-price="'+options[i].price+'" type="button" class="option-btn btn btn-default btn-sm">';
+			content += ' <span class="option-name">&nbsp;<b>'+options[i].name+'</b>('+options[i].price+')</span></button>';
+		};
+
+		var dialog = $.dialog({
+	        title: '请选择菜品附加选项',
+	        content:'<div id="option-dialog">'+content+'</div>',
+	        okValue: '确定',
+	        lock: true,
+		    fixed:true,
+	        ok: function () {
+	        	var $selected = $('#option-dialog').find('.selected');
+	        	if($selected.length>0){
+	        		$selected.each(function(){
+		        		var id = $(this).data('id');
+		        		select_options.push(id);
+		        	});
+		        	var dish_list = Data.get('dish_list'); //离线存储读取已经选中的菜品
+
+		        	dish_list[dishKey].options = select_options;   //将附件选项写进去
+		        	// console.log('xxx',dish_list);
+		        	Data.set('dish_list',JSON.stringify(dish_list)); //写回去离线存储
+	        	}
+
+	        	// this.content('保存成功，窗口自动关闭').time(500);
+	        	this.close();
+		        Dish.animate(dish_id);
+
+		        return false;
+		    },
+		    cancel: function(){
+		    	Dish.animate(dish_id);
+		    }
+    	});
+    	$('.option-btn').unbind('click').click(function(){
+    		var optionId = $(this).data('id');
+    		var optionName = $(this).data('name');
+    		var optionPrice = $(this).data('price');
+
+    		if($(this).hasClass('selected')){ //取消
+    			$(this).find('.glyphicon').remove();
+    			$(this).removeClass('btn-success').removeClass('selected').addClass('btn-default');
+    		}else{  //选中
+    			$(this).removeClass('btn-default').addClass('btn-success').addClass('selected');
+    			$('<span class="glyphicon glyphicon-ok"></span>').insertBefore($(this).find('.option-name'));
+    		}
+    		
+    	});
+	}
 }
