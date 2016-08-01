@@ -127,7 +127,7 @@ var Dish = {
 	dataFormat:function(dishData){ //一个菜的数据格式化，将附加选项之类的价格之类的开始算
 		var dishOptions = Dishoption.get(dishData.dishId);
 		var newOptions = [];
-		var newPrice = parseFloat(dishData.dishPrice);
+		var totalPrice = parseFloat(dishData.dishPrice);
 		// console.log('2222',dishOptions);
 		// $.each(dishOptions,function(k,v){
 		// 	alert(v.id);
@@ -140,10 +140,10 @@ var Dish = {
 			//if($.inArray(dishOptions[i].id, dishData.options)>-1){
 			if(dishData.options.indexOf(parseInt(dishOptions[i].id))>-1){
 				newOptions.push(dishOptions[i]);
-				newPrice = Data.floatAdd(newPrice, parseFloat(dishOptions[i].price));
+				totalPrice = Data.floatAdd(totalPrice, parseFloat(dishOptions[i].price));
 			}
 		}
-		dishData.newPrice = newPrice;
+		dishData.totalPrice = totalPrice;
 		dishData.options = newOptions;
 
 		return dishData;
@@ -162,7 +162,7 @@ var Dishoption = {
 		}
 		var self = this;
 		var list = [];
-		 $.ajax({
+		$.ajax({
              type: 'post',
              url: '../dishoption/getList',
              data: {dishId: dish_id},
@@ -181,7 +181,7 @@ var Dishoption = {
 				}
              }
 
-         });
+        });
 		return list;
 	},
 	selectOption: function(dish_id,dishKey){ //菜品id和菜品唯一Key
@@ -253,28 +253,11 @@ var Cart = {
 	init: function(){
 		var dish_list = Data.get('dish_list');
 		var length = Data.objLength(dish_list);
-		var data = {list:[]};
 		if(length<1){
-			var html = Template.getHtml('dishListHtml',data);
+			var html = Template.getHtml('dishListHtml',{list:[]});
 			$('#dishList').html(html);
 			return false;
 		}
-		$.each(dish_list,function(k,v){
-		 	//初始化附加选项
-		 	var dishData = Dish.dataFormat(v);
-			var _obj = {
-							id:k,
-							dishId:dishData.dishId,
-							name:dishData.name,
-							dishPrice:dishData.dishPrice,
-							newPrice:dishData.newPrice,
-							options: dishData.options
-						};
-			data.list.push(_obj);
-
-		});
-		console.log(data);
-		var html = Template.getHtml('dishListHtml',data);
 		$('body').delegate('.del_dish','click',function(){
 			var id = $(this).parents('tr').attr('id');
 			if(confirm('确定要删除该菜品？')){
@@ -285,33 +268,97 @@ var Cart = {
 			var id = $(this).parents('tr').attr('id');
 			Cart.editDish(id);
 		});
-		$('#dishList').html(html);
+		$('#checkOrder').click(this.submit);
+		$('#order_src').change(function(){
+			var order_src = $(this).val();
+			if(order_src==1){
+				$('#order_table_seat').show();
+			}else{
+				$('#order_table_seat').hide();
+			}
+			Data.set('order_src',order_src);
+		});
+		$('#order_table_seat').find('input').blur(function(){
+			var order_table_seat = $(this).val();
 
+			Data.set('order_table_seat',order_table_seat);
+		});
+		var order_src = Data.get('order_src','string');
+		var order_table_seat = Data.get('order_table_seat','string');
+		if(order_src != ''){
+			$('#order_src').val(order_src);
+		}
+		if(order_src == 1 || order_src == ''){
+			$('#order_table_seat').show();
+		}
+		if(order_table_seat != ''){
+			$('#order_table_seat').find('input').val(order_table_seat);
+		}
+
+		this.renderDish(dish_list);
+
+	},
+	renderDish: function(dish_list){
+		var data = {list:[]}
+		$.each(dish_list,function(k,v){
+	 	//初始化附加选项
+	 	var dishData = Dish.dataFormat(v);
+		var _obj = {
+						id:k,
+						dishId:dishData.dishId,
+						name:dishData.name,
+						dishPrice:dishData.dishPrice,
+						totalPrice:dishData.totalPrice,
+						options: dishData.options
+					};
+			data.list.push(_obj);
+
+		});
+		// console.log('qqqq',data);
+		var html = Template.getHtml('dishListHtml',data);
+		
+		$('#dishList').html(html);
+		$('#dish_num').find('span').text(data.list.length);
 	},
 	delDish: function(dishKey){//删除菜品
 		var dish_list = Data.get('dish_list');
-		delete dish_list[dishKey]; 
+		delete dish_list[dishKey];
 		Data.set('dish_list',JSON.stringify(dish_list));
 		$('.'+dishKey).fadeOut();
+		var $dishNum = $('#dish_num').find('span').text();
+		$('#dish_num').find('span').text(parseInt($dishNum)-1);
+		
 	},
 	editDish: function(dishKey){
-		var dish_id = $('#'+dishKey);
-		// var dish_option_list = Data.get('dish_option_list');
-		// if(typeof this.dish_option_list[dish_id] == 'undefined'){
-		// 	return false;
-		// }
-		// var options = this.dish_option_list[dish_id]; //当前菜品的所有选项
-		alert(11);
-		var options = Dishoption.get(dish_id);
-		var select_options = []; //选中的需要选项
+		var dish_id = $('#'+dishKey).data('dishid');
 
+		var options = Dishoption.get(dish_id);
+
+		var dish_list = Data.get('dish_list');
+		// console.log('wwwwwwwwww',dish_list);
+		var select_options = dish_list[dishKey].options; //选中的需要选项
 		var content = '';
 		var optionsLen = Data.objLength(options);
-		for (var i=0;i<optionsLen;i++) {
-			content += '<button data-id="'+options[i].id+'" data-name="'+options[i].name+'" data-price="'+options[i].price+'" type="button" class="option-btn btn btn-default btn-sm">';
-			content += ' <span class="option-name">&nbsp;<b>'+options[i].name+'</b>('+options[i].price+')</span></button>';
-		};
-
+		if(optionsLen<1){
+			alert('该菜品无附加选项！');
+			return false;
+		}else{
+			// console.log('aaaa',select_options);
+			for (var i=0;i<optionsLen;i++) {
+				var selected = '';
+				var buttonStyle = 'btn-default';
+				var selectBtn = '';
+				if(select_options.indexOf(parseInt(options[i].id))>-1){
+					selected = 'selected';
+					buttonStyle = 'btn-success';
+					selectBtn = '<span class="glyphicon glyphicon-ok"></span>';
+				}
+				content += '<button data-id="'+options[i].id+'" data-name="'+options[i].name+'" data-price="'+options[i].price+'" type="button" class="option-btn btn '+buttonStyle+' btn-sm '+selected+'">';
+				content += selectBtn+' <span class="option-name">&nbsp;<b>'+options[i].name+'</b>('+options[i].price+')</span></button>';
+			};
+		}
+		
+		// console.log(content);
 		var dialog = $.dialog({
 	        title: '请选择菜品附加选项',
 	        content:'<div id="option-dialog">'+content+'</div>',
@@ -320,26 +367,25 @@ var Cart = {
 		    fixed:true,
 	        ok: function () {
 	        	var $selected = $('#option-dialog').find('.selected');
+	        	select_options = [];
 	        	if($selected.length>0){
 	        		$selected.each(function(){
 		        		var id = $(this).data('id');
 		        		select_options.push(id);
 		        	});
-		        	var dish_list = Data.get('dish_list'); //离线存储读取已经选中的菜品
-
-		        	dish_list[dishKey].options = select_options;   //将附件选项写进去
-		        	// console.log('xxx',dish_list);
-		        	Data.set('dish_list',JSON.stringify(dish_list)); //写回去离线存储
+		        	
 	        	}
-
-	        	// this.content('保存成功，窗口自动关闭').time(500);
+	        	var dish_list = Data.get('dish_list'); //离线存储读取已经选中的菜品
+	        	dish_list[dishKey].options = select_options;   //将附件选项写进去
+	        	// console.log('xxx',dish_list);
+	        	Data.set('dish_list',JSON.stringify(dish_list)); //写回去离线存储
 	        	this.close();
-		        Dish.animate(dish_id);
-
+	        	// console.log('xxxx',dish_list);
+	        	Cart.renderDish(dish_list);
 		        return false;
 		    },
 		    cancel: function(){
-		    	Dish.animate(dish_id);
+		    	// Dish.animate(dish_id);
 		    }
     	});
     	$('.option-btn').unbind('click').click(function(){
@@ -356,5 +402,45 @@ var Cart = {
     		}
     		
     	});
+	},
+	submit:function(){
+		//字段检测
+		var order_src = $('#order_src').val();
+		var order_table_seat = $('#order_table_seat').find('input').val();
+		if(order_src==1 && order_table_seat.length<1){
+			alert('座位号不能为空！');
+		}
+		//获取菜品
+		var dish_list = Data.get('dish_list');
+		var listLength = Data.objLength(dish_list);
+		if(listLength<1){
+			alert('您还未点菜！');
+			return;
+		}
+		var data = {
+			order_src: order_src,
+			dish_list: JSON.stringify(dish_list),
+			order_table_seat: order_table_seat
+		}
+		$.ajax({
+             type: 'post',
+             url: '../order/add',
+             data: data,
+             dataType: 'json',
+             success: function(json){
+             	if (json._ret == 0) {
+					alert('订单提交成功！');
+					Data.del('dish_list');
+					Data.del('order_src');
+					Data.del('order_table_seat');
+
+					window.location.href = '../menu/index';
+					
+				} else {
+					alert("操作失败，请刷新重试！");
+				}
+             }
+
+        });
 	}
 }

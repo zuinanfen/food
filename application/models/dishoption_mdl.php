@@ -39,5 +39,9 @@ class Dishoption_mdl extends NB_Model {
         $row = $query->result_array();
         return $row;
 	}
+	public function getDetail($optionId){
+		$option_detail = $this->get($optionId);
+		return $option_detail;
+	}
 
 }

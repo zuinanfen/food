@@ -72,10 +72,12 @@ body {
   color: red;
   vertical-align: middle;
   margin-left: 3px;
+  text-align: center;
 }
 #dish_num img{
   width: 33px;
   height: 33px;
+  float: left;
 }
 .animateNum{
   font-size: 40px;

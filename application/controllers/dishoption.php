@@ -19,8 +19,7 @@ class Dishoption extends NB_Controller {
 	// }
 	public function getDetail () {
 		$optionId = $this->input->post('optionId');
-		$option_detail = $this->dishoption_mdl->get($optionId);
-		pr($option_detail);
+		$option_detail = $this->dishoption_mdl->getDetail($optionId);
 		$this->output_json(array(
 			'detail' => $option_detail
 		));
