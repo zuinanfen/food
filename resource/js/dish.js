@@ -444,3 +444,27 @@ var Cart = {
         });
 	}
 }
+
+var Order = {
+	init: function(){
+		this.getList();
+	},
+	getList: function(){
+		$.ajax({
+             type: 'post',
+             url: '../menu/order_list',
+             // data: data,
+             dataType: 'json',
+             success: function(json){
+             	if (json._ret == 0) {
+					var html = Template.getHtml('dishListHtml',json);
+					$('#dishList').html(html);
+					
+				} else {
+					alert("操作失败，请刷新重试！");
+				}
+             }
+
+        });
+	}
+}

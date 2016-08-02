@@ -62,6 +62,9 @@ class Order extends NB_Controller {
 			$this->set_error(static::RET_WRONG_INPUT, "错误的座位台号");	
 			return $this->output_json();
 		}
+		if(empty($order_table_seat)){
+			$order_table_seat = '';
+		}
 
 		$dish_list = $_POST['dish_list'];// 不知道为毛用$this->post('dish_list');接收不到数据，估计是xss拦截
 		if(empty($dish_list)){

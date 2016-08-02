@@ -8,9 +8,9 @@ $this->load->view ( 'common/h5_top', array (
 <div class="header clearfix">
 <nav>
   <ul class="nav nav-pills pull-right">
-	<li role="presentation" class="active"><a href="index">点菜</a></li>
+	<li class="active"><a href="index">点菜</a></li>
 	<!-- <li role="presentation"><a href="cart">当前订单</a></li> -->
-	<li role="presentation"><a href="#">订单列表</a></li>
+	<li><a href="order">订单列表</a></li>
   </ul>
 </nav>
 </div>
@@ -56,7 +56,7 @@ $this->load->view ( 'common/h5_top', array (
 <div class="marketing">
 	<div id="dish_num"><img src="<?php echo $_cdn_host?>/resource/images/buy.png" /> <span><span> </div>
 	<div style="display:inline-block;width:68%">
-		<button type="button" class="btn btn-warning btn-block" id="checkOrder">查看订单</button>
+		<button type="button" class="btn btn-warning btn-block" id="checkOrder">下订单</button>
 	</div>
 </div>
 <footer class="footer">

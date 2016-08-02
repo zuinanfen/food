@@ -1,42 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view ( 'common/h5_top', array (
-	'title' => '我的餐盘' ,
+	'title' => '订单详情' ,
 	'funcname'=> 'menu'
 ));
 ?>
 <div class="header clearfix">
 <nav>
    <ul class="nav nav-pills pull-right">
-	<li  class="active"><a href="index">点菜</a></li>
-	<!-- <li class="active"><a href="cart">当前订单</a></li> -->
+	<li><a href="index">点菜</a></li>
 	<li><a href="order">订单列表</a></li>
   </ul>
 </nav>
 </div>
-<table class="table table-condensed">
-	<thead>
-		<tr class="success">
-			<th>
-				<select id="order_src">
-					<?php foreach ($src_type as $id=>$name): ?>
-					<option value="<?php echo $id?>"><?php echo $name?></option> 
-					<?php endforeach; ?>
-				</select>
-			</th>
-			<th colspan="4" id="order_table_seat" style="display:none" >
-				<div class="show">
-					桌号：<input size="3">
-					<!-- 人数：<input rel="seat_num" max-length=3 size="3"> -->
-				</div>
-				
-			</th>
-		</tr>
-	<tr>
-	</thead>
-	<tbody>
-	</tbody>
-</table>
+
 <table class="table table-condensed table-striped">
 	<thead>
 		<tr>
@@ -93,7 +70,7 @@ $this->load->view ( 'common/h5_top', array (
 </script>
 <script>
 $(document).ready(function(){
-	Cart.init();
+	// Cart.init();
 });
 
 </script>
