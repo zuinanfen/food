@@ -7,7 +7,7 @@ $this->load->view ( 'common/h5_top', array (
 ?>
 <div class="header clearfix">
 <nav>
-   <ul class="nav nav-pills pull-right">
+   <ul class="nav nav-pills pull-right navi">
 	<li  class="active"><a href="index">点菜</a></li>
 	<!-- <li class="active"><a href="cart">当前订单</a></li> -->
 	<li><a href="order">订单列表</a></li>

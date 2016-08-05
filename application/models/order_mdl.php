@@ -33,13 +33,13 @@ class Order_mdl extends NB_Model {
 	public function list_by_status($status=null, $return_by_id=false) {
 		$res = array();
 
-		$this->db->from(self::T_NAME);
+		$this->db->from(self::T_NAME,100,0);  //最多一百条
 		if (!empty($status))
 			$this->db->where_in('status',$status);
 		$this->db->order_by('ctime', 'DESC');
 		$query = $this->db->get();
 		if($query && $query->num_rows() > 0){ 
-			$res = $query->result_object();
+			$res = $query->result_array();
 		}   
 
 		if ($return_by_id) {
@@ -52,17 +52,28 @@ class Order_mdl extends NB_Model {
 		return $res;
 	}
 	public function get($orderId){
-		echo $orderId;
-		$res = array();
-
-		$this->db->from(self::T_NAME);
-		$this->db->where_in('id',$orderId);
-		$query = $this->db->get();
-		if($query && $query->num_rows() > 0){ 
-			$res = $query->result_object();
-		}else{
-			return false;
-		}
-		return $res;
+		$where = array(
+            'id'   => $orderId,
+        );
+        $this->db->where($where);
+        $query = $this->db->get(self::T_NAME);
+        $row = $query->result_array();
+        if(empty($row)){
+        	return false;
+        }
+		return $row[0];
+	}
+	//更新订单状态
+	public function update_status($orderId, $status){
+		$data = array(
+            'status'    => $status,
+            'mTime'   => date('Y-m-d H:i:s'),
+        );
+        $this->db->update(self::T_NAME, $data, array('id'=>$orderId));
+	}
+	//更改订单内容
+	public function update( $orderId, $update_data= array()){
+		$update_data['mTime'] = date('Y-m-d H:i:s');
+        $this->db->update(self::T_NAME, $update_data, array('id'=>$orderId));
 	}
 }

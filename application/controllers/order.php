@@ -27,22 +27,22 @@ class Order extends NB_Controller {
 			'dish_list' => $dish_list,
 		));
 	}
-	public function edit () {
-		$id = $this->get('id', 'num');
-		$order_detail = $this->order_mdl->get($id);
-		$user_list = $this->user_mdl->list_by_roleid(array(3));
-		$dish_list = $this->dish_mdl->list_all(TRUE);
-		$option_list = $this->option_mdl->list_all(TRUE);
-		$this->output_data(array(
-			'detail' => $order_detail,
-			'src_type' => Order_mdl::$src_type,
-			'pay_type' => Order_mdl::$pay_type,
-			'status_list' => Order_mdl::$status,
-			'user_list' => $user_list,
-			'dish_list' => $dish_list,
-			'option_list' => $option_list
-		));
-	}
+	// public function edit () {
+	// 	$id = $this->get('id', 'num');
+	// 	$order_detail = $this->order_mdl->get($id);
+	// 	$user_list = $this->user_mdl->list_by_roleid(array(3));
+	// 	$dish_list = $this->dish_mdl->list_all(TRUE);
+	// 	$option_list = $this->option_mdl->list_all(TRUE);
+	// 	$this->output_data(array(
+	// 		'detail' => $order_detail,
+	// 		'src_type' => Order_mdl::$src_type,
+	// 		'pay_type' => Order_mdl::$pay_type,
+	// 		'status_list' => Order_mdl::$status,
+	// 		'user_list' => $user_list,
+	// 		'dish_list' => $dish_list,
+	// 		'option_list' => $option_list
+	// 	));
+	// }
 
 	protected function getOrderId($uid, $time){
         $id = $time.rand(1000,9999).substr(md5($time.$uid),0,8);
@@ -139,35 +139,53 @@ class Order extends NB_Controller {
 		return $order_total_price;
 
 	}
+	public function doneDish(){
+		$id = $this->post('id');
+		$this->orderdish_mdl->update_status($id, 2); //已经上菜
 
-	public function set ()
-	{
-		$id = $this->post("id");
-		if (empty($id)) {
-			$this->set_error(static::RET_WRONG_INPUT, "错误的参数ID");	
+		//查找该订单是否还有未完成的菜品,没有的话，改成订单已完成
+		$orderId = $this->post('orderId');
+		$res = $this->orderdish_mdl->orderlist_by_status($orderId,array(0,1));
+		if(empty($res)){
+			$this->order_mdl->update_status($orderId, 2);
+		}
+		return $this->output_json();
+
+	}
+	public function delDish(){
+		$dishId = $this->post('dishId');
+		$orderId = $this->post('orderId');
+		$dishKey = $this->post('dishKey');
+
+		//重新结算订单
+		$dishList = $this->orderdish_mdl->get_dish_list($orderId);
+		if(count($dishList)<2){
+			$this->set_error(static::RET_WRONG_INPUT, "该订单只有一个菜品，无法删除，请直接撤销订单！");
 			return $this->output_json();
 		}
+		//更改菜品状态
+		$this->orderdish_mdl->update_status($dishId, 8);
+		//读取有效的菜品
+		$dishList = $this->orderdish_mdl->get_dish_list($orderId);
+		
+		// //获取订单内容
+		// $orderInfo = $this->order_mdl->get($orderId);
+		// //修改dish_list包
+		// $orderDishList = json_decode($orderInfo['dish_list'], true);
+		// unset($orderDishList[$dishKey]);
 
-		$obj = $this->order_mdl->get($id);
-		if (empty($obj)) {
-			$this->set_error(static::RET_ERROR_DATA, "找不到对象");	
-			return $this->output_json();
+		//结算新订单的价格
+		$totalPrice = 0;
+		foreach ($dishList as $k => $v) {
+			$totalPrice = bcadd($totalPrice, $v['total_price'], 2);
 		}
-
-		$src = $this->post("src"); if (isset($src) && $src>=0) $obj->src = $src;
-		$table_id = $this->post("table_id"); if (isset($table_id) && !empty($table_id)) $obj->table_id = $table_id;
-		$order_time = $this->post("order_time", 'date'); if (isset($order_time) && !empty($order_time)) $obj->order_time = $order_time;
-		$order_user = $this->post("order_user", 'integer'); if (isset($order_user) && $order_user>=0) $obj->order_user = $order_user;
-		$status = $this->post("status", 'integer'); if (isset($status) && $status>=0) $obj->status = $status;
-		$dish_list = $this->post("dish_list", 'json'); if (isset($dish_list) && !empty($dish_list)) $obj->dish_list = $dish_list;
-		$dish_num = $this->post("dish_num", 'integer'); if (isset($dish_num) && $dish_num>=0) $obj->dish_num = $dish_num;
-		$remark = $this->post("remark"); if (isset($remark) && !empty($remark)) $obj->remark = $remark;
-		$amount = $this->post("amount", 'money'); if (isset($amount) && $amount>=0) $obj->amount = $amount;
-		$pay_amount = $this->post("pay_amount", 'money'); if (isset($pay_amount) && $pay_amount>=0) $obj->pay_amount = $pay_amount;
-		$discount = $this->post("discount", 'number'); if (isset($discount) && $discount>=0) $obj->discount = $discount;
-		$pay_type = $this->post("pay_type", 'integer'); if (isset($pay_amount) && $pay_amount>=0) $obj->pay_amount = $pay_amount;
-
-		$this->order_mdl->set($obj);
-		$this->output_json();
+		//更改订单价格和商品数量
+		$update_data = array(
+			// 'dish_list' => json_encode($orderDishList),
+			'dish_num'  => count($dishList),
+			'amount'    => $totalPrice,
+		);
+		$this->order_mdl->update($orderId, $update_data);
+		return $this->output_json();
 	}
 }

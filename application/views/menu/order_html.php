@@ -7,7 +7,7 @@ $this->load->view ( 'common/h5_top', array (
 ?>
 <div class="header clearfix">
 <nav>
-   <ul class="nav nav-pills pull-right">
+   <ul class="nav nav-pills pull-right navi">
 	<li><a href="index">点菜</a></li>
 	<!-- <li class="active"><a href="cart">当前订单</a></li> -->
 	<li class="active"><a href="#">订单列表</a></li>
@@ -19,8 +19,8 @@ $this->load->view ( 'common/h5_top', array (
 		<tr>
 			<th>来源</th>
 			<th>菜品数</th>
-			<th>结算价</th>
 			<th>下单时间</th>
+			<th>状态</th>
 			<th>操作</th>
 		</tr>
 	<tr>
@@ -43,8 +43,9 @@ $this->load->view ( 'common/h5_top', array (
 		<tr id="<%=data.id%>">
 			<td><%=data.sourceName%><%if(data.src==1){%>(<%=data.table_id%>)<%}%></td>
 			<td><%=data.dish_num%></td>
-			<td><%=data.amount%></td>
 			<td><%=data.orderTime%></td>
+			<td style="color:<%if(data.status==0){%>#337ab7<%}else if(data.status==1){%>#ec971f<%}%>;"><%=data.statusName%></td>
+			
 			<td>
 				<a href="order_show?orderId=<%=data.id%>"><button type="button"  class="btn btn-sm btn-success">查看</button></a>
 			</td>

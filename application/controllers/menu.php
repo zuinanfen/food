@@ -8,6 +8,7 @@ class Menu extends NB_Controller {
 		parent::__construct();
 		$this->load->model('dish_mdl');
 		$this->load->model('order_mdl');
+		$this->load->model('orderdish_mdl');
 		$this->load->library('Order');
 		$this->src_type = $this->config->item('orderSource');
 	}
@@ -65,9 +66,76 @@ class Menu extends NB_Controller {
 		if($detail == false){
 			echo '数据不存在'; die;
 		}
+		$detail = $this->order->init_order($detail);
 
+		// $dish_list = $this->orderdish_mdl->get_dish_list($orderId);
+		$dish_list = $this->orderdish_mdl->get_all_dish_list($orderId);
+		if(empty($dish_list)){
+			$dish_list =  array();
+		}else{
+			foreach ($dish_list as $k => $v) {
+				$dish_list[$k] = $this->order->init_dish($v);
+			}
+		}
+
+		$detail = json_decode(json_encode($detail), true);
 		$this->output_data(array(
+			'detail'  => $detail,
+			'dishList' => $dish_list,
+		));
+	}
 
+	//厨师查看页面
+	public function chef(){
+		$this->output_data(array(
+			
+		));
+	}
+	public function chef_get_list(){
+		$list = $this->orderdish_mdl->list_by_status(array(0,1));
+		$orderList = array();
+		foreach ($list as $k => $v) {
+			$v = json_decode(json_encode($v), true);
+
+			if(!isset($orderList[$v['order_id']])){
+				$orderInfo = $this->order_mdl->get($v['order_id']);
+				$orderInfo = $this->order->init_order($orderInfo);
+				$orderList[$v['order_id']] = $orderInfo;
+			}else{
+				$orderInfo = $orderList[$v['order_id']];
+			}
+			$v['sourceName'] = $orderInfo['sourceName'];
+			$v['source'] = $orderInfo['src'];
+			$v['table_id'] = $orderInfo['table_id'];
+			$list[$k] = $this->order->init_dish($v);
+		}
+		//自动更新制作中的菜品
+		$update = $this->post('update');
+		if($update){
+			$this->updateDish();
+		}
+		$this->output_json(array(
+			'list'   => $list,
+		));
+	}
+	//自动更新最早下单的几个菜为制作中
+	public function updateDish(){
+		$old_list = $this->orderdish_mdl->get_old_dish();
+		if($old_list !== false){
+			foreach ($old_list as $k => $v) {
+				$this->orderdish_mdl->update_status($v['id'], 1);
+				//订单状态改为制作中
+				$this->order_mdl->update_status($v['order_id'], 1);
+			}
+
+		}
+		return true;
+		
+	}
+	//上菜员查看页面
+	public function serving(){
+		$this->output_data(array(
+			
 		));
 	}
 

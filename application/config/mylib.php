@@ -4,8 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //订单状态
 $config['orderStatus']	= array(  
 		0 => '待处理',
-		1 => '处理完',
-		2 => '已付款',
+		1 => '处理中',
+		2 => '菜上齐',
+		3 => '已付款',
 
 
 		8 => '已撤销'
@@ -15,7 +16,7 @@ $config['orderStatus']	= array(
 $config['dishStatus'] = array(
 		0 => '待处理',
 		1 => '处理中',
-		2 => '处理完',
+		2 => '已上菜',
 		3 => '已付款',
 
 		8 => '已撤销'
@@ -39,3 +40,6 @@ $config['payType'] =  array(
 
 		8 => '其他',
 );
+
+//自动标注几个菜为制作中
+$config['autoUpdateDishNum'] = 4;

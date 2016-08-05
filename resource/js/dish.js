@@ -409,13 +409,14 @@ var Cart = {
 		var order_table_seat = $('#order_table_seat').find('input').val();
 		if(order_src==1 && order_table_seat.length<1){
 			alert('座位号不能为空！');
+			return false;
 		}
 		//获取菜品
 		var dish_list = Data.get('dish_list');
 		var listLength = Data.objLength(dish_list);
 		if(listLength<1){
 			alert('您还未点菜！');
-			return;
+			return false;
 		}
 		var data = {
 			order_src: order_src,
@@ -462,6 +463,110 @@ var Order = {
 					
 				} else {
 					alert("操作失败，请刷新重试！");
+				}
+             }
+
+        });
+	}
+}
+
+var Chef = {
+	init:function(){
+		this.getList();
+		window.setInterval(this.getList, 3000);
+	},
+	getList:function(){
+		$.ajax({
+             type: 'post',
+             url: '../menu/chef_get_list',
+             data: {update:1},
+             dataType: 'json',
+             success: function(json){
+             	if (json._ret == 0) {
+					var html = Template.getHtml('dishListHtml',json);
+					$('#chef_dish_list').html(html);
+					
+				} else {
+					alert("系统出现问题，请刷新重试");
+				}
+             }
+
+        });
+	}
+}
+Serving_interval = '';
+var Serving = {
+	interval: false,
+	init:function(){
+		this.getList();
+		$('body').delegate('.serving','click',this.updateStatus);
+		Serving_interval = window.setInterval(Chef.getList, 3000);
+	},
+	getList:function(){
+		$.ajax({
+	         type: 'post',
+	         url: '../menu/chef_get_list',
+	         dataType: 'json',
+	         data:{update:0},
+	         success: function(json){
+	         	if (json._ret == 0) {
+					var html = Template.getHtml('dishListHtml',json);
+					$('#chef_dish_list').html(html);
+					
+				} else {
+					alert("系统出现问题，请刷新重试");
+				}
+	         }
+
+	    });
+	},
+	updateStatus:function(){
+		//清除掉定时器，防止操作的时候自动刷新
+		window.clearInterval(Serving_interval);
+		var id = $(this).data('id');
+		var orderId = $(this).data('orderid');
+		$.ajax({
+             type: 'post',
+             url: '../order/doneDish',
+             data:{id:id,orderId:orderId},
+             dataType: 'json',
+             success: function(json){
+             	if (json._ret == 0) {
+					$('#'+id).fadeOut();
+					Serving_interval = window.setInterval(Chef.getList, 3000);
+					
+				} else {
+					alert("系统出现问题，请刷新重试");
+				}
+             }
+
+        });
+	}
+}
+var OrderShow = {
+	init:function(){
+		$('.del_dish').click(function(){
+			var id = $(this).data('id');
+			var orderId = $(this).data('orderid');
+			var dishKey = $(this).data('dishkey');
+			if(confirm('确定要删除该菜品？删除后会导致订单价格改变，需要重新打印订单给顾客付款！')){
+			 	OrderShow.delDish(id,orderId,dishKey);
+			}
+		});
+	},
+	delDish: function(id, orderId, dishKey){
+		$.ajax({
+             type: 'post',
+             url: '../order/delDish',
+             data:{dishId:id,orderId:orderId,dishKey:dishKey},
+             dataType: 'json',
+             success: function(json){
+             	if (json._ret == 0) {
+					alert('菜品删除成功，请重新打印订单给顾客结算！');
+					// window.location.reload();
+					
+				} else {
+					alert(json._log);
 				}
              }
 
