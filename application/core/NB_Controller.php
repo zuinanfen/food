@@ -57,15 +57,22 @@ class NB_Controller extends CI_Controller {
 		$this->debug_log = Logger::factory ( Logger::DEBUG_LOG ); //调试日志
 		$this->ajax_log = Logger::factory ( Logger::AJAX_LOG ); // 专门用于记录ajax调用耗时，及内存消耗。
 		$this->load->helper ( 'heartbeat' );
-
 		if (!$this->check_logon () && !$this->check_access ()) {
-			exit('not logon');
+			exit('访问被禁止！');
 		}   
 
 		if (!$this->check_privilege()) {
 			exit('no privilege');
-		}   
-
+		}
+		$this->sysData = array(
+				'controller'  => $this->router->fetch_class(),
+				'action'      => $this->router->fetch_method(),
+			);
+		if(isset($_SESSION[static::LOGON_SESSION_NAME])){
+			$this->sysData['username'] =  $_SESSION[static::LOGON_SESSION_NAME]->name;
+			$this->sysData['role_id'] = $_SESSION[static::LOGON_SESSION_NAME]->role_id;
+		}
+		
 		$this->read_params();
     }
     
@@ -87,10 +94,30 @@ class NB_Controller extends CI_Controller {
 	}
 
 	protected function check_privilege () {
-		if (empty($this->_allow_role) or in_array($this->_user->role_id, $this->_allow_role)) {
-			return TRUE;
+		$controller = $this->router->fetch_class();
+		$action = $this->router->fetch_method();
+		if($controller=='logon'){  //登陆logon逻辑，全部放行
+			return true;
 		}
-		return FALSE;
+
+
+		$privilegeList = $this->config->item('privilegeList');
+
+		$role_id = $_SESSION[static::LOGON_SESSION_NAME]->role_id;
+		$privilege = $privilegeList[$role_id];
+
+		if(!isset($privilege[$controller])){ //若未定义的controller，则禁止
+			return false;
+		}
+		$whiteAction = $privilege[$controller];  //白名单action
+		if(empty($whiteAction)){  //若配置为空,则放行
+			return true;
+		}
+		if(in_array($action, $whiteAction)){ //若action 在配置里，则放行
+			return true;
+		}
+		return false;
+
 	}
 
 	protected function check_access () {
@@ -109,6 +136,10 @@ class NB_Controller extends CI_Controller {
 		if (isset($_SESSION[static::LOGON_SESSION_NAME]) and isset($_SESSION[static::LOGON_SESSION_NAME]->id)) {
 			$this->_user = $_SESSION[static::LOGON_SESSION_NAME];
 			return TRUE;
+		}
+		//判断用户是否被禁止
+		if(isset($_SESSION[static::LOGON_SESSION_NAME]) && $_SESSION[static::LOGON_SESSION_NAME]->status==1){
+			return false;
 		}
 		return FALSE;
 	}
@@ -145,6 +176,9 @@ class NB_Controller extends CI_Controller {
 			$data['_debug'] = $this->_debug;
 		}
 		
+		$data['sysData']  = $this->sysData;
+
+
 		#CDN地址
 		if (!isset($data['_cdn_host'])) {
 			$data['_cdn_host'] = $this->config->config['cdn_host'];

@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+$config['secretKey']  = 'zuinanfen!@#$123' ; //站点通用秘钥
+
 //订单状态
 $config['orderStatus']	= array(  
 		0 => '待处理',
@@ -43,3 +45,56 @@ $config['payType'] =  array(
 
 //自动标注几个菜为制作中
 $config['autoUpdateDishNum'] = 4;
+
+//用戶角色
+$config['roleType']  = array(
+	0 => '未分配',
+	1 => '系统管理员',
+
+	2 => '厨师',
+	3 => '点餐员',
+	4 => '上菜员',
+
+
+
+);
+//用戶狀態
+$config['roleStatus'] = array(
+	0 => '正常',
+	1 => '冻结',
+);
+
+
+//用户权限表, 白名单方法，若controller未定义，则拦截，若action未定义，则放行，定义的则白名单，
+$config['privilegeList'] = array(
+	1   => array(  //系统管理员
+			'dish'         => array(),
+			'dishoption'   => array(),
+			'logon'        => array(),
+			'menu'         => array(),
+			'option'       => array(),
+			'order'        => array(),
+			'user'         => array(),
+		),
+	2   => array(  //厨师
+			'logon'        => array(),
+			'menu'         => array(),
+			'dishoption'   => array(),
+			'order'        => array('add','delDish','cancelOrder','doneDish'),
+		
+		),
+	3   => array( //点餐员
+			'logon'        => array(),
+			'menu'         => array(),
+			'dishoption'   => array(),
+			'order'        => array('add','delDish','cancelOrder','doneDish'),
+
+
+		),
+	4   => array( //上菜
+			'logon'        => array(),
+			'menu'         => array(),
+			'dishoption'   => array(),
+			'order'        => array('add','delDish','cancelOrder','doneDish'),
+		),
+);

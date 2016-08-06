@@ -139,6 +139,7 @@ class Order extends NB_Controller {
 		return $order_total_price;
 
 	}
+	//菜品上菜
 	public function doneDish(){
 		$id = $this->post('id');
 		$this->orderdish_mdl->update_status($id, 2); //已经上菜
@@ -152,6 +153,7 @@ class Order extends NB_Controller {
 		return $this->output_json();
 
 	}
+	//订单删除菜品
 	public function delDish(){
 		$dishId = $this->post('dishId');
 		$orderId = $this->post('orderId');
@@ -188,4 +190,36 @@ class Order extends NB_Controller {
 		$this->order_mdl->update($orderId, $update_data);
 		return $this->output_json();
 	}
+	//撤销订单
+	public function cancelOrder(){
+		$orderId = $this->post('orderId');
+		$orderStatus = $this->config->item('orderStatus');
+		//查询订单状态
+		$orderInfo = $this->order_mdl->get($orderId);
+		if(!$orderInfo){
+			$this->set_error(static::RET_WRONG_INPUT, "订单异常，无法撤销，请联系管理员！");
+			return $this->output_json();
+		}
+		if($orderInfo['status'] != 0){
+			$this->set_error(static::RET_WRONG_INPUT, "该订单状态为".$orderStatus[$orderInfo['status']]."，无法撤销！");
+			return $this->output_json();
+		}
+		//将该订单的所有商品都改成撤销状态
+		$dish_list = $this->orderdish_mdl->get_all_dish_list($orderId);
+		foreach ($dish_list as $k => $v) {
+			if($v['status']!=8){
+				$this->orderdish_mdl->update_status($v['id'],8);
+			}
+		}
+		//修改订单状态
+		$data = array(
+			'status'  =>8,
+			'amount'  =>0,
+			'dish_num'=>0,
+		);
+		$this->order_mdl->update($orderId,$data);
+		return $this->output_json();
+
+	}
+
 }

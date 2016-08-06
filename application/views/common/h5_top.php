@@ -20,3 +20,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 <div class="container-fluid">
 <div class="row">
+
+
+
+<div class="header clearfix">
+<div style="float:left;margin-top:10px">
+	<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+	<?=$sysData['username']?> <a href="/index.php/logon/logout">退出</a>
+</div>
+<nav>
+  <ul class="nav nav-pills pull-right navi">
+	<li <?if($sysData['controller']=='menu' && in_array($sysData['action'],array('index','cart'))){?>class="active"<?}?>><a href="index">点菜</a></li>
+	<li <?if($sysData['controller']=='menu' && $sysData['action']=='order'){?>class="active"<?}?>><a href="order">订单列表</a></li>
+  </ul>
+</nav>
+</div>

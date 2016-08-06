@@ -26,7 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<!-- <li <?php if($funcname=='config'):?>class="active"<?php endif?>><a href="#">配置</a></li> -->
 		<li <?php if($funcname=='stat'):?>class="active"<?php endif?>><a href="#">数据报表</a></li>
 		</ul>
-		<a href="../logout/redirect" class="glyphicon glyphicon-log-out" style="float:right;padding:15px">退出</a>
+		<a href="/index.php/logon/logout" class="glyphicon glyphicon-log-out" style="float:right;padding:15px">退出</a>
 	  </div>
 	</div>
 </nav>

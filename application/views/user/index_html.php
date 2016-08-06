@@ -15,7 +15,7 @@ $this->load->view ( 'common/header', array (
 	<table class="table table-striped table-condensed">
 		<thead>
 			<tr>
-				<th>ID</th>
+				<th>账号</th>
 				<th>姓名</th>
 				<th>角色ID</th>
 				<th>状态</th>
@@ -25,7 +25,7 @@ $this->load->view ( 'common/header', array (
 		<tbody>
 		<?php foreach($list as $obj): ?>
 			<tr>
-				<td><?php echo $obj->id ?></td>
+				<td><?=$obj->uid ?></td>
 				<td><?php echo $obj->name ?></td>
 				<td><?php echo isset($role_list[$obj->role_id])? $role_list[$obj->role_id] : '未分配'?></td>
 				<td>

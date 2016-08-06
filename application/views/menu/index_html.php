@@ -5,15 +5,7 @@ $this->load->view ( 'common/h5_top', array (
 	'funcname'=> 'menu'
 ));
 ?>
-<div class="header clearfix">
-<nav>
-  <ul class="nav nav-pills pull-right navi">
-	<li class="active"><a href="index">点菜</a></li>
-	<!-- <li role="presentation"><a href="cart">当前订单</a></li> -->
-	<li><a href="order">订单列表</a></li>
-  </ul>
-</nav>
-</div>
+
 <table class="table table-condensed" style="padding-bottom:30px;">
 	<thead>
 		<!--<tr class="success">
@@ -79,129 +71,6 @@ $(document).ready(function(){
 		}
 	});
 });
-
-/*var order_dish = {};
-var update_dish_price = function() {
-	$('tr[rel="dish_list"]').each(function(){
-		var self = $(this);
-		var price = self.find('td[rel=price]').attr('val') * 1;
-		self.next().find('input[name="option"]:checked').each(function(){
-			price += ($(this).attr('price')*1);
-		});
-		if (price<0)price = 0;
-		self.find('td[rel=price]').html(Math.round(price*100)/100);
-	});
-};
-var get_option = function(dish_id){
-	var option = [{id:1,name:'AA',price:2.34,sort:1},{id:2,name:'BB',price:-12.34,sort:9}];
-	return option;
-}
-
-$('input[name="option"]').click(function(){
-	update_dish_price();
-	});
-
-$('.glyphicon-plus').click(function(){
-	var num = $(this).prev().val();
-	if (num<99) {
-		$(this).prev().val(parseInt(num)+1);
-		if (num==0) {
-		//显示附加项
-			var dish = $(this).parent().parent();
-			var option = get_option(dish.val());
-			if (option.length > 0) {
-				var optionStr = '<tr><td colspan="5"><div>';
-				for (var i=0;i<option.length;i++) {
-					var v = option[i];
-					if (i>0&&i%4==0) optionStr+='</div></div>';
-					optionStr+='<label><small>'+v.name+'</small>';
-					optionStr+='<input type="checkbox" name="option" value="'+v.id+'" price="'+v.price+'"></label>';
-				}
-				optionStr+='</div></td></tr>';
-				$(optionStr).insertAfter(dish);
-			}
-		}
-	}
-});
-$('.glyphicon-minus').click(function(){
-	var num = $(this).next().val();
-	if (num>0) {
-		$(this).next().val(parseInt(num)-1);
-		if (num==1) {
-		//隐藏附加项
-		}
-	}
-});
-
-$('#order_src').change(function(){
-	if($(this).val()==0) {
-		$("#order_table_seat").addClass("show").removeClass("hide");
-		$("#order_table_takeout").addClass("hide").removeClass("show");
-		$('#order_table_seat input[rel="table_id"').val('');
-	} else {
-		$("#order_table_seat").addClass("hide").removeClass("show");
-		$("#order_table_takeout").addClass("show").removeClass("hide");
-		$('#order_table_takeout input[rel="seat_num"').val(0);
-	}
-});
-
-$('#submit').click(function(){
-	$.fn.cookie('order_src', $('#order_src').val());
-	$.fn.cookie('order_table_id', $('div.show[rel="order_table"] input[rel="table_id"').val());
-	$.fn.cookie('order_seat_num', $('div.show[rel="order_table"] input[rel="seat_num"').val());
-	$('tr[rel=dish_list]').each(function(){
-		var self = $(this);
-		var id = self.attr('val');
-		order_dish[id] = {
-			id:id,
-			num:$(this).find('input[rel=num]').val(),
-				price:$(this).find('td[rel=price]').html(),
-				option:function(){
-					var dish_option = [];
-					self.next().find('input[name="option"]:checked').each(function(){
-						dish_option.push($(this).val())
-					});
-					return dish_option;
-				}()
-		};
-		if(order_dish[id].num<=0) {
-			delete order_dish[id];
-		}
-	});
-	//console.log(order_dish);
-	$.fn.cookie('order_dish', JSON.stringify(order_dish));
-	location.href = 'cart';
-});
-
-$(function(){
-	if ($.fn.cookie('order_src')) {
-		$('#order_src').val($.fn.cookie('order_src'));
-	}
-	if ($.fn.cookie('order_table_id')) {
-		$('input[rel="table_id"]').val($.fn.cookie('order_table_id'));
-	}
-	if ($.fn.cookie('order_seat_num')) {
-		$('input[rel="seat_num"]').val($.fn.cookie('order_seat_num'));
-	}
-	$('#order_src').change();
-
-	if ($.fn.cookie('order_dish')) {
-		order_dish = JSON.parse($.fn.cookie('order_dish'));
-		$.each(order_dish, function(id,obj){
-			console.log(obj);
-			if (obj.num <= 0) {
-				return;
-			}
-			var tr = $('tr[rel="dish_list"][val="'+id+'"]');
-			tr.find('input[rel=num]').val(obj.num);
-			if (obj.option.length > 0) {
-				tr.next().find('input[name="option"]').filter(function(){return obj.option.indexOf($(this).val())>=0}).attr('checked', true);
-			}
-		});
-		update_dish_price();
-	}
-});*/
-
 
 
 </script>

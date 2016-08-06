@@ -553,6 +553,12 @@ var OrderShow = {
 			 	OrderShow.delDish(id,orderId,dishKey);
 			}
 		});
+		$('#cancelOrder').click(function(){
+			var orderId = $(this).data('id');
+			if(confirm('确定要撤销该订单？')){
+				OrderShow.cancelOrder(orderId);
+			}
+		});
 	},
 	delDish: function(id, orderId, dishKey){
 		$.ajax({
@@ -563,7 +569,25 @@ var OrderShow = {
              success: function(json){
              	if (json._ret == 0) {
 					alert('菜品删除成功，请重新打印订单给顾客结算！');
-					// window.location.reload();
+					window.location.reload();
+					
+				} else {
+					alert(json._log);
+				}
+             }
+
+        });
+	},
+	cancelOrder: function(orderId){
+		$.ajax({
+             type: 'post',
+             url: '../order/cancelOrder',
+             data:{orderId:orderId},
+             dataType: 'json',
+             success: function(json){
+             	if (json._ret == 0) {
+					alert('订单撤销成功！');
+					window.location.reload();
 					
 				} else {
 					alert(json._log);

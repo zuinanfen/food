@@ -12,48 +12,54 @@ class Logon extends NB_Controller {
 	}
 
 	public function get_user () {
-		$name = $this->post("name");
-		if (empty($name)) {
-			$this->set_error(static::RET_WRONG_INPUT, "错误的参数NAME");	
+		$uid = $this->post("uid");
+		if (empty($uid)) {
+			$this->set_error(static::RET_WRONG_INPUT, "登陆账号不能为空");	
 			return $this->output_json();
 		}
 
-		$obj = $this->user_mdl->get_by_name($name);
+		$obj = $this->user_mdl->get_by_uid($uid);
 		if (empty($obj)) {
-			$this->set_error(static::RET_ERROR_DATA, "找不到对象");	
+			$this->set_error(static::RET_ERROR_DATA, "找不到该用户");	
 			return $this->output_json();
 		}
 
 		$password = $this->post("password");
 		if (empty($password)) {
-			$this->set_error(static::RET_WRONG_INPUT, "错误的参数PASSWORD");	
+			$this->set_error(static::RET_WRONG_INPUT, "密码不能为空");	
 			return $this->output_json();
 		}
 
-		if ( $password != $obj->password ) {
+		$secretKey = $this->config->item('secretKey');
+
+		if ( md5($secretKey.$password) != $obj->password ) {
 			$this->set_error(static::RET_ERROR_DATA, "密码错误");	
 			return $this->output_json();
 		}
 
+		unset($obj->password);
+		unset($obj->ctime);
+		unset($obj->mtime);
+		unset($obj->oper);
 		//登录成功
 		$this->set_logon($obj);	
 
 		//根据角色选择首页
 		switch ($obj->role_id) {
-			case 1:
+			case 1:  //系統管理員
 				$url = '/index.php/user/index';
 				break;
-			case 2:
-				$url = '/index.php/serve/index';
+			case 2:  //廚師
+				$url = '/index.php/menu/chef';
 				break;
-			case 3:
+			case 3:  //點餐員
 				$url = '/index.php/menu/index';
 				break;
-			case 4:
-				$url = '/index.php/order/serving';
+			case 4:  //上菜員
+				$url = '/index.php/menu/serving';
 				break;
 			default:
-				$url = '';
+				$url = '/index.php/menu/index';
 				break;
 		}
 
@@ -61,5 +67,9 @@ class Logon extends NB_Controller {
 			'detail' => $obj,
 			'location' => $url
 		));
+	}
+	public function logout(){
+		$this->set_logout();
+		header('Location: /');
 	}
 }

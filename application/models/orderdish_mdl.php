@@ -77,7 +77,7 @@ class Orderdish_mdl extends NB_Model {
         }
 		return $rows;
 	}
-	//获取单个订单有效菜品列表
+	//获取单个订单所有菜品列表
 	public function get_all_dish_list($orderId){
 
 		$status = $this->config->item('dishStatus');
