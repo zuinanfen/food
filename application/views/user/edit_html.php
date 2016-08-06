@@ -18,6 +18,12 @@ $this->load->view ( 'common/header', array (
 		</div>
 		<div class="panel-body">
 			<div class="form-horizontal">
+			<div class="form-group">
+				<label for="uid" class="col-sm-2 control-label">账号：</label>
+				<div class="col-sm-5">
+				  <input type="text" class="form-control" id="uid" value="<?php echo $detail->uid ?>">
+				</div>
+			  </div>
 			  <div class="form-group">
 				<label for="name" class="col-sm-2 control-label">姓名：</label>
 				<div class="col-sm-5">
@@ -66,6 +72,7 @@ $(function(){
 		$.post('set', {
 			id:<?php echo $detail->id?>,
 			name:$('#name').val(),
+			uid:$('#uid').val(),
 			password:$('#password1').val(),
 			newpassword:$('#password2').val(),
 			role_id:$('#role_id').val()

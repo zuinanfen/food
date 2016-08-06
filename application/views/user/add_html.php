@@ -18,6 +18,12 @@ $this->load->view ( 'common/header', array (
 		</div>
 		<div class="panel-body">
 			<div class="form-horizontal">
+				<div class="form-group">
+					<label for="uid" class="col-sm-2 control-label">登陆账号</label>
+					<div class="col-sm-5">
+					  <input type="text" class="form-control" id="uid" placeholder="例如：123@qq.com">
+					</div>
+				  </div>
 			  <div class="form-group">
 				<label for="name" class="col-sm-2 control-label">姓名：</label>
 				<div class="col-sm-5">
@@ -57,6 +63,7 @@ $(function(){
 	});
 	$('#submit').click(function(){
 		$.post('insert', {
+			uid: $('#uid').val(),
 			name:$('#name').val(),
 			password:$('#password1').val(),
 			role_id:$('#role_id').val(),

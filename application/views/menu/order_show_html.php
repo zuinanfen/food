@@ -104,6 +104,17 @@ $this->load->view ( 'common/h5_top', array (
       </tr>
     </tbody>
   </table>
+<div style="height:20px;"></div>
+  <div class="marketing">
+		<div style="display:inline-block;width:48%">
+			<button type="button" data-id=<?=$detail['id']?> class="btn <?if($detail['status']!=8){?>btn-danger<?}?> btn-block" <?if($detail['status']==8){?>disabled=""<?}?>  id="cancelOrder">
+			撤销订单</button>
+		</div>
+
+		<div style="display:inline-block;width:48%">
+			<button type="button" class="btn btn-warning btn-block" id="checkOrder">打印订单</button>
+		</div>
+	</div>
 
 <script type="text/javascript">
 	$(function(){
