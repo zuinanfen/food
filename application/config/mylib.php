@@ -75,6 +75,7 @@ $config['privilegeList'] = array(
 			'option'       => array(),
 			'order'        => array(),
 			'user'         => array(),
+			'report'       => array(),
 		),
 	2   => array(  //厨师
 			'logon'        => array(),

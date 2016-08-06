@@ -76,4 +76,17 @@ class Order_mdl extends NB_Model {
 		$update_data['mTime'] = date('Y-m-d H:i:s');
         $this->db->update(self::T_NAME, $update_data, array('id'=>$orderId));
 	}
+	//list by time
+	public function list_by_time($startTime, $endTime){
+		$this->db->from(self::T_NAME);
+
+		$this->db->where("ctime>'{$startTime}' and ctime<'{$endTime}'");
+		$this->db->order_by('ctime', 'desc');
+		$query = $this->db->get();
+		$res = $query->result_array();
+		if(empty($res)){
+			return array();
+		} 
+		return $res;
+	}
 }

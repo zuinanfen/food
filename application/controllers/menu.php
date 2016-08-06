@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Menu extends NB_Controller {
 
-	protected $_allow_role = array(1,3);
+	// protected $_allow_role = array(1,3);
 	function __construct () {
 		parent::__construct();
 		$this->load->model('dish_mdl');

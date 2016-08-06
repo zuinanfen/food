@@ -22,9 +22,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<!-- <li <?php if($funcname=='index'):?>class="active"<?php endif?>><a href="#">经营状况</a></li> -->
 		<li <?php if($funcname=='user'):?>class="active"<?php endif?>><a href="../user/index">用户管理</a></li>
 		<li <?php if($funcname=='dish'):?>class="active"<?php endif?>><a href="../dish/index">菜单管理</a></li>
-		<li <?php if($funcname=='order'):?>class="active"<?php endif?>><a href="../order/index">订单管理</a></li>
+		<!-- <li <?php if($funcname=='order'):?>class="active"<?php endif?>><a href="../order/index">订单管理</a></li> -->
 		<!-- <li <?php if($funcname=='config'):?>class="active"<?php endif?>><a href="#">配置</a></li> -->
-		<li <?php if($funcname=='stat'):?>class="active"<?php endif?>><a href="#">数据报表</a></li>
+		<li <?php if($funcname=='report'):?>class="active"<?php endif?>><a href="../report/index">数据报表</a></li>
 		</ul>
 		<a href="/index.php/logon/logout" class="glyphicon glyphicon-log-out" style="float:right;padding:15px">退出</a>
 	  </div>
