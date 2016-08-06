@@ -563,7 +563,7 @@ var OrderShow = {
              success: function(json){
              	if (json._ret == 0) {
 					alert('菜品删除成功，请重新打印订单给顾客结算！');
-					// window.location.reload();
+					window.location.reload();
 					
 				} else {
 					alert(json._log);
