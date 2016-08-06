@@ -17,11 +17,11 @@ $this->load->view ( 'common/header', array (
           <span class="input-group-btn">
             <button class="btn btn-default" type="button">开始日期</button>
           </span>
-          <input type="date" value="<?=date('Y-m-d')?>" id="startTime" class="form-control" />
+          <input type="date" value="<?=date('Y-m-d',strtotime($startTime))?>" id="startTime" class="form-control" />
         </div>
 
         <div class="input-group" style="margin:8px 0;">
-          <input type="date" value="<?=date('Y-m-d')?>" id="endTime" class="form-control" />
+          <input type="date" value="<?=date('Y-m-d',strtotime($endTime))?>" id="endTime" class="form-control" />
           <span class="input-group-btn">
             <button class="btn btn-default" type="button">结束日期</button>
           </span>
@@ -30,13 +30,40 @@ $this->load->view ( 'common/header', array (
 	</div>
 	
 </div>
+<table class="table table-striped">
+      <thead>
+        <tr>
+          <th>日期</th>
+          <th>等待</th>
+          <th>处理中</th>
+          <th>完成</th>
+          <th>撤销</th>
+          <th>总数</th>
+          <th>应收款</th>
+        </tr>
+      </thead>
+      <tbody>
+      <?foreach($list as $k=>$v){?>
+        <tr>
+          <td><?=$k?></td>
+          <td><?=$v['waitNum']?></td>
+          <td><?=$v['doNum']?></td>
+          <td><?=$v['doneNum']?></td>
+          <td><?=$v['cancelNum']?></td>
+          <td><?=$v['orderNum']?></td>
+          <td><?=$v['amountNum']?></td>
+        </tr>
+        <?}?>
+      </tbody>
+    </table>
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
 
 <script type="text/javascript">
 	$('#submit_btn').click(function(){
 		var startTime = $('#startTime').val();
 		var endTime = $('#endTime').val();
-		Report.dateReport(startTime,endTime);
+		window.location.href = '/index.php/report/index?startTime='+startTime+'&endTime='+endTime;
+		// Report.dateReport(startTime,endTime);
 	});
 
 

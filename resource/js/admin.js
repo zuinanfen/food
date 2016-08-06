@@ -1,5 +1,5 @@
 var Report = {
-	dateReport: function(startTime,endTime){
+	/*dateReport: function(startTime,endTime){
 		startTime = startTime+' 00:00:01';
 
 		endTime = endTime+' 23:59:59';
@@ -17,5 +17,5 @@ var Report = {
              }
 
         });
-	}
+	}*/
 }

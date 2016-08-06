@@ -9,7 +9,7 @@ class Order extends NB_Controller {
 		$this->load->model('order_mdl');
 		$this->load->model('user_mdl');
 		$this->load->model('dish_mdl');
-		$this->load->model('option_mdl');
+		// $this->load->model('option_mdl');
 		$this->load->model('dishoption_mdl');
 		$this->load->model('orderdish_mdl');
 		// $this->load->library('session');

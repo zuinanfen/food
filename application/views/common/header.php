@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
 	  <div class="navbar-header">
-		<a class="navbar-brand" href="#">醉南粉</a>
+		<a class="navbar-brand" href="#">醉南粉点餐系统</a>
 	  </div>
 	  <div class="navbar-collapse collapse">
 		<ul class="nav navbar-nav">

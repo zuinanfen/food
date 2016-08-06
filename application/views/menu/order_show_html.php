@@ -5,14 +5,6 @@ $this->load->view ( 'common/h5_top', array (
 	'funcname'=> 'menu'
 ));
 ?>
-<div class="header clearfix">
-<nav>
-   <ul class="nav nav-pills pull-right navi">
-	<li><a href="index">点菜</a></li>
-	<li><a href="order">订单列表</a></li>
-  </ul>
-</nav>
-</div>
 
 <h3>菜品列表</h3>
 <table class="table table-condensed table-striped">
