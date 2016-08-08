@@ -55,6 +55,8 @@ $config['roleType']  = array(
 	3 => '点餐员',
 	4 => '上菜员',
 
+	100 => '开发者',
+
 
 
 );
@@ -67,7 +69,7 @@ $config['roleStatus'] = array(
 
 //用户权限表, 白名单方法，若controller未定义，则拦截，若action未定义，则放行，定义的则白名单，
 $config['privilegeList'] = array(
-	1   => array(  //系统管理员
+	100   => array(  //开发者
 			'dish'         => array(),
 			'dishoption'   => array(),
 			'logon'        => array(),
@@ -75,6 +77,16 @@ $config['privilegeList'] = array(
 			'option'       => array(),
 			'order'        => array(),
 			'user'         => array(),
+			'report'       => array(),
+		),
+	1   => array(  //系统管理员
+			'dish'         => array(),
+			'dishoption'   => array(),
+			'logon'        => array(),
+			'menu'         => array(),
+			'option'       => array(),
+			'order'        => array(),
+			// 'user'         => array(),
 			'report'       => array(),
 		),
 	2   => array(  //厨师
