@@ -36,7 +36,7 @@ $this->load->view ( 'common/h5_top', array (
 	          <span class="glyphicon-class">订单列表</span>
 	        </a>
         </li>
-      <?if($sysData['role_id']==1){?>
+      <?if($sysData['role_id']==1||$sysData['role_id']==100){?>
         <li>
         	<a href="/index.php/report/index">
 	          <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
@@ -49,8 +49,16 @@ $this->load->view ( 'common/h5_top', array (
 	          <span class="glyphicon-class">菜品管理</span>
 	         </a>
         </li>
+            <?if($sysData['role_id']==100){?>
+            <li>
+                <a href="/index.php/user/index">
+                  <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+                  <span class="glyphicon-class">用户管理</span>
+                 </a>
+            </li>
+            <?}?>
         <?}?>
-       
+    </ul>
   </div>
 
 <?php $this->load->view ( 'common/h5_bottom' ); ?>
