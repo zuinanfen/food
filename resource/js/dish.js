@@ -228,6 +228,7 @@ var Dishoption = {
 
 		        return false;
 		    },
+		    cancelValue: '不选，经典口味',
 		    cancel: function(){
 		    	Dish.animate(dish_id);
 		    }

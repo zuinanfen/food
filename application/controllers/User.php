@@ -77,13 +77,14 @@ class User extends NB_Controller {
 			return $this->output_json();
 		}
 
+		$obj = $this->user_mdl->get($id);
+		
 		$uid = $this->post("uid");
 		if (!empty($uid)) {
 			$obj->uid = $uid;
 		}
 
 
-		$obj = $this->user_mdl->get($id);
 		if (empty($obj)) {
 			$this->set_error(static::RET_ERROR_DATA, "找不到对象");	
 			return $this->output_json();

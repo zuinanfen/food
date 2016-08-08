@@ -32,7 +32,7 @@ $this->load->view ( 'common/h5_top', array (
 	<%}else{%>
 		<%for(i=0;i<list.length;i++){var data=list[i]%>
 		<tr id="<%=data.id%>">
-			<td><%=data.sourceName%><%if(data.src==1){%>(<%=data.table_id%>)<%}%></td>
+			<td><%=data.sourceName%><%if(data.src==1){%>(<%=data.table_id%>号)<%}%></td>
 			<td><%=data.dish_num%></td>
 			<td><%=data.orderTime%></td>
 			<td style="color:<%if(data.status==0){%>#337ab7<%}else if(data.status==1){%>#ec971f<%}%>;"><%=data.statusName%></td>

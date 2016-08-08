@@ -17,7 +17,7 @@ $this->load->view ( 'common/h5_top', array (
 			</th>
 			<th colspan="4" id="order_table_seat" style="display:none" >
 				<div class="show">
-					桌号：<input size="3">
+					桌号：<input size="3" type="number" min="1" max="100" />
 					<!-- 人数：<input rel="seat_num" max-length=3 size="3"> -->
 				</div>
 				
