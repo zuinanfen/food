@@ -71,6 +71,8 @@ class NB_Controller extends CI_Controller {
 		if(isset($_SESSION[static::LOGON_SESSION_NAME])){
 			$this->sysData['username'] =  $_SESSION[static::LOGON_SESSION_NAME]->name;
 			$this->sysData['role_id'] = $_SESSION[static::LOGON_SESSION_NAME]->role_id;
+			$roleType = $this->config->item('roleType');
+			$this->sysData['role_type'] = $roleType[$this->sysData['role_id']];
 		}
 		
 		$this->read_params();

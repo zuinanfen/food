@@ -1,0 +1,56 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+$this->load->view ( 'common/h5_top', array (
+	'title' => '醉南粉点餐系统' ,
+	'funcname'=> 'menu'
+));
+?>
+<h3 style="text-align:center;margin:25px 0;">欢迎使用醉南粉点餐系统</h3>
+<div class="bs-glyphicons">
+    <ul class="bs-glyphicons-list">
+      
+        <li >
+          	<a href="/index.php/menu/index">
+	          <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>
+	          <span class="glyphicon-class">我要点餐</span>
+          	</a>
+        </li>
+      
+        <li>
+        	<a href="/index.php/menu/chef">
+	          <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+	          <span class="glyphicon-class">我要炒菜</span>
+	         </a>
+        </li>
+      
+        <li>
+        	<a href="/index.php/menu/serving">
+	          <span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
+	          <span class="glyphicon-class">我要上菜</span>
+	         </a>
+        </li>
+      
+        <li>
+        	<a href="/index.php/menu/order">
+	          <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+	          <span class="glyphicon-class">订单列表</span>
+	        </a>
+        </li>
+      <?if($sysData['role_id']==1){?>
+        <li>
+        	<a href="/index.php/report/index">
+	          <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+	          <span class="glyphicon-class">数据统计</span>
+	        </a>
+        </li>
+        <li>
+        	<a href="/index.php/dish/index">
+	          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+	          <span class="glyphicon-class">菜品管理</span>
+	         </a>
+        </li>
+        <?}?>
+       
+  </div>
+
+<?php $this->load->view ( 'common/h5_bottom' ); ?>

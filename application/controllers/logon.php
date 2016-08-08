@@ -47,19 +47,19 @@ class Logon extends NB_Controller {
 		//根据角色选择首页
 		switch ($obj->role_id) {
 			case 1:  //系統管理員
-				$url = '/index.php/report/index';
+				$url = '/index.php/menu/logon';
 				break;
 			case 2:  //廚師
-				$url = '/index.php/menu/chef';
+				$url = '/index.php/menu/logon';
 				break;
 			case 3:  //點餐員
-				$url = '/index.php/menu/index';
+				$url = '/index.php/menu/logon';
 				break;
 			case 4:  //上菜員
-				$url = '/index.php/menu/serving';
+				$url = '/index.php/menu/logon';
 				break;
 			default:
-				$url = '/index.php/menu/index';
+				$url = '/index.php/menu/logon';
 				break;
 		}
 

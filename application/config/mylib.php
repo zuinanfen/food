@@ -44,7 +44,7 @@ $config['payType'] =  array(
 );
 
 //自动标注几个菜为制作中
-$config['autoUpdateDishNum'] = 4;
+$config['autoUpdateDishNum'] = 3;
 
 //用戶角色
 $config['roleType']  = array(

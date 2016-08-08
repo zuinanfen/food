@@ -7,10 +7,10 @@ $this->load->view ( 'common/h5_top', array (
 ?>
 <table class="table" >
     <thead>
-      <tr>
+      <!-- <tr>
         <th style="text-align:center">来源</th>
         <th style="text-align:center">菜名</th>
-      </tr>
+      </tr> -->
     </thead>
     <tbody>
     	<tr>

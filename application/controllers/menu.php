@@ -139,4 +139,12 @@ class Menu extends NB_Controller {
 		));
 	}
 
+	//登陆后首页
+	public function logon(){
+		
+		$this->output_data(array(
+			
+		));
+	}
+
 }
