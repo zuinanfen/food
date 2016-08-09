@@ -503,7 +503,7 @@ var Serving = {
 	init:function(){
 		this.getList();
 		$('body').delegate('.serving','click',this.updateStatus);
-		Serving_interval = window.setInterval(Chef.getList, 3000);
+		Serving_interval = window.setInterval(Chef.getList, 2500);
 	},
 	getList:function(){
 		$.ajax({

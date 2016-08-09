@@ -78,14 +78,14 @@ class Order extends NB_Controller {
 			return $this->output_json();
 		}
 
-		$userData = $_SESSION['NBFOOD'];
+		$cookies = $this->input->cookie();
 		$ctime = date('Y-m-d H:i:s');
-        $orderId = $this->getOrderId($userData->id, strtotime($ctime));
+        $orderId = $this->getOrderId($cookies['id'], strtotime($ctime));
 
         $obj->id = $orderId;
         $obj->src = $order_src;
         $obj->table_id = $order_table_seat;
-        $obj->uid = $userData->id;
+        $obj->uid = $cookies['id'];
         $obj->status = 0;
         $obj->dish_list = json_encode($dish_list);
         $obj->ctime = $ctime;
@@ -104,8 +104,7 @@ class Order extends NB_Controller {
 	private function insertOrderDish($orderId, $dish_list){
 		$obj = $this->orderdish_mdl->gen_new();
 		$obj->order_id = $orderId;
-		$userData = $_SESSION['NBFOOD'];
-		$obj->uid = $userData->id;
+		$obj->uid = $this->input->cookie('id');
 		$ctime = date('Y-m-d H:i:s');
 		$obj->ctime = $ctime;
 		$obj->mtime = $ctime;
