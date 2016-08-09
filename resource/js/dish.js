@@ -363,7 +363,7 @@ var Cart = {
 		var dialog = $.dialog({
 	        title: '请选择菜品附加选项',
 	        content:'<div id="option-dialog">'+content+'</div>',
-	        okValue: '确定',
+	        okValue: '确定修改',
 	        lock: true,
 		    fixed:true,
 	        ok: function () {
@@ -385,8 +385,9 @@ var Cart = {
 	        	Cart.renderDish(dish_list);
 		        return false;
 		    },
+		    cancelValue: '关闭，不做修改',
 		    cancel: function(){
-		    	// Dish.animate(dish_id);
+		    	// Dish.animate(dish_id);?
 		    }
     	});
     	$('.option-btn').unbind('click').click(function(){
