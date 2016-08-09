@@ -29,7 +29,7 @@ class NB_Controller extends CI_Controller {
 	const DEBUG_WARN = 0x2;
 	const DEBUG_ERROR = 0x3;
 
-	const LOGON_SESSION_NAME = 'NBFOOD';
+	// const LOGON_SESSION_NAME = 'NBFOOD';
 
 	public function reflection_api() {
 		$data = array ();
@@ -51,30 +51,41 @@ class NB_Controller extends CI_Controller {
 		$this->benchmark->mark ( 'request_start' );
 		
 		require_once APPPATH.'helpers/log_helper.php';
+
 		// 创建日志工具
 		$this->sys_log = Logger::factory ( Logger::SYS_LOG );	//系统请求日志
 		$this->user_log = Logger::factory ( Logger::USER_LOG ); //用户日志（DB）
 		$this->debug_log = Logger::factory ( Logger::DEBUG_LOG ); //调试日志
 		$this->ajax_log = Logger::factory ( Logger::AJAX_LOG ); // 专门用于记录ajax调用耗时，及内存消耗。
 		$this->load->helper ( 'heartbeat' );
-		if (!$this->check_logon () && !$this->check_access ()) {
-			exit('访问被禁止！');
-		}   
 
-		if (!$this->check_privilege()) {
-			exit('no privilege');
+		$this ->cookies = $this->input->cookie();
+
+		// if (!$this->check_logon () && !$this->check_access ()) {
+		// 	exit('访问被禁止！');
+		// } 
+		$controller = $this->router->fetch_class();
+
+		if($controller!='logon'){  //检查权限
+			if(!$this->check_logon()){
+				exit('访问被禁止！');
+			}
+			if (!$this->check_privilege()) {
+				exit('no privilege');
+			}
 		}
+
 		$this->sysData = array(
-				'controller'  => $this->router->fetch_class(),
+				'controller'  => $controller,
 				'action'      => $this->router->fetch_method(),
 			);
-		if(isset($_SESSION[static::LOGON_SESSION_NAME])){
-			$this->sysData['username'] =  $_SESSION[static::LOGON_SESSION_NAME]->name;
-			$this->sysData['role_id'] = $_SESSION[static::LOGON_SESSION_NAME]->role_id;
+
+		if(!empty($this ->cookies)){
+			$this->sysData['username'] =  $this->input->cookie('name');
+			$this->sysData['role_id'] = $this->input->cookie('role_id');
 			$roleType = $this->config->item('roleType');
 			$this->sysData['role_type'] = $roleType[$this->sysData['role_id']];
 		}
-		
 		$this->read_params();
     }
     
@@ -98,14 +109,13 @@ class NB_Controller extends CI_Controller {
 	protected function check_privilege () {
 		$controller = $this->router->fetch_class();
 		$action = $this->router->fetch_method();
-		if($controller=='logon'){  //登陆logon逻辑，全部放行
-			return true;
-		}
+		
 
 
 		$privilegeList = $this->config->item('privilegeList');
 
-		$role_id = $_SESSION[static::LOGON_SESSION_NAME]->role_id;
+		// $role_id = $_SESSION[static::LOGON_SESSION_NAME]->role_id;
+		$role_id = $this->input->cookie('role_id');
 		$privilege = $privilegeList[$role_id];
 
 		if(!isset($privilege[$controller])){ //若未定义的controller，则禁止
@@ -118,19 +128,24 @@ class NB_Controller extends CI_Controller {
 		if(in_array($action, $whiteAction)){ //若action 在配置里，则放行
 			return true;
 		}
+
 		return false;
 
+
+
 	}
 
-	protected function check_access () {
-		if (in_array ( $this->router->method, $this->_allow_access )) {
-			return TRUE;
-		}
-		return FALSE;
-	}
+	// protected function check_access () {
+	// 	if (in_array ( $this->router->method, $this->_allow_access )) {
+	// 		return TRUE;
+	// 	}
+	// 	return FALSE;
+	// }
 
 	protected function check_logon () {
-		@session_start();
+		/*@session_start();
+		print_r($_SESSION);
+
 		// 更新session防止被回收
 		if (! isset ( $_SESSION ['_last_access'] ) || ($_SERVER ['REQUEST_TIME'] - $_SESSION ['_last_access']) > 60)
 			$_SESSION ['_last_access'] = $_SERVER ['REQUEST_TIME'];
@@ -143,17 +158,58 @@ class NB_Controller extends CI_Controller {
 		if(isset($_SESSION[static::LOGON_SESSION_NAME]) && $_SESSION[static::LOGON_SESSION_NAME]->status==1){
 			return false;
 		}
-		return FALSE;
+		return FALSE;*/
+
+		$cookies = $this->input->cookie();
+		//判断cookies参数是否齐全
+		if(!isset($cookies['id']) || !isset($cookies['name']) || !isset($cookies['_time']) || !isset($cookies['_secretKey'])){
+			return false;
+		}
+		//判断cookies参数是否合法
+		$secretKey = $this->config->item('secretKey');
+		if(md5($cookies['role_id'].$cookies['_time'].$secretKey) != $cookies['_secretKey']){
+			return false;
+		}
+
+		//判断登录是否过期
+		$logonTime = $this->config->item('logonTime');
+		if(time()-$cookies['_time'] > $logonTime){
+			return false;
+		}
+
+		return true;
+
+		// pr($cookies);
 	}
+	protected function setCookie($name, $value){
+		$logonTime = $this->config->item('logonTime');
+    	setcookie($name, $value, time()+$logonTime, '/', "", FALSE, TRUE);
+    }
 
 	protected function set_logon ($user) {
-		@session_start();
-		$_SESSION[static::LOGON_SESSION_NAME] = $user;
+		/*@session_start();
+		$_SESSION[static::LOGON_SESSION_NAME] = $user;*/
+		// $this->setCookie('uid', $user->uid);
+    	$this->setCookie('name', $user->name);
+    	$this->setCookie('id', $user->id);
+    	// $this->setCookie('status', $user->status);
+    	$this->setCookie('role_id', $user->role_id);
+    	$logonTime = time();
+    	$this->setCookie('_time', $logonTime);
+    	$secretKey = $this->config->item('secretKey');
+
+    	$this->setCookie('_secretKey', md5($user->role_id.$logonTime.$secretKey));
 	}
 
 	protected function set_logout () {
-		@session_start();
-		unset($_SESSION[static::LOGON_SESSION_NAME]);
+		// @session_start();
+		// unset($_SESSION[static::LOGON_SESSION_NAME]);
+		$cookies = $this->input->cookie();
+		if(!empty($cookies)){
+			foreach ($cookies as $k => $v) {
+				setcookie($k, '', time()-3600, '/', '', FALSE, TRUE);
+			}
+		}
 	}
 
 	protected function output_data ($data = array(), $view = '', $return = FALSE) {

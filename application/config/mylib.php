@@ -2,6 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $config['secretKey']  = 'zuinanfen!@#$123' ; //站点通用秘钥
+//自动标注几个菜为制作中
+$config['autoUpdateDishNum'] = 3;
+//登录有效时间
+$config['logonTime'] = 60*60*24*3; //三天有效
 
 //订单状态
 $config['orderStatus']	= array(  
@@ -14,6 +18,17 @@ $config['orderStatus']	= array(
 		8 => '已撤销'
 );
 
+//订单状态颜色
+$config['orderStatusColor']	= array(  
+		0 => '#337ab7',
+		1 => '#449d44',
+		2 => '#000000',
+		3 => '#dff0d8',
+
+
+		8 => '#d44950'
+);
+
 //单个菜品状态
 $config['dishStatus'] = array(
 		0 => '待处理',
@@ -23,6 +38,18 @@ $config['dishStatus'] = array(
 
 		8 => '已撤销'
 );
+
+//菜品状态颜色
+$config['dishStatusColor']	= array(  
+		0 => '#337ab7',
+		1 => '#449d44',
+		2 => '#000000',
+		3 => '#dff0d8',
+
+
+		8 => '#d44950'
+);
+
 
 //订单来源配置
 $config['orderSource'] = array(
@@ -43,8 +70,7 @@ $config['payType'] =  array(
 		8 => '其他',
 );
 
-//自动标注几个菜为制作中
-$config['autoUpdateDishNum'] = 3;
+
 
 //用戶角色
 $config['roleType']  = array(

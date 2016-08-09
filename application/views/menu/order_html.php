@@ -35,7 +35,7 @@ $this->load->view ( 'common/h5_top', array (
 			<td><%=data.sourceName%><%if(data.src==1){%>(<%=data.table_id%>号)<%}%></td>
 			<td><%=data.dish_num%></td>
 			<td><%=data.orderTime%></td>
-			<td style="color:<%if(data.status==0){%>#337ab7<%}else if(data.status==1){%>#ec971f<%}%>;"><%=data.statusName%></td>
+			<td style="color:<%=orderStatusColor[data.status]%>;"><%=data.statusName%></td>
 			
 			<td>
 				<a href="order_show?orderId=<%=data.id%>"><button type="button"  class="btn btn-sm btn-success">查看</button></a>

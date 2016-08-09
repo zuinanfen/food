@@ -25,7 +25,7 @@ $this->load->view ( 'common/h5_top', array (
 			<td><strong><?php echo $v['name']?></strong></td>
 			<td><?php echo $v['price']?></td>
 			<td><b><?php echo $v['total_price'] ?><b></td>
-			<td style="color:<?if($v['status']==0){?>#337ab7<?}elseif($v['status']==1){?>#ec971f<?}?>;">
+			<td style="color:<?=$dishStatusColor[$v['status']]?>;">
 			<?php echo $v['statusName'] ?></td>
 			<td>
 				<?if($v['status']==0){?>
@@ -63,15 +63,16 @@ $this->load->view ( 'common/h5_top', array (
 	        <td>订单号</td>
 	        <td><b><?php echo $detail['id']?></b></td>
 	      </tr>
-    	<tr>
-	        <td>菜品数量</td>
-	        <td><b><?php echo $detail['dish_num']?></b></td>
-	    </tr>
-	      <tr>
+	       <tr>
 	        <td>订单总金额</td>
 	        <td><b><?php echo $detail['amount']?></b></td>
 	      </tr>
       
+    	<tr>
+	        <td>菜品数量</td>
+	        <td><b><?php echo $detail['dish_num']?></b></td>
+	    </tr>
+	     
       <tr>
         <td>订单来源</td>
         <td><b><?php echo $detail['sourceName']?></b></td>
@@ -84,7 +85,11 @@ $this->load->view ( 'common/h5_top', array (
 	<?}?>
       <tr>
         <td>订单状态</td>
-        <td><b style="color:<?if($detail['status']==0){?>#337ab7<?}elseif($detail['status']==1){?>#ec971f<?}?>;"><?php echo $detail['statusName']?></b></td>
+        <td><b style="color:<?=$orderStatusColor[$detail['status']]?>;"><?php echo $detail['statusName']?></b></td>
+      </tr>
+      <tr>
+        <td>下单用户</td>
+        <td><b><?php echo $detail['username']?></b></td>
       </tr>
       <tr>
         <td>下单时间</td>
@@ -99,7 +104,7 @@ $this->load->view ( 'common/h5_top', array (
 <div style="height:20px;"></div>
   <div class="marketing">
 		<div style="display:inline-block;width:48%">
-			<button type="button" data-id=<?=$detail['id']?> class="btn <?if($detail['status']!=8){?>btn-danger<?}?> btn-block" <?if($detail['status']==8){?>disabled=""<?}?>  id="cancelOrder">
+			<button type="button" data-id=<?=$detail['id']?> class="btn <?if($detail['status']!=8){?>btn-danger<?}?> btn-block" <?if(in_array($detail['status'],array(2,3,8))){?>disabled=""<?}?>  id="cancelOrder">
 			撤销订单</button>
 		</div>
 

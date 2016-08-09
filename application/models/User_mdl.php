@@ -35,6 +35,7 @@ class User_mdl extends NB_Model {
 	}
 
 	public function get_by_uid ($uid) {
+		var_dump($uid);
         //$res = $this->get_by_kvcache(static::T_NAME.'_NAME',$name);
         //if (!empty($res)) return $res;
 
@@ -49,5 +50,18 @@ class User_mdl extends NB_Model {
 
         //$this->set_by_kvcache(static::T_NAME.'_NAME', $name, $res);
 		return $res; 
+	}
+	public function get_by_id ($id) {
+
+		$res = null; 
+
+		$this->db->from(static::T_NAME); 
+		$this->db->where('id',$id); 
+		$query = $this->db->get(); 
+		if($query && $query->num_rows() > 0){ 
+			$res = $query->result_array(); 
+		}
+
+		return $res[0]; 
 	}
 }

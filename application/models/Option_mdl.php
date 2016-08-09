@@ -1,5 +1,5 @@
 <?php	
-class Option_mdl extends NB_Model {
+/*class Option_mdl extends NB_Model {
 	
 	const T_NAME = 't_option';
 
@@ -8,9 +8,6 @@ class Option_mdl extends NB_Model {
 		1 => '禁用',
 	);
 
-	/**********************************************************
-	 * inherit gen_new,get,set,list_all functions from parent *
-	 *********************************************************/
 
 	public function list_by_status($status=null, $return_by_id=false) {
 		$res = array();
@@ -34,3 +31,4 @@ class Option_mdl extends NB_Model {
 	}
 
 }
+*/

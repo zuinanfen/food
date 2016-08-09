@@ -36,11 +36,15 @@ class Logon extends NB_Controller {
 			$this->set_error(static::RET_ERROR_DATA, "密码错误");	
 			return $this->output_json();
 		}
+		if($obj->status !=0){
+			$this->set_error(static::RET_ERROR_DATA, "用户禁止访问！");	
+			return $this->output_json();
+		}
 
-		unset($obj->password);
-		unset($obj->ctime);
-		unset($obj->mtime);
-		unset($obj->oper);
+		// unset($obj->password);
+		// unset($obj->ctime);
+		// unset($obj->mtime);
+		// unset($obj->oper);
 		//登录成功
 		$this->set_logon($obj);	
 

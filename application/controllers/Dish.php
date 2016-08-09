@@ -7,7 +7,7 @@ class Dish extends NB_Controller {
 	function __construct () {
 		parent::__construct();
 		$this->load->model('dish_mdl');
-		$this->load->model('option_mdl');
+		//$this->load->model('option_mdl');
 		$this->load->model('dishoption_mdl');
 	}
 

@@ -9,6 +9,7 @@ class Menu extends NB_Controller {
 		$this->load->model('dish_mdl');
 		$this->load->model('order_mdl');
 		$this->load->model('orderdish_mdl');
+		$this->load->model('user_mdl');
 		$this->load->library('Order');
 		$this->src_type = $this->config->item('orderSource');
 	}
@@ -38,10 +39,11 @@ class Menu extends NB_Controller {
 	}
 	public function order(){
 		$list = $this->order_mdl->list_by_status();
+
 		// $user_list = $this->user_mdl->list_by_roleid(array(3), TRUE);
 		// $dish_list = $this->dish_mdl->list_all(TRUE);
 		$this->output_data(array(
-			'list' => $list
+			'list' => $list,
 		));
 	}
 	public function order_list(){
@@ -51,8 +53,11 @@ class Menu extends NB_Controller {
 			$list[$k] = $orderInit;
 		}
 		// pr($list);
+		$orderStatusColor = $this->config->item('orderStatusColor');
 		$this->output_json(array(
-			'list' => $list
+			'list' => $list,
+			'orderStatusColor'  => $orderStatusColor,
+
 		));
 	}
 	//查看订单
@@ -67,6 +72,8 @@ class Menu extends NB_Controller {
 			echo '数据不存在'; die;
 		}
 		$detail = $this->order->init_order($detail);
+		$userInfo = $this->user_mdl->get_by_id($detail['uid']);
+		$detail['username'] = $userInfo['name'];
 
 		// $dish_list = $this->orderdish_mdl->get_dish_list($orderId);
 		$dish_list = $this->orderdish_mdl->get_all_dish_list($orderId);
@@ -79,9 +86,13 @@ class Menu extends NB_Controller {
 		}
 
 		$detail = json_decode(json_encode($detail), true);
+		$orderStatusColor = $this->config->item('orderStatusColor');
+		$dishStatusColor = $this->config->item('dishStatusColor');
 		$this->output_data(array(
 			'detail'  => $detail,
 			'dishList' => $dish_list,
+			'orderStatusColor' => $orderStatusColor,
+			'dishStatusColor'  => $dishStatusColor,
 		));
 	}
 

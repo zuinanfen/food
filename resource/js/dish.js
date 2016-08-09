@@ -459,6 +459,7 @@ var Order = {
              dataType: 'json',
              success: function(json){
              	if (json._ret == 0) {
+             		console.log(json);
 					var html = Template.getHtml('dishListHtml',json);
 					$('#dishList').html(html);
 					

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Option extends NB_Controller {
+/*class Option extends NB_Controller {
 
 	function __construct () {
 		parent::__construct();
@@ -65,3 +65,4 @@ class Option extends NB_Controller {
 		$this->output_json();
 	}
 }
+*/
