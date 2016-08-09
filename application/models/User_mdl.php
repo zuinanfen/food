@@ -35,7 +35,6 @@ class User_mdl extends NB_Model {
 	}
 
 	public function get_by_uid ($uid) {
-		var_dump($uid);
         //$res = $this->get_by_kvcache(static::T_NAME.'_NAME',$name);
         //if (!empty($res)) return $res;
 
