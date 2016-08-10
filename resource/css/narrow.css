@@ -164,9 +164,14 @@ body {
 }
 #chef_dish_list .table{
   margin-bottom: 8px;
+  background-color: transparent;
 }
 #chef_dish_list button{
   width: 40%;
+}
+.chef_list.doing{
+  border-color:#eea236;
+  background-color:#eee;
 }
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {

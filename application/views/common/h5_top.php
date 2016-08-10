@@ -40,7 +40,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <nav>
   <ul class="nav nav-pills pull-right navi">
 	<li <?if($sysData['controller']=='menu' && in_array($sysData['action'],array('index','cart'))){?>class="active"<?}?>><a href="index">点菜</a></li>
-	<li <?if($sysData['controller']=='menu' && $sysData['action']=='order'){?>class="active"<?}?>><a href="order">订单列表</a></li>
+	<li <?if($sysData['controller']=='menu' && $sysData['action']=='serving'){?>class="active"<?}?>><a href="serving">上菜</a></li>
+	<li <?if($sysData['controller']=='menu' && $sysData['action']=='order'){?>class="active"<?}?>><a href="order">订单</a></li>
   </ul>
 </nav>
 <?}?>

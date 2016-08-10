@@ -27,7 +27,7 @@ $this->load->view ( 'common/h5_top', array (
 
 <script id="dishListHtml" type="text/html">
 	<%for(var i=0;i<list.length;i++){ var v=list[i];%>
-	<div id="<%=v['id']%>" class="chef_list" <%if(v['status']==1){%>style="border-color:#eea236"<%}%>>
+	<div id="<%=v['id']%>" class="chef_list <%if(v['status']==1){%>doing<%}%>" >
 		<table class="table">
 	    
 	    <tbody>
@@ -38,7 +38,7 @@ $this->load->view ( 'common/h5_top', array (
 	      </tr>
 	      <%if(v['select_options'].length>0){%>
 	      <tr>
-	        <td colspan="2">
+	        <td colspan="2" style="color:#d44950">
 	        <%for(j=0;j<v['select_options'].length;j++) {var value=v['select_options'][j];%>
 	        &nbsp;<%=value['name']%>
 				<%if(value['price']!=0){%>(<%=value['price']%>)<%}%>
