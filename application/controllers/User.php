@@ -84,33 +84,51 @@ class User extends NB_Controller {
 			$obj->uid = $uid;
 		}
 
-
 		if (empty($obj)) {
-			$this->set_error(static::RET_ERROR_DATA, "找不到对象");	
+			$this->set_error(static::RET_ERROR_DATA, "找不到该用户信息");	
 			return $this->output_json();
 		}
 
-
 		$secretKey = $this->config->item('secretKey');
 		$old_name = $obj->name;
-		$name = $this->post("name"); if (isset($name) && !empty($name)) $obj->name = $name;
-		$role_id = $this->post("role_id"); if (isset($role_id) && $role_id>=0) $obj->role_id = intval($role_id);
-		$status = $this->post("status"); if (isset($status) && $status>=0) $obj->status = intval($status);
-		$password = $this->post("password");
-		if (isset($name) && !empty($name) && isset($password) && !empty($password)) {
-			if ( md5($secretKey.$password) != $obj->password ) {
-				$this->set_error(static::RET_ERROR_DATA, "原始密码错误");	
-				return $this->output_json();
-			}
 
-			$newpassword = $this->post("newpassword"); 
-			if (empty($newpassword)) {
-				$this->set_error(static::RET_WRONG_INPUT, "新密码不能为空");	
-				return $this->output_json();
-			}
 
+		$name = $this->post("name"); 
+		if (isset($name) && !empty($name)){
+			$obj->name = $name;
+		}
+
+		$role_id = $this->post("role_id"); 
+		if (isset($role_id) && $role_id>=0){
+			$obj->role_id = intval($role_id);
+		} 
+		$status = $this->post("status"); 
+		if (isset($status) && $status>=0){
+			$obj->status = intval($status);
+		}
+
+
+		// $password = $this->post("password");
+		// if (isset($name) && !empty($name) && isset($password) && !empty($password)) {
+		// 	if ( md5($secretKey.$password) != $obj->password ) {
+		// 		$this->set_error(static::RET_ERROR_DATA, "原始密码错误");	
+		// 		return $this->output_json();
+		// 	}
+
+			
+		// 	if (empty($newpassword)) {
+		// 		$this->set_error(static::RET_WRONG_INPUT, "新密码不能为空");	
+		// 		return $this->output_json();
+		// 	}
+
+			
+		// }
+		$newpassword = $this->post("newpassword"); 
+
+		if(isset($newpassword) && !empty($newpassword)){
 			$obj->password = md5($secretKey.$newpassword);
 		}
+
 
 		$this->user_mdl->set($obj);
 		$this->output_json();

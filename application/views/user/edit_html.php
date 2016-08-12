@@ -30,12 +30,12 @@ $this->load->view ( 'common/header', array (
 				  <input type="text" class="form-control" id="name" value="<?php echo $detail->name ?>">
 				</div>
 			  </div>
-			  <div class="form-group">
+			  <!-- <div class="form-group">
 				<label for="password1" class="col-sm-2 control-label" value="">原始密码：</label>
 				<div class="col-sm-5">
 				  <input type="password" class="form-control" id="password1" placeholder="可以不填">
 				</div>
-			  </div>
+			  </div> -->
 			  <div class="form-group">
 				<label for="password1" class="col-sm-2 control-label" value="">新密码：</label>
 				<div class="col-sm-5">
@@ -73,7 +73,7 @@ $(function(){
 			id:<?php echo $detail->id?>,
 			name:$('#name').val(),
 			uid:$('#uid').val(),
-			password:$('#password1').val(),
+			// password:$('#password1').val(),
 			newpassword:$('#password2').val(),
 			role_id:$('#role_id').val()
 		}, function(data){
