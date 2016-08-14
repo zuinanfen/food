@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title><?php echo $title?></title>
+	<link rel="shortcut icon" href="<?= $_cdn_host?>/resource/images/favicon.ico"/>
 	<link rel="stylesheet" href="<?php echo $_cdn_host?>/resource/css/bootstrap.min.css" type="text/css" />
 	<link rel="stylesheet" href="<?php echo $_cdn_host?>/resource/css/dashboard.css" type="text/css" />
 	<script src="<?php echo $_cdn_host?>/resource/js/jquery-2.2.4.min.js"></script>
