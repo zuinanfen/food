@@ -50,18 +50,7 @@ $this->load->view ( 'common/header', array (
 				<div class="col-sm-7">
 					<table class="table table-bordered table-condensed">
 					<tr><th>菜名</th><th>定制项</th><th>数量</th></tr>
-			  <?php if (!empty($detail->dish_list)):$dish = json_decode($detail->dish_list); foreach ($dish as $obj): ?>
-					<tr>
-						<td><?php echo $dish_list[$obj->id]->name?></td>
-						<td><?php if (isset($obj->option)): ?>
-							<?php foreach ($obj->option as $i=>$id):?>
-								<small><?php echo $option_list[$id]->name?></small>
-							<?php endforeach?>
-							<?php endif?>
-						</td>
-						<td>✖️<?php echo $obj->num?></td>
-					</tr>
-			  <?php endforeach;endif?>
+			
 					</table>
 				</div>
 			  </div>

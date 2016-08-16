@@ -14,7 +14,7 @@ class Order extends CI_Controller {
         $order_content['sourceName'] = $this->order_source[$order_content['src']];
         $order_content['payTypeName'] = $this->pay_type[$order_content['pay_type']];
         $order_content['orderTime'] = date('m-d H:i:s', strtotime($order_content['ctime']));
-        $order_content['dish_list'] = json_decode($order_content['dish_list'], true);        
+        // $order_content['dish_list'] = json_decode($order_content['dish_list'], true);        
         return $order_content;
     }
     public function init_dish($dish_content){

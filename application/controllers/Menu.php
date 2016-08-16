@@ -157,5 +157,38 @@ class Menu extends NB_Controller {
 			
 		));
 	}
+	//	//加菜
+	public function add_dish(){
+		$orderId = $this->get('orderId');
+		if(!preg_match("/^[A-Za-z0-9]+$/",$orderId)){
+			echo '非法请求'; die;
+		}
 
+		$detail = $this->order_mdl->get($orderId);
+		if($detail == false){
+			echo '订单数据不存在'; die;
+		}
+		$detail = $this->order->init_order($detail);
+		$userInfo = $this->user_mdl->get_by_id($detail['uid']);
+		$detail['username'] = $userInfo['name'];
+
+		$dish_list = $this->orderdish_mdl->get_all_dish_list($orderId);
+		if(empty($dish_list)){
+			$dish_list =  array();
+		}else{
+			foreach ($dish_list as $k => $v) {
+				$dish_list[$k] = $this->order->init_dish($v);
+			}
+		}
+
+		$detail = json_decode(json_encode($detail), true);
+		$orderStatusColor = $this->config->item('orderStatusColor');
+		$dishStatusColor = $this->config->item('dishStatusColor');
+		$this->output_data(array(
+			'detail'  => $detail,
+			'dishList' => $dish_list,
+			'orderStatusColor' => $orderStatusColor,
+			'dishStatusColor'  => $dishStatusColor,
+		));
+	}
 }

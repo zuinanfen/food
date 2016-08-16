@@ -87,7 +87,7 @@ class Order extends NB_Controller {
         $obj->table_id = $order_table_seat;
         $obj->uid = $cookies['id'];
         $obj->status = 0;
-        $obj->dish_list = json_encode($dish_list);
+        // $obj->dish_list = json_encode($dish_list);
         $obj->ctime = $ctime;
         $obj->mtime = $ctime;
 		$obj->dish_num = count($dish_list);
@@ -158,33 +158,31 @@ class Order extends NB_Controller {
 		$orderId = $this->post('orderId');
 		$dishKey = $this->post('dishKey');
 
-		//重新结算订单
-		$dishList = $this->orderdish_mdl->get_dish_list($orderId);
-		if(count($dishList)<2){
-			$this->set_error(static::RET_WRONG_INPUT, "该订单只有一个菜品，无法删除，请直接撤销订单！");
+		// //重新结算订单
+		// $dishList = $this->orderdish_mdl->get_dish_list($orderId);
+		// if(count($dishList)<2){
+		// 	$this->set_error(static::RET_WRONG_INPUT, "该订单只有一个菜品，无法删除，请直接撤销订单！");
+		// 	return $this->output_json();
+		// }
+		//读取菜品状态，只有未处理，和处理中的允许撤销
+		$info = $this->orderdish_mdl->get($dishId);
+		if(!in_array($info['status'], array(0,1))){
+			$this->set_error(static::RET_WRONG_INPUT, "该菜品不允许撤销！");
 			return $this->output_json();
 		}
+
+
 		//更改菜品状态
 		$this->orderdish_mdl->update_status($dishId, 8);
 		//读取有效的菜品
-		$dishList = $this->orderdish_mdl->get_dish_list($orderId);
-		
-		// //获取订单内容
-		// $orderInfo = $this->order_mdl->get($orderId);
-		// //修改dish_list包
-		// $orderDishList = json_decode($orderInfo['dish_list'], true);
-		// unset($orderDishList[$dishKey]);
+		$res = $this->orderDishInit($orderId);
 
-		//结算新订单的价格
-		$totalPrice = 0;
-		foreach ($dishList as $k => $v) {
-			$totalPrice = bcadd($totalPrice, $v['total_price'], 2);
-		}
 		//更改订单价格和商品数量
 		$update_data = array(
 			// 'dish_list' => json_encode($orderDishList),
-			'dish_num'  => count($dishList),
-			'amount'    => $totalPrice,
+			'dish_num'  => $res['dish_num'],
+			'amount'    => $res['amount'],
+			'status'    => $res['status'],
 		);
 		$this->order_mdl->update($orderId, $update_data);
 		return $this->output_json();
@@ -219,6 +217,103 @@ class Order extends NB_Controller {
 		$this->order_mdl->update($orderId,$data);
 		return $this->output_json();
 
+	}
+	//加菜
+	public function addDish(){
+		$orderId = $this->post('orderId');
+		if(!preg_match("/^[A-Za-z0-9]+$/",$orderId)){
+			$this->set_error(static::RET_WRONG_INPUT, "非法请求");
+			return $this->output_json();
+		}
+
+		$detail = $this->order_mdl->get($orderId);
+		if($detail == false){
+			$this->set_error(static::RET_WRONG_INPUT, "订单数据不存在！");
+			return $this->output_json();
+		}
+
+		if(!in_array($detail['status'], array(0,1,2))){
+			$this->set_error(static::RET_WRONG_INPUT, "该订单状态不允许添加菜品！");	
+			return $this->output_json();
+		}
+
+		$dish_list = $_POST['dish_list'];// 不知道为毛用$this->post('dish_list');接收不到数据，估计是xss拦截
+		if(empty($dish_list)){
+			$this->set_error(static::RET_WRONG_INPUT, "菜品不能为空！");	
+			return $this->output_json();
+		}
+		try {
+			$dish_list = json_decode($dish_list, true);
+		} catch (Exception $e) {
+			$this->set_error(static::RET_WRONG_INPUT, "参数错误，请联系管理员");	
+			return $this->output_json();
+		}
+
+        $this->insertOrderDish($orderId, $dish_list); //循环插入菜品
+
+        // $new_dish_list = json_decode($detail['dish_list'], true) + $dish_list;
+
+        
+
+        //计算菜品总价，菜品数量，菜品list
+        $res = $this->orderDishInit($orderId);
+
+
+		$data = array(
+			'status'   => $res['status'],
+			'dish_num' => $res['dish_num'],
+			'amount'   => $res['amount'],
+		);
+
+        //继续插入订单
+		$this->order_mdl->update($orderId, $data);
+		$this->output_json();
+
+	}
+	private function orderDishInit($orderId){
+
+		//获取菜品列表
+        $db_dish_list = $this->orderdish_mdl->get_dish_list($orderId);
+        if(!$db_dish_list){
+ 			return array('amount'=>0,'dish_num'=>0,'status'=>8);
+        }
+
+        $amount = 0;
+        $dish_num = count($db_dish_list);
+
+
+        $status_arr = array();
+
+        $dishStatus = $this->config->item('dishStatus');
+
+        foreach ($dishStatus as $k => $v) {
+    		$status_arr[$k] = 0;
+    	}
+
+        if($dish_num>0){
+			foreach ($db_dish_list as $k => $v) {
+        		$amount = bcadd($amount, $v['total_price'], 2);
+        		$status_arr[$v['status']] = intval($status_arr[$v['status']]) + 1;
+        	}
+        }
+
+        $res = array('amount'=>$amount,'dish_num'=>$dish_num,'status'=>8);
+
+        //以菜品状态来决定订单状态
+        if($status_arr[0]>0){ //有未完成的菜品
+        	$res['status'] = 0;
+        	return $res;
+        }
+        if($status_arr[1]>0){ //有处理中的菜品
+        	$res['status'] = 1;
+        	return $res;
+        }
+        
+        if($status_arr[2] == $dish_num){  //若所有菜都已经上菜，则订单为为菜上齐状态
+        	$res['status'] = 2;
+        	return $res;
+        }
+        return $res;
 	}
 
 }

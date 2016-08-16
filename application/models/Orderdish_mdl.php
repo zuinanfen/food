@@ -126,4 +126,16 @@ class Orderdish_mdl extends NB_Model {
 
         
 	}
+	public function get($id){
+		$where = array(
+            'id'   => $id,
+        );
+        $this->db->where($where);
+        $query = $this->db->get(self::T_NAME);
+        $row = $query->result_array();
+        if(empty($row)){
+        	return false;
+        }
+		return $row[0];
+	}
 }

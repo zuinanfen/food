@@ -562,6 +562,10 @@ var OrderShow = {
 				OrderShow.cancelOrder(orderId);
 			}
 		});
+		$('#addDishBtn').click(function(){
+			var orderId = $(this).data('orderid');
+			OrderShow.addDish(orderId);
+		});
 	},
 	delDish: function(id, orderId, dishKey){
 		$.ajax({
@@ -598,5 +602,40 @@ var OrderShow = {
              }
 
         });
+	},
+	addDish:function(orderId){
+		//清掉之前的离线缓存，防止用户下单不小心多下了
+		Data.del('dish_list');
+		Data.set('orderId',orderId);
+		window.location.href="/index.php/menu/index";
+	},
+	addDishInit:function(){
+		var dish_list = Data.get('dish_list');
+		Cart.renderDish(dish_list);
+		$('#cancel_add').click(function(){
+			var orderId = $(this).data('orderid');
+			Data.del('dish_list');
+			window.location.href='/index.php/menu/order_show?orderId='+orderId;
+		});
+		$('#add_dish_submit').click(function(){
+			var orderId = $(this).data('orderid');
+			var dish_list = Data.get('dish_list');
+			$.ajax({
+	             type: 'post',
+	             url: '../order/addDish',
+	             data:{orderId:orderId,dish_list:JSON.stringify(dish_list)},
+	             dataType: 'json',
+	             success: function(json){
+	             	if (json._ret == 0) {
+						alert('添加菜品成功，请以最新订单金额进行结算！');
+						window.location.href='/index.php/menu/order_show?orderId='+orderId;
+					} else {
+						alert(json._log);
+						window.location.reload();
+					}
+	             }
+
+	        });
+		});
 	}
 }

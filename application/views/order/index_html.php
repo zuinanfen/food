@@ -34,9 +34,7 @@ $this->load->view ( 'common/header', array (
 				<td><?php echo $obj->order_time ?></td>
 				<td><?php echo isset($user_list[$obj->order_user])? $user_list[$obj->order_user]->name : '未知'?></td>
 				<td>
-					<?php $order_dish = @json_decode($obj->dish_list); if ($order_dish) foreach($order_dish as $id=>$o): ?>
-					<?php echo $dish_list[$id]->name?>✖️<?php echo $o->num ?><br/>
-					<?php endforeach; ?>
+					
 				</td>
 				<td><?php echo $obj->amount ?></td>
 				<td>

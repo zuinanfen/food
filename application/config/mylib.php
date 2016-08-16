@@ -119,14 +119,14 @@ $config['privilegeList'] = array(
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish'),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
 		
 		),
 	3   => array( //点餐员
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish'),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
 
 
 		),
@@ -134,6 +134,6 @@ $config['privilegeList'] = array(
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish'),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
 		),
 );

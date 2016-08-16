@@ -8,25 +8,6 @@ $this->load->view ( 'common/h5_top', array (
 
 <table class="table table-condensed" style="padding-bottom:30px;">
 	<thead>
-		<!--<tr class="success">
-			<th>
-				<select id="order_src">
-						<?php foreach ($src_type as $id=>$name): ?>
-						<option value="<?php echo $id?>"><?php echo $name?></option> 
-						<?php endforeach; ?>
-				</select>
-			</th>
-			<th colspan="4" nowrap=nowrap>
-				<div id="order_table_seat" rel="order_table" class="show">
-					桌号：<input rel="table_id" size="3">
-					人数：<input rel="seat_num" max-length=3 size="3">
-				</div>
-				<div id="order_table_takeout" rel="order_table" class="hide">
-					用户：<input rel="table_id" type="number" placeholder="手机号或者联系方式">
-					<input rel="seat_num" value="0" type="hidden">
-				</div>
-			</th>
-		</tr>-->
 		<tr>
 			<th colspan="3">菜名</th>
 			<th nowrap=nowrap>单价</th>
@@ -67,7 +48,15 @@ $(document).ready(function(){
 		if(parseInt(dishNum)<1){
 			alert('您还未选择菜品！');
 		}else{
-			window.location.href = 'cart';
+			//判断是点菜还是加菜
+			var orderId = Data.get('orderId','string');
+			if(orderId==null || orderId==''){
+				window.location.href = 'cart';
+			}else{
+				Data.del('orderId');
+				window.location.href = 'add_dish?orderId='+orderId;
+			}
+
 		}
 	});
 });
