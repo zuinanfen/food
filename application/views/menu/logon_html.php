@@ -60,5 +60,7 @@ $this->load->view ( 'common/h5_top', array (
         <?}?>
     </ul>
   </div>
-
+<h6 class="text-center" style="bottom:0;position:absolute;width:100%">
+<small>&copy; 醉南粉餐饮管理有限公司 V1.1</small>
+</h6>
 <?php $this->load->view ( 'common/h5_bottom' ); ?>
