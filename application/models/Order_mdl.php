@@ -34,6 +34,7 @@ class Order_mdl extends NB_Model {
 		$res = array();
 
 		$this->db->from(self::T_NAME,100,0);  //最多一百条
+		$this->db->where('shop_id',$this->shop_id);
 		if (!empty($status))
 			$this->db->where_in('status',$status);
 		$this->db->order_by('ctime', 'DESC');
@@ -54,6 +55,7 @@ class Order_mdl extends NB_Model {
 	public function get($orderId){
 		$where = array(
             'id'   => $orderId,
+            'shop_id'  => $this->shop_id
         );
         $this->db->where($where);
         $query = $this->db->get(self::T_NAME);
@@ -79,8 +81,7 @@ class Order_mdl extends NB_Model {
 	//list by time
 	public function list_by_time($startTime, $endTime){
 		$this->db->from(self::T_NAME);
-
-		$this->db->where("ctime>'{$startTime}' and ctime<'{$endTime}'");
+		$this->db->where("shop_id='{$this->shop_id}' and ctime>'{$startTime}' and ctime<'{$endTime}'");
 		$this->db->order_by('ctime', 'desc');
 		$query = $this->db->get();
 		$res = $query->result_array();

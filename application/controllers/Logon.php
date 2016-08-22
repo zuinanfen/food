@@ -8,7 +8,19 @@ class Logon extends NB_Controller {
 	function __construct () {
 		parent::__construct();
 		$this->load->model('user_mdl');
-		$this->load->model('role_mdl');
+	}
+
+	public function index(){
+		$shop_id = $this->get("shop_id");
+		if(empty($shop_id)){
+			echo '来源非法';
+			header('Location: /');
+			die;
+		}
+
+		$this->output_data(array(
+			'shop_id'  => intval($shop_id),
+		));
 	}
 
 	public function get_user () {
@@ -17,10 +29,28 @@ class Logon extends NB_Controller {
 			$this->set_error(static::RET_WRONG_INPUT, "登陆账号不能为空");	
 			return $this->output_json();
 		}
+		$shop_id = $this->post("shop_id");
+		if (empty($shop_id)) {
+			$this->set_error(static::RET_WRONG_INPUT, "来源非法，无法追踪店铺");	
+			return $this->output_json();
+		}
 
-		$obj = $this->user_mdl->get_by_uid($uid);
-		if (empty($obj)) {
+		$res = $this->user_mdl->get_by_uid($uid);
+		if (empty($res)) {
 			$this->set_error(static::RET_ERROR_DATA, "找不到该用户");	
+			return $this->output_json();
+		}
+		$checkUser = false;
+		$obj = '';
+		foreach ($res as $k => $v) {
+			if($v->shop_id==0 || $v->shop_id==$shop_id){
+				$checkUser = true;
+				$obj=$v;
+				break;
+			}
+		}
+		if(!$checkUser){
+			$this->set_error(static::RET_WRONG_INPUT, "该用户身份不能管理该店铺，请联系管理员");	
 			return $this->output_json();
 		}
 
@@ -46,7 +76,7 @@ class Logon extends NB_Controller {
 		// unset($obj->mtime);
 		// unset($obj->oper);
 		//登录成功
-		$this->set_logon($obj);	
+		$this->set_logon($obj, $shop_id);	
 
 		//根据角色选择首页
 		switch ($obj->role_id) {

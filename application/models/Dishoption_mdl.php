@@ -16,6 +16,7 @@ class Dishoption_mdl extends NB_Model {
 		$res = array();
 
 		$this->db->from(self::T_NAME);
+		$this->db->where('shop_id',$this->shop_id);
 		if (!empty($status))
 			$this->db->where_in('status',$status);
 		$query = $this->db->get();
@@ -34,7 +35,7 @@ class Dishoption_mdl extends NB_Model {
 	}
 	public function list_by_dish($dish_id,$status=0) {
 		$t_name = self::T_NAME;
-		$sql = "select * from {$t_name} where dish_id='{$dish_id}' and status={$status} order by sort desc ";
+		$sql = "select * from {$t_name} where dish_id='{$dish_id}' and shop_id='{$this->shop_id}' and status={$status} order by sort desc ";
         $query = $this->db->query($sql);
         $row = $query->result_array();
         return $row;

@@ -17,6 +17,7 @@ class NB_Controller extends CI_Controller {
 	protected $_ret = 0;
 	protected $_log = '';
 	protected $_debug = '';
+	// protected $shop_id = '';
 
 	const RET_NORMAL = 0;
 	const RET_WRONG_INPUT = 0x1;
@@ -61,30 +62,29 @@ class NB_Controller extends CI_Controller {
 
 		$this ->cookies = $this->input->cookie();
 
-		// if (!$this->check_logon () && !$this->check_access ()) {
-		// 	exit('访问被禁止！');
-		// } 
 		$controller = $this->router->fetch_class();
+
+		$this->sysData = array(
+			'controller'  => $controller,
+			'action'      => $this->router->fetch_method(),
+		);
 
 		if($controller!='logon'){  //检查权限
 			if(!$this->check_logon()){
-				exit('访问被禁止！');
+				exit('登陆过期，访问被禁止！');
 			}
 			if (!$this->check_privilege()) {
-				exit('no privilege');
+				exit('没有权限访问，请重新登陆再试！');
 			}
 		}
-
-		$this->sysData = array(
-				'controller'  => $controller,
-				'action'      => $this->router->fetch_method(),
-			);
-
 		if(!empty($this ->cookies)){
 			$this->sysData['username'] =  $this->input->cookie('name');
 			$this->sysData['role_id'] = $this->input->cookie('role_id');
 			$roleType = $this->config->item('roleType');
 			$this->sysData['role_type'] = $roleType[$this->sysData['role_id']];
+
+			$this->shop_id = intval($this->input->cookie('shop_id'));
+			$this->sysData['shop_id'] = $this->shop_id;
 		}
 		$this->read_params();
     }
@@ -162,12 +162,12 @@ class NB_Controller extends CI_Controller {
 
 		$cookies = $this->input->cookie();
 		//判断cookies参数是否齐全
-		if(!isset($cookies['id']) || !isset($cookies['name']) || !isset($cookies['_time']) || !isset($cookies['_secretKey'])){
+		if(!isset($cookies['id']) || !isset($cookies['name']) || !isset($cookies['shop_id']) || !isset($cookies['_time']) || !isset($cookies['_secretKey'])){
 			return false;
 		}
 		//判断cookies参数是否合法
 		$secretKey = $this->config->item('secretKey');
-		if(md5($cookies['role_id'].$cookies['_time'].$secretKey) != $cookies['_secretKey']){
+		if(md5($cookies['role_id'].$cookies['shop_id'].$cookies['_time'].$secretKey) != $cookies['_secretKey']){
 			return false;
 		}
 
@@ -186,7 +186,7 @@ class NB_Controller extends CI_Controller {
     	setcookie($name, $value, time()+$logonTime, '/', "", FALSE, TRUE);
     }
 
-	protected function set_logon ($user) {
+	protected function set_logon ($user,$shop_id) {
 		/*@session_start();
 		$_SESSION[static::LOGON_SESSION_NAME] = $user;*/
 		// $this->setCookie('uid', $user->uid);
@@ -194,11 +194,12 @@ class NB_Controller extends CI_Controller {
     	$this->setCookie('id', $user->id);
     	// $this->setCookie('status', $user->status);
     	$this->setCookie('role_id', $user->role_id);
+    	$this->setCookie('shop_id', $shop_id);
     	$logonTime = time();
     	$this->setCookie('_time', $logonTime);
     	$secretKey = $this->config->item('secretKey');
 
-    	$this->setCookie('_secretKey', md5($user->role_id.$logonTime.$secretKey));
+    	$this->setCookie('_secretKey', md5($user->role_id.$shop_id.$logonTime.$secretKey));
 	}
 
 	protected function set_logout () {

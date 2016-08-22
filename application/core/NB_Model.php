@@ -44,6 +44,7 @@ abstract class NB_Model extends CI_Model {
 	
 	public function set($obj){
 		$obj->mtime = date('Y-m-d H:i:s');
+		$obj->shop_id = $this->shop_id;
         //$this->set_by_kvcache(static::T_NAME,$obj->id, $obj);
 		return $this->db->replace(static::T_NAME, $obj); 
 	}
@@ -52,6 +53,8 @@ abstract class NB_Model extends CI_Model {
 		$res = array();
 
 		$this->db->from(static::T_NAME);
+		$this->db->where('shop_id',$this->shop_id);
+	
 		foreach ($orderArr as $k => $v) {
 			$this->db->order_by($k,$v);
 		}

@@ -14,9 +14,12 @@ class Dish_mdl extends NB_Model {
 	 *********************************************************/
 
 	public function list_by_status($status=null, $return_by_id=false) {
+		
+
 		$res = array();
 
 		$this->db->from(self::T_NAME);
+		$this->db->where('shop_id',$this->shop_id);
 		if (!empty($status))
 			$this->db->where_in('status',$status);
 		$this->db->order_by('sort','DESC');

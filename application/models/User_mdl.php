@@ -21,6 +21,7 @@ class User_mdl extends NB_Model {
 	public function list_by_roleid($role_list, $return_by_id=false) {
 		$res = array();
 		$this->db->from(static::T_NAME);
+		$this->db->where('shop_id',$this->shop_id);
 		$this->db->where_in('role_id',$role_list); 
 		$query = $this->db->get(); 
 		if($query && $query->num_rows() > 0){ 
@@ -41,10 +42,14 @@ class User_mdl extends NB_Model {
 		$res = null; 
 
 		$this->db->from(static::T_NAME); 
-		$this->db->where('uid',$uid); 
+		$where = array(
+            'uid'   => $uid
+        );
+		$this->db->where($where); 
 		$query = $this->db->get(); 
 		if($query && $query->num_rows() > 0){ 
-			$res = $query->row_object(); 
+			$res = $query->result_object(); 
+			// $res = $query->result_array();
 		}
 
         //$this->set_by_kvcache(static::T_NAME.'_NAME', $name, $res);
@@ -55,7 +60,10 @@ class User_mdl extends NB_Model {
 		$res = null; 
 
 		$this->db->from(static::T_NAME); 
-		$this->db->where('id',$id); 
+		$where = array(
+            'id'   => $id
+        );
+		$this->db->where($where); 
 		$query = $this->db->get(); 
 		if($query && $query->num_rows() > 0){ 
 			$res = $query->result_array(); 

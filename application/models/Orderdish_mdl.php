@@ -21,8 +21,8 @@ class Orderdish_mdl extends NB_Model {
 	public function list_by_status($status=array(), $return_by_id=false) {
 		$res = array();
 		$this->db->from(self::T_NAME);
+		$this->db->where('shop_id',$this->shop_id);
 		if (!empty($status)){
-
 			$this->db->where_in('status',$status);
 		}
 		$this->db->order_by('ctime', 'asc');
@@ -101,7 +101,7 @@ class Orderdish_mdl extends NB_Model {
             'status'    => $status,
             'mTime'   => date('Y-m-d H:i:s'),
         );
-        $this->db->update(self::T_NAME, $data, array('id'=>$id));
+        $this->db->update(self::T_NAME, $data, array('id'=>$id,'shop_id'=>$this->shop_id));
 	}
 	//获取最早下单的几个未制作的菜
 	public function get_old_dish(){
@@ -112,6 +112,8 @@ class Orderdish_mdl extends NB_Model {
 		$do_num = count($rows);
 		//假如制作中的菜品不够，则自动补上
 		if($autoUpdateDishNum>$do_num){
+			$this->db->where('shop_id',$this->shop_id);
+
 			$this->db->where('status', 0);
 	        $query = $this->db->get(self::T_NAME, $autoUpdateDishNum-$do_num, 0);
 	        $this->db->order_by('ctime', 'asc');
@@ -129,6 +131,7 @@ class Orderdish_mdl extends NB_Model {
 	public function get($id){
 		$where = array(
             'id'   => $id,
+            'shop_id'  => $this->shop_id
         );
         $this->db->where($where);
         $query = $this->db->get(self::T_NAME);
