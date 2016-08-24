@@ -5,7 +5,7 @@ $this->load->view ( 'common/h5_top', array (
 	'funcname'=> 'menu'
 ));
 ?>
-<h3 style="text-align:center;margin:25px 0;">欢迎使用醉南粉点餐系统</h3>
+<h3 style="text-align:center;margin:25px 0;">欢迎使用<?=$sysData['shop_name']?>点餐系统</h3>
 <div class="bs-glyphicons">
     <ul class="bs-glyphicons-list">
       
@@ -39,8 +39,8 @@ $this->load->view ( 'common/h5_top', array (
       <?if($sysData['role_id']==1||$sysData['role_id']==100){?>
         <li>
         	<a href="/index.php/report/index">
-	          <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
-	          <span class="glyphicon-class">数据统计</span>
+	          <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+	          <span class="glyphicon-class">订单统计</span>
 	        </a>
         </li>
         <li>
@@ -48,6 +48,12 @@ $this->load->view ( 'common/h5_top', array (
 	          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
 	          <span class="glyphicon-class">菜品管理</span>
 	         </a>
+        </li>
+        <li>
+          <a href="/index.php/income/index">
+            <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+            <span class="glyphicon-class">收入记账</span>
+           </a>
         </li>
             <?if($sysData['role_id']==100){?>
             <li>
@@ -61,6 +67,8 @@ $this->load->view ( 'common/h5_top', array (
     </ul>
   </div>
 <h6 class="text-center" style="bottom:0;position:absolute;width:100%">
-<small>&copy; 醉南粉餐饮管理有限公司 V1.1</small>
+<?
+$this->load->view ('common/version');
+?>
 </h6>
 <?php $this->load->view ( 'common/h5_bottom' ); ?>

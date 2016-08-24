@@ -75,8 +75,10 @@ class Logon extends NB_Controller {
 		// unset($obj->ctime);
 		// unset($obj->mtime);
 		// unset($obj->oper);
+		$shopList = $this->config->item('shopList');
+		$shop_name = $shopList[$shop_id];
 		//登录成功
-		$this->set_logon($obj, $shop_id);	
+		$this->set_logon($obj, $shop_id, $shop_name);	
 
 		//根据角色选择首页
 		switch ($obj->role_id) {

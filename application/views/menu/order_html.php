@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view ( 'common/h5_top', array (
-	'title' => '我的餐盘' ,
+	'title' => '订单列表' ,
 	'funcname'=> 'menu'
 ));
 ?>

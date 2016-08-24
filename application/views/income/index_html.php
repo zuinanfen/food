@@ -1,18 +1,21 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 $this->load->view ( 'common/admin_top', array (
-	'title' => '数据报表' ,
-	'funcname'=> 'report'
+	'title' => '收入记账' ,
+	'funcname'=> 'income',
 ));
 ?>
-<!-- <div class="col-sm-3 col-md-2 sidebar">
-	<ul class="nav nav-sidebar">
-		<li class="active"><a href="index">每日统计</a></li>
-	</ul>
-</div> -->
-<h4>订单结算表</h4>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	<div>
+		<div class="input-group" style="margin:8px 0;">
+	      <span class="input-group-addon">收款方式</span>
+	      <select id="type" class="form-control">
+	      	<option value="0">全部</option>
+	      	<?foreach($incomeType as $k=>$v){?>
+	      	<option value="<?=$k?>" <?if($type==$k){?> selected<?}?>><?=$v?></option>
+	      	<?}?>
+	      </select>
+	    </div>
 		<div class="input-group">
           <span class="input-group-btn">
             <button class="btn btn-default" type="button">开始日期</button>
@@ -34,24 +37,20 @@ $this->load->view ( 'common/admin_top', array (
       <thead>
         <tr>
           <th>日期</th>
-          <th>等待</th>
-          <th>处理中</th>
-          <th>完成</th>
-          <th>撤销</th>
-          <th>总数</th>
-          <th>应收款</th>
+          <th>入账类型</th>
+          <th>金额</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
       <?foreach($list as $k=>$v){?>
         <tr>
           <td><?=$k?></td>
-          <td><?=$v['waitNum']?></td>
-          <td><?=$v['doNum']?></td>
-          <td><?=$v['doneNum']?></td>
-          <td><?=$v['cancelNum']?></td>
-          <td><?=$v['orderNum']?></td>
-          <td><?=$v['amountNum']?></td>
+          <td><?=$typeName?></td>
+          <td><?=$v?></td>
+          <td>
+          <a href="show?date=<?=$k?>"><button type="button" class="btn btn-sm btn-success">查看</button></a>
+          </td>
         </tr>
         <?}?>
       </tbody>
@@ -62,7 +61,8 @@ $this->load->view ( 'common/admin_top', array (
 	$('#submit_btn').click(function(){
 		var startTime = $('#startTime').val();
 		var endTime = $('#endTime').val();
-		window.location.href = '/index.php/report/index?startTime='+startTime+'&endTime='+endTime;
+		var type = $('#type').val();
+		window.location.href = '/index.php/income/index?startTime='+startTime+'&endTime='+endTime+'&type='+type;
 		// Report.dateReport(startTime,endTime);
 	});
 

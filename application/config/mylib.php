@@ -92,6 +92,24 @@ $config['roleStatus'] = array(
 	1 => '冻结',
 );
 
+//入账类型
+$config['incomeType'] = array(
+	1 => '现金',
+	2 => '支付宝',
+	3 => '大众优惠买单',
+	4 => '大众团购券',
+	5 => '美团外卖',
+	6 => '百度外卖',
+	7 => '饿了么外卖',
+	8 => '乐惠',
+	9 => '一阳指',
+	100 => '银行卡',
+);
+//店铺名称
+$config['shopList'] = array(
+	1 => '醉南粉',
+	2 => '醉南鸡',
+);
 
 //用户权限表, 白名单方法，若controller未定义，则拦截，若action未定义，则放行，定义的则白名单，
 $config['privilegeList'] = array(
@@ -104,6 +122,7 @@ $config['privilegeList'] = array(
 			'order'        => array(),
 			'user'         => array(),
 			'report'       => array(),
+			'income'       => array(),
 		),
 	1   => array(  //系统管理员
 			'dish'         => array(),
@@ -114,6 +133,7 @@ $config['privilegeList'] = array(
 			'order'        => array(),
 			// 'user'         => array(),
 			'report'       => array(),
+			'income'       => array(),
 		),
 	2   => array(  //厨师
 			'logon'        => array(),
