@@ -55,6 +55,12 @@ $this->load->view ( 'common/h5_top', array (
             <span class="glyphicon-class">收入记账</span>
            </a>
         </li>
+         <li>
+          <a href="/index.php/invoice/index">
+            <span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+            <span class="glyphicon-class">报销管理</span>
+           </a>
+        </li>
             <?if($sysData['role_id']==100){?>
             <li>
                 <a href="/index.php/user/index">

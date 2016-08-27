@@ -38,3 +38,22 @@ var Income = {
         });
 	}
 }
+var Invoice = {
+    add:function(data){
+        $.ajax({
+             type: 'post',
+             url: '../invoice/addnew',
+             data: data,
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('添加记录成功！');
+                    // window.location.reload();
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
+    }
+}

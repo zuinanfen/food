@@ -111,6 +111,27 @@ $config['shopList'] = array(
 	1 => '醉南粉',
 	2 => '醉南鸡',
 );
+//报销状态
+$config['invoiceStatus'] = array(
+	0  => '未审核',
+	1  => '审核通过',
+	2  => '已结算',
+	3  => '撤销申请',
+	4  => '审核未通过'
+);
+//报销类型
+$config['invoiceType'] = array(
+	1  => '采购费',
+	2  => '交通费',
+	3  => '餐饮费',
+	4  => '通讯费',
+	5  => '住宿费',
+	6  => '办证费',
+	7  => '装修费',
+	8  => '活动费',
+	100=> '其他',
+);
+
 
 //用户权限表, 白名单方法，若controller未定义，则拦截，若action未定义，则放行，定义的则白名单，
 $config['privilegeList'] = array(
@@ -124,8 +145,9 @@ $config['privilegeList'] = array(
 			'user'         => array(),
 			'report'       => array(),
 			'income'       => array(),
+			'invoice'       => array(),
 		),
-	1   => array(  //系统管理员
+	1   => array(  //店长
 			'dish'         => array(),
 			'dishoption'   => array(),
 			'logon'        => array(),
@@ -135,6 +157,7 @@ $config['privilegeList'] = array(
 			// 'user'         => array(),
 			'report'       => array(),
 			'income'       => array(),
+			'invoice'       => array(),
 		),
 	2   => array(  //厨师
 			'logon'        => array(),
