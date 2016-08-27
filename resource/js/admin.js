@@ -47,8 +47,25 @@ var Invoice = {
              dataType: 'json',
              success: function(json){
                 if (json._ret == 0) {
-                    alert('添加记录成功！');
-                    // window.location.reload();
+                    alert('创建报销单成功！');
+                    window.location.href='/index.php/invoice/index';
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
+    },
+    cancel:function(id){
+        $.ajax({
+             type: 'post',
+             url: '../invoice/cancel',
+             data:{id:id},
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('撤销报销单成功！');
+                    window.location.reload();
                 } else {
                     alert(json._log);
                 }

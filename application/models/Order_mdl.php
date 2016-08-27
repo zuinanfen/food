@@ -41,7 +41,7 @@ class Order_mdl extends NB_Model {
 		$query = $this->db->get();
 		if($query && $query->num_rows() > 0){ 
 			$res = $query->result_array();
-		}   
+		}
 
 		if ($return_by_id) {
 			$res_new = array();

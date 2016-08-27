@@ -45,6 +45,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   </ul>
 </nav>
 <?}?>
+<?if($funcname=='invoice'){?>
+<nav>
+  <ul class="nav nav-pills pull-right navi">
+	<li <?if($sysData['action']=='index'){?>class="active"<?}?>><a href="index">我的报销</a></li>
+	<?if($sysData['role_id']==1 || $sysData['role_id']==100){?>
+		<li <?if($sysData['action']=='listall'){?>class="active"<?}?>><a href="listall">报销列表</a></li>
+	<?}?>
+  </ul>
+</nav>
+<?}?>
 
 
 

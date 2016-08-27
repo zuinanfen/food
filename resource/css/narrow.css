@@ -3,6 +3,11 @@ body {
   padding-top: 20px;
   padding-bottom: 20px;
 }
+.bs-example{
+  border:1px solid #ddd;
+  padding:0px 8px;
+  margin:4px 2px;
+}
 .bs-glyphicons-list {
     padding-left: 0;
     list-style: none;

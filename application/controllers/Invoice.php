@@ -7,11 +7,27 @@ class Invoice extends NB_Controller {
 	function __construct () {
 		parent::__construct();
 		$this->load->model('invoice_mdl');
+		$this->load->model('user_mdl');
 	}
 
 	public function index () {
+		$invoiceType = $this->config->item('invoiceType');
+		$invoiceStatus = $this->config->item('invoiceStatus');
+		$invoiceStatusColor = $this->config->item('invoiceStatusColor');
+		$list = $this->invoice_mdl->userGet($this->sysData['user_id']);
+		if(!empty($list)){
+			foreach ($list as $k => $v) {
+				$list[$k]['invoiceStatusName'] = $invoiceStatus[$v['status']];
+				$list[$k]['invoiceTypeName'] = $invoiceType[$v['type']];
+				$list[$k]['ctime'] = date('m-d H:i:s',strtotime($v['ctime']));
+				$list[$k]['invoiceStatusColor'] = $invoiceStatusColor[$v['status']];
+			}
+		}
 		
-		$this->output_data();
+
+		$this->output_data(array(
+			'list'   => $list
+		));
 	}
 	public function add(){
 
@@ -23,7 +39,7 @@ class Invoice extends NB_Controller {
 		$this->output_data($data);
 	}
 	public function addnew(){
-		$obj = $this->income_mdl->gen_new();
+		$obj = $this->invoice_mdl->gen_new();
 
 		$title = $this->post('title');
 		if(empty($title)){
@@ -63,9 +79,156 @@ class Invoice extends NB_Controller {
 		$obj->ctime = date('Y-m-d H:i:s');
 		$obj->user_id = $this->sysData['user_id'];
 
-		$this->income_mdl->set($obj);
+		//系统自动审核通过
+		$obj->status = 1;
+		$obj->checkTime = date('Y-m-d H:i:s');
+
+
+		$this->invoice_mdl->set($obj);
 		
 		return $this->output_json();
+	}
+	public function show(){
+		$id = $this->get('id');
+		if(empty($id)){
+			echo '报销单号不正确！';
+			die;
+		}
+		$id = intval($id);
+		$res = $this->invoice_mdl->get($id);
+		
+		$invoiceType = $this->config->item('invoiceType');
+		$invoiceStatus = $this->config->item('invoiceStatus');
+		$invoiceStatusColor = $this->config->item('invoiceStatusColor');
+
+
+		$res->invoiceStatusName = $invoiceStatus[$res->status];
+		$res->invoiceTypeName = $invoiceType[$res->type];
+		$res->invoiceStatusColor = $invoiceStatusColor[$res->status];
+
+		if($res->check_user){
+			$userInfo = $this->user_mdl->get_by_id($res->check_user);
+			$res->check_username = $userInfo['name'];
+		}else{
+			$res->check_username = '系统自动审核';
+		}
+
+		if($res->done_user){
+			$userInfo = $this->user_mdl->get_by_id($res->done_user);
+			$res->done_username = $userInfo['name'];
+		}
+
+
+		$detail = json_decode(json_encode($res), true);
+
+		$this->output_data(
+		 array(
+		 	'id'   => $id,
+			'detail' => $detail
+		 	)
+			
+		);
+	}
+
+	public function cancel(){
+		$id = $this->post('id');
+		if(empty($id)){
+			$this->set_error(static::RET_WRONG_INPUT, "报销单号不正确！");	
+			return $this->output_json();
+		}
+		$id = intval($id);
+		$res = $this->invoice_mdl->get($id);
+
+		//判断用户是否一致
+		if($res->user_id != $this->sysData['user_id']){
+			$this->set_error(static::RET_WRONG_INPUT, "只允许申请人自己撤销报销单！");	
+			return $this->output_json();
+		}
+		//判断状态是否可以撤销
+		if(!in_array($res->status,array(0,1,4))){
+			$this->set_error(static::RET_WRONG_INPUT, "该报销单状态不允许撤销！");	
+			return $this->output_json();
+		}
+
+		$obj = array(
+			'status' => 3,
+		);
+
+		$this->invoice_mdl->update($id,$obj);
+		return $this->output_json();
+	}
+	public function listall(){
+		$startTime = $this->get('startTime');
+		$endTime = $this->get('endTime');
+		$status = $this->get('status');
+		$user_id = $this->get('user_id');
+		$type = $this->get('type');
+		if(!isset($startTime)){
+			$startTime = date('Y-m-d', strtotime('-1 week'));
+			$endTime = date('Y-m-d', strtotime('today'));
+		}
+		$startTime = $startTime.' 00:00:01';
+		$endTime = $endTime.' 23:59:59';
+
+		if(strtotime($endTime) - strtotime($startTime) > 60*60*24*30){
+			$this->set_error(static::RET_WRONG_INPUT, "不能统计超过30天的数据");	
+			return $this->output_json();
+		}
+		if($status==null || $status=='all'){
+			$status = 'all';
+		}else{
+			$status = intval($status);
+		}
+
+		$where = array(
+
+		);
+		if(!empty($user_id)){
+			$where['user_id']  = $user_id;
+		}
+		if($status!==null && $status!=='all'){
+			$where['status']  = $status;
+		}
+		if(!empty($type)){
+			$where['type']  = $type;
+		}
+
+		$invoiceType = $this->config->item('invoiceType');
+		$invoiceStatus = $this->config->item('invoiceStatus');
+		$invoiceStatusColor = $this->config->item('invoiceStatusColor');
+
+		$list = $this->invoice_mdl->search($startTime,$endTime,$where);
+
+
+		if(!empty($list)){
+			foreach ($list as $k => $v) {
+				$list[$k]['invoiceStatusName'] = $invoiceStatus[$v['status']];
+				$list[$k]['invoiceTypeName'] = $invoiceType[$v['type']];
+				$list[$k]['ctime'] = date('m-d H:i:s',strtotime($v['ctime']));
+				$list[$k]['invoiceStatusColor'] = $invoiceStatusColor[$v['status']];
+				$userInfo = $this->user_mdl->get_by_id($v['user_id']);
+				$list[$k]['username'] = $userInfo['name'];
+			}
+		}
+		
+		$res = $this->user_mdl->list_by_roleid(array(1,2,3,4));
+		$user_list = array();
+		foreach ($res as $key => $value) {
+			$user_list[$value->id] = $value->name;
+		}
+
+		$data = array(
+			'invoiceStatus'   => $invoiceStatus,
+			'invoiceType'     => $invoiceType,
+			'status'          => $status,
+			'user_id'         => intval($user_id),
+			'type'            => intval($type),
+			'startTime'       => $startTime,
+			'endTime'         => $endTime,
+			'list'            => $list,
+			'user_list'       => $user_list
+ 		);
+		$this->output_data($data);
 	}
 
 }

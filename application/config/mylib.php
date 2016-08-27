@@ -113,11 +113,21 @@ $config['shopList'] = array(
 );
 //报销状态
 $config['invoiceStatus'] = array(
-	0  => '未审核',
-	1  => '审核通过',
+	0  => '待审核',
+	1  => '待结算',
 	2  => '已结算',
 	3  => '撤销申请',
 	4  => '审核未通过'
+);
+//报销状态
+$config['invoiceStatusColor'] = array(
+	0 => '#337ab7',
+	1 => '#449d44',
+	2 => '#000000',
+	3 => '#dff0d8',
+
+
+	4 => '#d44950'
 );
 //报销类型
 $config['invoiceType'] = array(
