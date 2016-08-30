@@ -6,7 +6,17 @@ class Invoice_mdl extends NB_Model {
 	/**********************************************************
 	 * inherit gen_new,get,set,list_all functions from parent *
 	 *********************************************************/
-	public function userGet($user_id){
+	public function countUser($user_id){
+		$where = array(
+			'shop_id'  => $this->shop_id,
+            'user_id'   => $user_id,
+        );
+		$this->db->where($where);
+		$num = $this->db->count_all_results(self::T_NAME);
+
+		return $num;
+	}
+	public function userGet($user_id,$page){
 		$where = array(
 			'shop_id'  => $this->shop_id,
             'user_id'   => $user_id,
@@ -15,6 +25,10 @@ class Invoice_mdl extends NB_Model {
 		$this->db->from(self::T_NAME,50,0);  //最多一百条
 		$this->db->where($where);
 		$this->db->order_by('ctime', 'DESC');
+		$perPage = $this->sysData['perPage'];
+		$startNum = ($page-1)*$perPage;
+
+		$this->db->limit($perPage,$startNum);
 		$res = '';
 		$query = $this->db->get();
 
@@ -53,10 +67,11 @@ class Invoice_mdl extends NB_Model {
 
 		$this->db->where($where);
 		$this->db->order_by('ctime', 'desc');
-		$perpage = 20;
-		$startNum = ($page-1)*$perpage;
+		$perPage = $this->sysData['perPage'];
 
-		$this->db->limit($perpage,$startNum);
+		$startNum = ($page-1)*$perPage;
+
+		$this->db->limit($perPage,$startNum);
 		$query = $this->db->get();
 		$res = $query->result_array();
 		if(empty($res)){

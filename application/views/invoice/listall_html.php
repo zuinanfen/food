@@ -98,7 +98,7 @@ $this->load->view ( 'common/admin_top', array (
       
       Page.init({
           items: <?=$allNum?>,
-          itemsOnPage:20,
+          itemsOnPage:<?=$sysData['perPage']?>,
           currentPage:<?=$page?>,
           hrefTextPrefix:'/index.php/invoice/listall?'+paramString
       });

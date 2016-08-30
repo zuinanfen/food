@@ -29,14 +29,23 @@ $this->load->view ( 'common/admin_top', array (
   </div>
   <?}?>
 <?}?>
-
+<div id="pagination"></div>
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
 <script>
   $('.bs-example').click(function(){
     var id = $(this).data('id');
     window.location.href='/index.php/invoice/show?id='+id;
   });
-
+  $(function() {
+      var paramString = 'page=';
+      
+      Page.init({
+          items: <?=$allNum?>,
+          itemsOnPage:<?=$sysData['perPage']?>,
+          currentPage:<?=$page?>,
+          hrefTextPrefix:'/index.php/invoice/index?'+paramString
+      });
+  });
 </script>
 
 <?php $this->load->view ( 'common/footer' )?> 

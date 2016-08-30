@@ -84,7 +84,7 @@ class NB_Controller extends CI_Controller {
 			$this->sysData['shop_name'] = $this->input->cookie('shop_name');
 			$roleType = $this->config->item('roleType');
 			$this->sysData['role_type'] = $roleType[$this->sysData['role_id']];
-
+			$this->sysData['perPage'] = $this->config->item('perPage');
 			$this->shop_id = intval($this->input->cookie('shop_id'));
 			$this->sysData['shop_id'] = $this->shop_id;
 		}

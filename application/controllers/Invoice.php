@@ -14,7 +14,12 @@ class Invoice extends NB_Controller {
 		$invoiceType = $this->config->item('invoiceType');
 		$invoiceStatus = $this->config->item('invoiceStatus');
 		$invoiceStatusColor = $this->config->item('invoiceStatusColor');
-		$list = $this->invoice_mdl->userGet($this->sysData['user_id']);
+		$allNum = $this->invoice_mdl->countUser($this->sysData['user_id']);
+		$page = $this->get('page');
+		if(!isset($page)){
+			$page=1;
+		}
+		$list = $this->invoice_mdl->userGet($this->sysData['user_id'],$page);
 		if(!empty($list)){
 			foreach ($list as $k => $v) {
 				$list[$k]['invoiceStatusName'] = $invoiceStatus[$v['status']];
@@ -26,7 +31,9 @@ class Invoice extends NB_Controller {
 		
 
 		$this->output_data(array(
-			'list'   => $list
+			'allNum' => intval($allNum),
+			'list'   => $list,
+			'page'   => intval($page),
 		));
 	}
 	public function add(){

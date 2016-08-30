@@ -6,7 +6,8 @@ $config['secretKey']  = 'zuinanfen!@#$123' ; //站点通用秘钥
 $config['autoUpdateDishNum'] = 3;
 //登录有效时间
 $config['logonTime'] = 60*60*24*10; //10天有效
-
+//每页多少条数据
+$config['perPage'] = 20;
 //订单状态
 $config['orderStatus']	= array(  
 		0 => '待处理',
