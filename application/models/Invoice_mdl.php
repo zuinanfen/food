@@ -27,10 +27,25 @@ class Invoice_mdl extends NB_Model {
 		$update_data['mTime'] = date('Y-m-d H:i:s');
         $this->db->update(self::T_NAME, $update_data, array('id'=>$id));
 	}
-	public function search($startTime, $endTime, $data=array()){
-		$this->db->from(self::T_NAME);
-		$where = "shop_id='{$this->shop_id}' and ctime>'{$startTime}' and ctime<'{$endTime}'";
+	public function countSearch($data=array()){
+		// $this->db->from(self::T_NAME);
+		$where = "shop_id='{$this->shop_id}' and ctime>'{$data['startTime']}' and ctime<'{$data['endTime']}'";
+		unset($data['startTime']);
+		unset($data['endTime']);
+		foreach ($data as $key => $value) {
+			$where .= " and {$key}='{$value}'";
+		}
 
+		$this->db->where($where);
+		$num = $this->db->count_all_results(self::T_NAME);
+
+		return $num;
+	}
+	public function search($page, $data=array()){
+		$this->db->from(self::T_NAME);
+		$where = "shop_id='{$this->shop_id}' and ctime>'{$data['startTime']}' and ctime<'{$data['endTime']}'";
+		unset($data['startTime']);
+		unset($data['endTime']);
 		foreach ($data as $key => $value) {
 			$where .= " and {$key}='{$value}'";
 		}
@@ -38,6 +53,10 @@ class Invoice_mdl extends NB_Model {
 
 		$this->db->where($where);
 		$this->db->order_by('ctime', 'desc');
+		$perpage = 20;
+		$startNum = ($page-1)*$perpage;
+
+		$this->db->limit($perpage,$startNum);
 		$query = $this->db->get();
 		$res = $query->result_array();
 		if(empty($res)){

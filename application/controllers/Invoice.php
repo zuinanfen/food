@@ -117,7 +117,8 @@ class Invoice extends NB_Controller {
 			$userInfo = $this->user_mdl->get_by_id($res->done_user);
 			$res->done_username = $userInfo['name'];
 		}
-
+		$userInfo = $this->user_mdl->get_by_id($res->user_id);
+		$res->username = $userInfo['name'];
 
 		$detail = json_decode(json_encode($res), true);
 
@@ -163,6 +164,10 @@ class Invoice extends NB_Controller {
 		$status = $this->get('status');
 		$user_id = $this->get('user_id');
 		$type = $this->get('type');
+		$page = $this->get('page');
+		if(!isset($page)){
+			$page=1;
+		}
 		if(!isset($startTime)){
 			$startTime = date('Y-m-d', strtotime('-1 week'));
 			$endTime = date('Y-m-d', strtotime('today'));
@@ -181,7 +186,8 @@ class Invoice extends NB_Controller {
 		}
 
 		$where = array(
-
+			'startTime'  => $startTime,
+			'endTime'    => $endTime,
 		);
 		if(!empty($user_id)){
 			$where['user_id']  = $user_id;
@@ -197,7 +203,9 @@ class Invoice extends NB_Controller {
 		$invoiceStatus = $this->config->item('invoiceStatus');
 		$invoiceStatusColor = $this->config->item('invoiceStatusColor');
 
-		$list = $this->invoice_mdl->search($startTime,$endTime,$where);
+		$allNum = $this->invoice_mdl->countSearch($where);
+
+		$list = $this->invoice_mdl->search($page,$where);
 
 
 		if(!empty($list)){
@@ -223,10 +231,12 @@ class Invoice extends NB_Controller {
 			'status'          => $status,
 			'user_id'         => intval($user_id),
 			'type'            => intval($type),
-			'startTime'       => $startTime,
-			'endTime'         => $endTime,
+			'startTime'       => date('Y-m-d',strtotime($startTime)),
+			'endTime'         => date('Y-m-d',strtotime($endTime)),
 			'list'            => $list,
-			'user_list'       => $user_list
+			'user_list'       => $user_list,
+			'allNum'          => intval($allNum),
+			'page'            => intval($page),
  		);
 		$this->output_data($data);
 	}

@@ -70,14 +70,14 @@ $this->load->view ( 'common/admin_top', array (
           <td colspan="2"><?=$v['ctime']?></td>
         </tr>
         <tr>
-          <td colspan="3">事由：<?=$v['desc']?></td>
+          <td colspan="3">事由：<?=$v['title']?></td>
         </tr>
       </tbody>
     </table>
 </div>
 <?}?>
 
-
+<div id="pagination"></div>
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
 
 <script type="text/javascript">
@@ -89,7 +89,20 @@ $this->load->view ( 'common/admin_top', array (
     var user_id = $('#user_id').val();
 		window.location.href = '/index.php/invoice/listall?startTime='+startTime+'&endTime='+endTime+'&type='+type+'&status='+status+'&user_id='+user_id;
 	});
-
+  $('.bs-example').click(function(){
+    var id = $(this).data('id');
+    window.location.href='/index.php/invoice/show?id='+id;
+  });
+  $(function() {
+      var paramString = 'startTime=<?=$startTime?>&endTime=<?=$endTime?>&type=<?=$type?>&status=<?=$status?>&user_id=<?=$user_id?>&page=';
+      
+      Page.init({
+          items: <?=$allNum?>,
+          itemsOnPage:20,
+          currentPage:<?=$page?>,
+          hrefTextPrefix:'/index.php/invoice/listall?'+paramString
+      });
+  });
 
 
 </script>

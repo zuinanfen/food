@@ -22,7 +22,7 @@ $this->load->view ( 'common/admin_top', array (
             <td><?=$v['ctime']?></td>
           </tr>
           <tr>
-            <td colspan="2">事由：<?=$v['desc']?></td>
+            <td colspan="2">事由：<?=$v['title']?></td>
           </tr>
         </tbody>
       </table>

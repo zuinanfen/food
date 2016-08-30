@@ -44,7 +44,6 @@ class Report extends NB_Controller {
 				);
 			}
 			$data[$timeKey]['orderNum'] = $data[$timeKey]['orderNum'] + 1;
-			$data[$timeKey]['amountNum'] = bcadd($data[$timeKey]['amountNum'], $v['amount'], 2);
 
 			switch ($v['status']) {
 				case '0':
@@ -66,6 +65,9 @@ class Report extends NB_Controller {
 					# code...
 					break;
 			}
+			
+			$data[$timeKey]['amountNum'] = bcadd($data[$timeKey]['amountNum'], $v['amount'], 2);
+
 		
 
 		}

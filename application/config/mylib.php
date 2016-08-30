@@ -5,7 +5,7 @@ $config['secretKey']  = 'zuinanfen!@#$123' ; //站点通用秘钥
 //自动标注几个菜为制作中
 $config['autoUpdateDishNum'] = 3;
 //登录有效时间
-$config['logonTime'] = 60*60*24*3; //三天有效
+$config['logonTime'] = 60*60*24*10; //10天有效
 
 //订单状态
 $config['orderStatus']	= array(  
@@ -81,6 +81,7 @@ $config['roleType']  = array(
 	3 => '点餐员',
 	4 => '上菜员',
 
+	90 => '财务',
 	100 => '系统管理员',
 
 
@@ -153,6 +154,13 @@ $config['privilegeList'] = array(
 			'option'       => array(),
 			'order'        => array(),
 			'user'         => array(),
+			'report'       => array(),
+			'income'       => array(),
+			'invoice'       => array(),
+		),
+	90   => array(  //财务
+			'logon'        => array(),
+			'menu'         => array(),
 			'report'       => array(),
 			'income'       => array(),
 			'invoice'       => array(),

@@ -10,7 +10,7 @@ $this->load->view ( 'common/admin_top', array (
 <table class="table table-striped" style="border:1px solid #ccc">
     <tbody>
 		<tr>
-			<td>标题</td>
+			<td style="width:80px;">标题</td>
 			<td><?=$detail['title']?></b></td>
 		</tr>
 		<tr>
@@ -42,6 +42,10 @@ $this->load->view ( 'common/admin_top', array (
 <h3>报销状态变更</h3>
 <table class="table table-striped" style="border:1px solid #ccc">
     <tbody>
+    	<tr>
+			<td>提单用户</td>
+			<td><?=$detail['username']?></b></td>
+		</tr>
 		<tr>
 			<td>提单时间</td>
 			<td><?=$detail['ctime']?></b></td>
