@@ -76,8 +76,8 @@ $this->load->view ( 'common/admin_top', array (
     </table>
 </div>
 <?}?>
-
-<div id="pagination"></div>
+<!-- <div><a href="/index.php/invoice/download" target="_blank">下载</a></div>-->
+ <div id="pagination"></div>
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
 
 <script type="text/javascript">

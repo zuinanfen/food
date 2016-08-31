@@ -164,7 +164,7 @@ $config['privilegeList'] = array(
 			'menu'         => array(),
 			'report'       => array(),
 			'income'       => array(),
-			'invoice'       => array(),
+			'invoice'      => array(),
 		),
 	1   => array(  //店长
 			'dish'         => array(),

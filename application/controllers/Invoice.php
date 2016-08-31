@@ -8,6 +8,7 @@ class Invoice extends NB_Controller {
 		parent::__construct();
 		$this->load->model('invoice_mdl');
 		$this->load->model('user_mdl');
+		$this->load->library('Excel');
 	}
 
 	public function index () {
@@ -246,6 +247,22 @@ class Invoice extends NB_Controller {
 			'page'            => intval($page),
  		);
 		$this->output_data($data);
+	}
+	public function download(){
+		$title = array(
+			'A' => '姓名',
+			'B' => '年龄',
+			'C' => '金额',
+
+		);
+		$data = array(
+			array('花满楼','12','213.22'),
+			array('nick','22','22'),
+
+		);
+
+
+		$this->excel->down($title,$data);
 	}
 
 }
