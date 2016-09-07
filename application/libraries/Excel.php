@@ -8,7 +8,7 @@ class Excel extends CI_Controller {
         $this->ci = & get_instance();
        
     }
-    public function down($titleArr=array(),$data=array()){
+    public function down($fileName,$titleArr=array(),$data=array()){
         // Create new PHPExcel object
         $objPHPExcel = new PHPExcel();
 
@@ -23,17 +23,22 @@ class Excel extends CI_Controller {
 
 
         // Add title
-        $index = 0;
+        $col = 0;
         foreach ($titleArr as $k => $v) {
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($k.'1', $v);
             
-            foreach ($data as $key => $value) {
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($k.$index+2, $value[$index]);
-
+            $index = 2;
+            for($i=0;$i<count($data);$i++){
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($k.$index, $data[$i][$col]);
+                $index = $index+1;
             }
-            $index = $index+1;
+            $col = $col+1;
         }
-       
+        // foreach ($data as $key => $value) {
+        //     $objPHPExcel->setActiveSheetIndex(0)->setCellValue($k.$index+2, $value[$index]);
+
+        // }
+   
         // Miscellaneous glyphs, UTF-8
        
         
@@ -47,7 +52,7 @@ class Excel extends CI_Controller {
 
         // Redirect output to a client’s web browser (Excel5)
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="01simple.xls"');
+        header('Content-Disposition: attachment;filename='.$fileName);
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');

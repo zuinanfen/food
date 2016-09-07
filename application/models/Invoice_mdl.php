@@ -29,7 +29,7 @@ class Invoice_mdl extends NB_Model {
 		$startNum = ($page-1)*$perPage;
 
 		$this->db->limit($perPage,$startNum);
-		$res = '';
+		$res = array();
 		$query = $this->db->get();
 
 		if($query && $query->num_rows() > 0){ 
@@ -72,6 +72,26 @@ class Invoice_mdl extends NB_Model {
 		$startNum = ($page-1)*$perPage;
 
 		$this->db->limit($perPage,$startNum);
+		$query = $this->db->get();
+		$res = $query->result_array();
+		if(empty($res)){
+			return array();
+		} 
+		return $res;
+	}
+	public function searchAll($data=array()){
+		$this->db->from(self::T_NAME);
+		$where = "shop_id='{$this->shop_id}' and ctime>'{$data['startTime']}' and ctime<'{$data['endTime']}'";
+		unset($data['startTime']);
+		unset($data['endTime']);
+		foreach ($data as $key => $value) {
+			$where .= " and {$key}='{$value}'";
+		}
+
+
+		$this->db->where($where);
+		$this->db->order_by('ctime', 'desc');
+
 		$query = $this->db->get();
 		$res = $query->result_array();
 		if(empty($res)){

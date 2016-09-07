@@ -97,5 +97,22 @@ var Invoice = {
              }
 
         });
+    },
+    done:function(id){
+        $.ajax({
+             type: 'post',
+             url: '../invoice/done',
+             data:{id:id},
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('结算报销单成功！');
+                    window.location.reload();
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
     }
 };

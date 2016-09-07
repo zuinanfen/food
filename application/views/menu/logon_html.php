@@ -36,7 +36,7 @@ $this->load->view ( 'common/h5_top', array (
 	          <span class="glyphicon-class">订单列表</span>
 	        </a>
         </li>
-      <?if($sysData['role_id']==1||$sysData['role_id']==100){?>
+      <?if($sysData['role_id']==1||$sysData['role_id']==100||$sysData['role_id']==90){?>
         <li>
         	<a href="/index.php/report/index">
 	          <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>

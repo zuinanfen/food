@@ -29,7 +29,6 @@ class Invoice extends NB_Controller {
 				$list[$k]['invoiceStatusColor'] = $invoiceStatusColor[$v['status']];
 			}
 		}
-		
 
 		$this->output_data(array(
 			'allNum' => intval($allNum),
@@ -183,8 +182,8 @@ class Invoice extends NB_Controller {
 		$startTime = $startTime.' 00:00:01';
 		$endTime = $endTime.' 23:59:59';
 
-		if(strtotime($endTime) - strtotime($startTime) > 60*60*24*30){
-			$this->set_error(static::RET_WRONG_INPUT, "不能统计超过30天的数据");	
+		if(strtotime($endTime) - strtotime($startTime) > 60*60*24*60){
+			$this->set_error(static::RET_WRONG_INPUT, "不能统计超过60天的数据");	
 			return $this->output_json();
 		}
 		if($status==null || $status=='all'){
@@ -215,6 +214,11 @@ class Invoice extends NB_Controller {
 
 		$list = $this->invoice_mdl->search($page,$where);
 
+		$res = $this->user_mdl->list_by_roleid(array(1,2,3,4));
+		$user_list = array();
+		foreach ($res as $key => $value) {
+			$user_list[$value->id] = $value->name;
+		}
 
 		if(!empty($list)){
 			foreach ($list as $k => $v) {
@@ -222,15 +226,9 @@ class Invoice extends NB_Controller {
 				$list[$k]['invoiceTypeName'] = $invoiceType[$v['type']];
 				$list[$k]['ctime'] = date('m-d H:i:s',strtotime($v['ctime']));
 				$list[$k]['invoiceStatusColor'] = $invoiceStatusColor[$v['status']];
-				$userInfo = $this->user_mdl->get_by_id($v['user_id']);
-				$list[$k]['username'] = $userInfo['name'];
+				//$userInfo = $this->user_mdl->get_by_id($v['user_id']);
+				$list[$k]['username'] = $user_list[$list[$k]['user_id']];
 			}
-		}
-		
-		$res = $this->user_mdl->list_by_roleid(array(1,2,3,4));
-		$user_list = array();
-		foreach ($res as $key => $value) {
-			$user_list[$value->id] = $value->name;
 		}
 
 		$data = array(
@@ -249,20 +247,126 @@ class Invoice extends NB_Controller {
 		$this->output_data($data);
 	}
 	public function download(){
+		$startTime = $this->get('startTime');
+		$endTime = $this->get('endTime');
+		$status = $this->get('status');
+		$user_id = $this->get('user_id');
+		$type = $this->get('type');
+		if(!isset($startTime)){
+			$startTime = date('Y-m-d', strtotime('-1 week'));
+			$endTime = date('Y-m-d', strtotime('today'));
+		}
+		$startTime = $startTime.' 00:00:01';
+		$endTime = $endTime.' 23:59:59';
+
+		if(strtotime($endTime) - strtotime($startTime) > 60*60*24*60){
+			$this->set_error(static::RET_WRONG_INPUT, "不能统计超过60天的数据");	
+			return $this->output_json();
+		}
+		if($status==null || $status=='all'){
+			$status = 'all';
+		}else{
+			$status = intval($status);
+		}
+
+		$where = array(
+			'startTime'  => $startTime,
+			'endTime'    => $endTime,
+		);
+		if(!empty($user_id)){
+			$where['user_id']  = $user_id;
+		}
+		if($status!==null && $status!=='all'){
+			$where['status']  = $status;
+		}
+		if(!empty($type)){
+			$where['type']  = $type;
+		}
+
+		$invoiceType = $this->config->item('invoiceType');
+		$invoiceStatus = $this->config->item('invoiceStatus');
+		$invoiceStatusColor = $this->config->item('invoiceStatusColor');
+
+		$list = $this->invoice_mdl->searchAll($where);
+
+
+
+		$res = $this->user_mdl->list_by_roleid(array(1,2,3,4));
+		$user_list = array();
+		foreach ($res as $key => $value) {
+			$user_list[$value->id] = $value->name;
+		}
+		$data = array();
+		if(!empty($list)){
+			foreach ($list as $k => $v) {
+				// $list[$k]['invoiceStatusName'] = $invoiceStatus[$v['status']];
+				// $list[$k]['invoiceTypeName'] = $invoiceType[$v['type']];
+				// $list[$k]['ctime'] = date('m-d H:i:s',strtotime($v['ctime']));
+				// $list[$k]['invoiceStatusColor'] = $invoiceStatusColor[$v['status']];
+				// //$userInfo = $this->user_mdl->get_by_id($v['user_id']);
+				// $list[$k]['username'] = $user_list[$list[$k]['user_id']];
+
+				$arr = array(
+					$list[$k]['id'],
+					$list[$k]['ctime'],
+					$list[$k]['date'],
+					$user_list[$list[$k]['user_id']],
+					$invoiceType[$v['type']],
+					$list[$k]['amount'],
+					$list[$k]['title'],
+					$invoiceStatus[$v['status']],
+					$list[$k]['desc'],
+				);
+				array_push($data, $arr);
+
+			}
+		}
+		
+
 		$title = array(
-			'A' => '姓名',
-			'B' => '年龄',
-			'C' => '金额',
+			'A' => '审批ID',
+			'B' => '提交时间',
+			'C' => '发生时间',
+			'd' => '申请人',
+			'e' => '报销类型',
+			'f' => '金额',
+			'g' => '标题',
+			'h' => '审批状态',
+			'i' => '详细说明',
 
 		);
-		$data = array(
-			array('花满楼','12','213.22'),
-			array('nick','22','22'),
 
-		);
-
-
-		$this->excel->down($title,$data);
+		$fileName = '报销列表.xls';
+		$this->excel->down($fileName,$title,$data);
 	}
 
+	public function done(){
+		$id = $this->post('id');
+		if(empty($id)){
+			$this->set_error(static::RET_WRONG_INPUT, "报销单号不正确！");	
+			return $this->output_json();
+		}
+		$id = intval($id);
+		$res = $this->invoice_mdl->get($id);
+
+		//判断是否是财务
+		if($this->sysData['role_id']!=90){
+			$this->set_error(static::RET_WRONG_INPUT, "只允许结算报销单！");	
+			return $this->output_json();
+		}
+		//判断状态是否可以结算
+		if($res->status!=1){
+			$this->set_error(static::RET_WRONG_INPUT, "该报销单状态不允许结算！");	
+			return $this->output_json();
+		}
+
+		$obj = array(
+			'status' => 2,
+			'doneTime' => date('Y-m-d H:i:s'),
+			'done_user' => $this->sysData['user_id'],
+		);
+
+		$this->invoice_mdl->update($id,$obj);
+		return $this->output_json();
+	}
 }

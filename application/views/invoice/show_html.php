@@ -11,7 +11,7 @@ $this->load->view ( 'common/admin_top', array (
     <tbody>
 		<tr>
 			<td style="width:80px;">标题</td>
-			<td><?=$detail['title']?></b></td>
+			<td><?=$detail['title']?></td>
 		</tr>
 		<tr>
 			<td>状态</td>
@@ -19,12 +19,12 @@ $this->load->view ( 'common/admin_top', array (
 		</tr>
 		<tr>
 			<td>报销类型</td>
-			<td><b><?=$detail['invoiceTypeName']?></b></td>
+			<td><?=$detail['invoiceTypeName']?></td>
 		</tr>
 
 		<tr>
 			<td>发生时间</td>
-			<td><b><?=$detail['date']?></b></td>
+			<td><?=$detail['date']?></td>
 		</tr>
 
 		<tr>
@@ -33,7 +33,7 @@ $this->load->view ( 'common/admin_top', array (
 		</tr>
 		<tr>
 			<td>说明</td>
-			<td><b><?=$detail['desc']?></b></td>
+			<td><?=$detail['desc']?></td>
 		</tr>
 
 
@@ -43,12 +43,16 @@ $this->load->view ( 'common/admin_top', array (
 <table class="table table-striped" style="border:1px solid #ccc">
     <tbody>
     	<tr>
+			<td>单号id</td>
+			<td><b><?=$detail['id']?></b></td>
+		</tr>
+    	<tr>
 			<td>提单用户</td>
-			<td><?=$detail['username']?></b></td>
+			<td><?=$detail['username']?></td>
 		</tr>
 		<tr>
 			<td>提单时间</td>
-			<td><?=$detail['ctime']?></b></td>
+			<td><?=$detail['ctime']?></td>
 		</tr>
 		<?if($detail['checkTime']!='0000-00-00 00:00:00'){?>
 		<tr>
@@ -81,15 +85,15 @@ $this->load->view ( 'common/admin_top', array (
 			<button type="button" data-id="<?=$detail['id']?>" class="btn btn-danger btn-block" id="cancelInvoice">撤回该单</button>
 		</div>
 		<?}?>
-		<!--<?if($detail['status']==0){?>
+		<?if($detail['status']==0){?>
 		<div style="display:inline-block;width:48%">
 			<button type="button" class="btn btn-warning btn-block" id="checkOrder">通过审核</button>
 		</div>
-		<?}elseif($detail['status']==1){?>
+		<?}elseif($detail['status']==1&&$sysData['role_id']==90){?>
 		<div style="display:inline-block;width:48%">
-		<button type="button" class="btn btn-warning btn-block" id="checkOrder">结算订单</button>
+		<button type="button" data-id="<?=$detail['id']?>" class="btn btn-warning btn-block" id="doneOrder">结算订单</button>
 		</div>
-		<?}?>-->
+		<?}?>
 	</div>
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
 <script type="text/javascript">
@@ -97,6 +101,13 @@ $this->load->view ( 'common/admin_top', array (
 		if(confirm("确定撤销该报销单？")){
 			var id = $(this).data('id');
 			Invoice.cancel(id);
+		}
+		
+	});
+	$('#doneOrder').click(function(){
+		if(confirm("确定结算该报销单？请先付款后再修改状态")){
+			var id = $(this).data('id');
+			Invoice.done(id);
 		}
 		
 	});

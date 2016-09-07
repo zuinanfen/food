@@ -5,7 +5,7 @@ $this->load->view ( 'common/admin_top', array (
 	'funcname'=> 'invoice',
 ));
 ?>
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="margin-bottom:10px">
+<div class="main" style="margin-bottom:10px">
 	<div>
 		<div class="input-group" style="margin:8px 0;">
 	      <span class="input-group-addon">报销状态</span>
@@ -47,7 +47,8 @@ $this->load->view ( 'common/admin_top', array (
             <button class="btn btn-default" type="button">结束日期</button>
           </span>
         </div>
-		<button type="button" class="btn btn-primary btn-block" id="submit_btn" >提交</button>
+		<button type="button" class="btn btn-primary btn-block" id="submit_btn" >查询</button>
+    <button type="button" class="btn btn-info btn-block" id="down_btn" >导出excel</button>
 	</div>
 	
 </div>
@@ -76,11 +77,11 @@ $this->load->view ( 'common/admin_top', array (
     </table>
 </div>
 <?}?>
-<!-- <div><a href="/index.php/invoice/download" target="_blank">下载</a></div>-->
  <div id="pagination"></div>
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
 
 <script type="text/javascript">
+  var paramString = 'startTime=<?=$startTime?>&endTime=<?=$endTime?>&type=<?=$type?>&status=<?=$status?>&user_id=<?=$user_id?>&page=';
 	$('#submit_btn').click(function(){
 		var startTime = $('#startTime').val();
 		var endTime = $('#endTime').val();
@@ -93,9 +94,10 @@ $this->load->view ( 'common/admin_top', array (
     var id = $(this).data('id');
     window.location.href='/index.php/invoice/show?id='+id;
   });
+  $('#down_btn').click(function(){
+    window.open('/index.php/invoice/download?'+paramString);
+  });
   $(function() {
-      var paramString = 'startTime=<?=$startTime?>&endTime=<?=$endTime?>&type=<?=$type?>&status=<?=$status?>&user_id=<?=$user_id?>&page=';
-      
       Page.init({
           items: <?=$allNum?>,
           itemsOnPage:<?=$sysData['perPage']?>,
