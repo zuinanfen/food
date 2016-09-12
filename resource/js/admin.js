@@ -167,5 +167,22 @@ var Reverve = {
              }
 
         });
+    },
+    send:function(data){
+        $.ajax({
+             type: 'post',
+             url: '../reserve/send',
+             data:data,
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('发货成功！');
+                    window.location.reload();
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
     }
 };

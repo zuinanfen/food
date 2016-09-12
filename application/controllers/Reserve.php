@@ -141,11 +141,13 @@ class Reserve extends NB_Controller {
 		$res->username = $userInfo['name'];
 
 		$detail = json_decode(json_encode($res), true);
+		$express = $this->config->item('express');
 
 		$this->output_data(
 		 array(
 		 	'id'   => $id,
-			'detail' => $detail
+			'detail' => $detail,
+			'express'=>$express,
 		 	)
 			
 		);
@@ -198,6 +200,41 @@ class Reserve extends NB_Controller {
 
 		$obj = array(
 			'status' => 1,
+		);
+
+		$this->reserve_mdl->update($id,$obj);
+		return $this->output_json();
+	}
+	public function send(){
+		$id = $this->post('id');
+		if(empty($id)){
+			$this->set_error(static::RET_WRONG_INPUT, "单号不正确！");	
+			return $this->output_json();
+		}
+		$id = intval($id);
+		$res = $this->reserve_mdl->get($id);
+
+
+		//判断状态是否可以发货
+		if($res->status!=1){
+			$this->set_error(static::RET_WRONG_INPUT, "该单状态不允许发货！");	
+			return $this->output_json();
+		}
+		$express = $this->post('express');
+		if(empty($express)){
+			$this->set_error(static::RET_WRONG_INPUT, "请选择快递！");	
+			return $this->output_json();
+		}
+		$expressNumber = $this->post('expressNumber');
+		if(empty($expressNumber)){
+			$this->set_error(static::RET_WRONG_INPUT, "请填写快递单号！");	
+			return $this->output_json();
+		}
+
+		$obj = array(
+			'express' => $express,
+			'expressNumber'  => $expressNumber,
+			'status' => 2,
 		);
 
 		$this->reserve_mdl->update($id,$obj);

@@ -45,7 +45,7 @@ $this->load->view ( 'common/admin_top', array (
 		 <?if($detail['status']==2){?>
 		<tr>
 			<td>快递名称</td>
-			<td><b><?=$detail['express']?></b></td>
+			<td><b><?=$express[$detail['express']]?></b></td>
 		</tr>
     	<tr>
 			<td>快递单号</td>
@@ -57,19 +57,29 @@ $this->load->view ( 'common/admin_top', array (
   </table>
  <?if($detail['status']==1){?>
 <h3>物流信息</h3>
-<table class="table table-striped" style="border:1px solid #ccc">
-    <tbody>
-    	<tr>
-			<td>快递名称</td>
-			<td><b><?=$detail['express']?></b></td>
-		</tr>
-    	<tr>
-			<td>快递单号</td>
-			<td><?=$detail['expressNumber']?></td>
-		</tr>
+<div class="main" style="margin-bottom:10px">
+	<div>
+		<div class="input-group" style="margin:8px 0;">
+	      <span class="input-group-addon">快递名称</span>
+	      <select id="express" class="form-control">
+	      <?foreach ($express as $key => $value) {?>
+  		      	<option value="<?=$key?>"><?=$value?></option>
+	      <?}?>
+	      </select>
+	    </div>
+     
+		<div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">快递单号</button>
+          </span>
+          <input type="text" value="" id="expressNumber" class="form-control">
+        </div>
 
-    </tbody>
-  </table>
+       
+		<button  data-id="<?=$detail['id']?>"  style="margin:10px 0" type="button" class="btn btn-primary btn-block" id="send_btn">确认发货</button>
+	</div>
+	
+</div>
   <?}?>
 <div style="height:20px;"></div>
  	<div class="marketing">
@@ -100,6 +110,14 @@ $this->load->view ( 'common/admin_top', array (
 			Reverve.done(id);
 		}
 		
+	});
+	$('#send_btn').click(function(){
+		var data = {
+			id: $(this).data('id'),
+			express: $('#express').val(),
+			expressNumber: $('#expressNumber').val()
+		}
+		Reverve.send(data);
 	});
 </script>
 <?php $this->load->view ( 'common/h5_bottom' ); ?>

@@ -109,6 +109,13 @@ $config['incomeType'] = array(
 	11=>'微信',
 	100 => '银行卡',
 );
+//快递名称
+$config['express'] = array(
+	1 => '顺丰',
+	2 => '人人快递',
+	3 => 'UU跑腿',
+	4 => '亿翔快递'
+);
 //店铺名称
 $config['shopList'] = array(
 	1 => '醉南粉',
