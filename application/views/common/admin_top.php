@@ -59,6 +59,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </nav>
 <?}?>
 
+<?if($funcname=='reserve'){?>
+<nav>
+  <ul class="nav nav-pills pull-right navi">
+	<li <?if($sysData['action']=='index'){?>class="active"<?}?>><a href="index">预定列表</a></li>
+	<li <?if($sysData['action']=='add'){?>class="active"<?}?>><a href="add">添加订单</a></li>
+  </ul>
+</nav>
+<?}?>
 
 
 </div>

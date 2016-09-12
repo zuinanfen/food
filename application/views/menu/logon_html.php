@@ -29,6 +29,12 @@ $this->load->view ( 'common/h5_top', array (
 	          <span class="glyphicon-class">我要上菜</span>
 	         </a>
         </li>
+        <li>
+          <a href="/index.php/reserve/index">
+            <span class="glyphicon glyphicon-gift" aria-hidden="true"></span>
+            <span class="glyphicon-class">菜品预定</span>
+           </a>
+        </li>
       
         <li>
         	<a href="/index.php/menu/order">

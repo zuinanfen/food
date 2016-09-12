@@ -106,6 +106,7 @@ $config['incomeType'] = array(
 	8 => '乐惠',
 	9 => '一阳指',
 	10 => '百度糯米',
+	11=>'微信',
 	100 => '银行卡',
 );
 //店铺名称
@@ -121,14 +122,12 @@ $config['invoiceStatus'] = array(
 	3  => '撤销申请',
 	4  => '审核未通过'
 );
-//报销状态
+//报销状态颜色
 $config['invoiceStatusColor'] = array(
 	0 => '#337ab7',
 	1 => '#449d44',
 	2 => '#000000',
 	3 => '#dff0d8',
-
-
 	4 => '#d44950'
 );
 //报销类型
@@ -143,7 +142,21 @@ $config['invoiceType'] = array(
 	8  => '活动费',
 	100=> '其他',
 );
-
+//预订单状态
+$config['reserveStatus'] = array(
+	0  => '待确认',
+	1  => '待发货',
+	2  => '已发货',
+	4  => '已撤销'
+);
+//预订单状态颜色
+$config['reserveStatusColor'] = array(
+	0 => '#337ab7',
+	1 => '#449d44',
+	2 => '#000000',
+	// 3 => '#dff0d8',
+	4 => '#d44950'
+);
 
 //用户权限表, 白名单方法，若controller未定义，则拦截，若action未定义，则放行，定义的则白名单，
 $config['privilegeList'] = array(
@@ -158,6 +171,7 @@ $config['privilegeList'] = array(
 			'report'       => array(),
 			'income'       => array(),
 			'invoice'       => array(),
+			'reserve'       => array(),
 		),
 	90   => array(  //财务
 			'logon'        => array(),
@@ -177,6 +191,7 @@ $config['privilegeList'] = array(
 			'report'       => array(),
 			'income'       => array(),
 			'invoice'       => array(),
+			'reserve'       => array(),
 		),
 	2   => array(  //厨师
 			'logon'        => array(),
@@ -190,7 +205,7 @@ $config['privilegeList'] = array(
 			'menu'         => array(),
 			'dishoption'   => array(),
 			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
-
+			'reserve'       => array(),
 
 		),
 	4   => array( //上菜
@@ -198,5 +213,6 @@ $config['privilegeList'] = array(
 			'menu'         => array(),
 			'dishoption'   => array(),
 			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
+			'reserve'       => array(),
 		),
 );

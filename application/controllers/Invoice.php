@@ -351,7 +351,7 @@ class Invoice extends NB_Controller {
 
 		//判断是否是财务
 		if($this->sysData['role_id']!=90){
-			$this->set_error(static::RET_WRONG_INPUT, "只允许结算报销单！");	
+			$this->set_error(static::RET_WRONG_INPUT, "只允许财务结算报销单！");	
 			return $this->output_json();
 		}
 		//判断状态是否可以结算

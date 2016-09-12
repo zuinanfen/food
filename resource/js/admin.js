@@ -116,3 +116,56 @@ var Invoice = {
         });
     }
 };
+var Reverve = {
+    add:function(data){
+        $.ajax({
+             type: 'post',
+             url: '../reserve/addnew',
+             data: data,
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('创建预订单成功！');
+                    window.location.href='/index.php/reserve/index';
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
+    },
+    cancel:function(id){
+        $.ajax({
+             type: 'post',
+             url: '../reserve/cancel',
+             data:{id:id},
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('撤销订单成功！');
+                    window.location.reload();
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
+    },
+    done:function(id){
+        $.ajax({
+             type: 'post',
+             url: '../reserve/done',
+             data:{id:id},
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('确认订单成功！');
+                    window.location.reload();
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
+    }
+};
