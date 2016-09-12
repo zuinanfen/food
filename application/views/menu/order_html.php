@@ -45,10 +45,17 @@ $this->load->view ( 'common/h5_top', array (
 		<%}%>
 	<%}%>
 </script>
-
+<script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
 <script type="text/javascript">
 	$(function(){
 		Order.init();
 	});
+	var paramString = '';
+	Page.init({
+          items: 100,
+          itemsOnPage:20,
+          currentPage:2,
+          hrefTextPrefix:'/index.php/invoice/listall?'+paramString
+      });
 </script>
 <?php $this->load->view ( 'common/h5_bottom' ); ?>

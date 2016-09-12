@@ -24,11 +24,11 @@ $this->load->view ( 'common/admin_top', array (
       <span class="input-group-addon">菜品描述</span>
       <textarea rows="3" id="desc" class="form-control" placeholder="输入菜品描述"></textarea>
     </div>
-    <div class="input-group" style="margin-top:8px">
+    <!-- <div class="input-group" style="margin-top:8px">
       <span class="input-group-addon">费用金额</span>
       <input type="number" id="amount" class="form-control" placeholder="输入金额">
     </div>
-	
+	 -->
 	<button type="button" class="btn btn-warning btn-block" style="margin-top:8px" id="add_btn">提交</button>
 </div>
 
@@ -55,16 +55,16 @@ $this->load->view ( 'common/admin_top', array (
 			return;
 		}
 
-		if(amount==''){
-			alert('请输入订单金额！');
-			return;
-		}
+		// if(amount==''){
+		// 	alert('请输入订单金额！');
+		// 	return;
+		// }
 
 		var data = {
 			phone:$.trim(phone),
 			name: $.trim(name),
 			addr:addr,
-			amount:$.trim(amount),
+			amount:0,
 			desc:$.trim(desc)
 		}
 		if(confirm('确定提交该预订单？')){
