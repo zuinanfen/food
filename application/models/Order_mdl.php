@@ -52,6 +52,32 @@ class Order_mdl extends NB_Model {
 		}
 		return $res;
 	}
+	public function countSearch(){
+		// $this->db->from(self::T_NAME);
+		$where = "shop_id='{$this->shop_id}'";
+		$this->db->where($where);
+		$num = $this->db->count_all_results(self::T_NAME);
+
+		return $num;
+	}
+	public function search($page){
+		$this->db->from(self::T_NAME);
+		$where = "shop_id='{$this->shop_id}'";
+
+		$this->db->where($where);
+		$this->db->order_by('ctime', 'desc');
+		$perPage = $this->sysData['perPage'];
+
+		$startNum = ($page-1)*$perPage;
+
+		$this->db->limit($perPage,$startNum);
+		$query = $this->db->get();
+		$res = $query->result_array();
+		if(empty($res)){
+			return array();
+		} 
+		return $res;
+	}
 	public function get($orderId){
 		$where = array(
             'id'   => $orderId,

@@ -43,15 +43,14 @@ $this->load->view ( 'common/admin_top', array (
       <thead>
         <tr>
           <th><?=$v['name']?></th>
-          <th><?=$v['phone']?></th>
+          <th><?=$v['ctime']?></th>
           <th style="color:<?=$v['reserveStatusColor']?>"><?=$v['reserveStatusName']?></th>
 
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>金额：<?=$v['amount']?></td>
-          <td colspan="2"><?=$v['ctime']?></td>
+          <td colspan="3">发货：<?=$v['addr']?></td>
         </tr>
         <tr>
           <td colspan="3">描述：<?=$v['desc']?></td>

@@ -450,7 +450,7 @@ var Cart = {
 
 var Order = {
 	init: function(){
-		this.getList();
+		//this.getList();
 	},
 	getList: function(){
 		$.ajax({

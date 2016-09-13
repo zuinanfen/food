@@ -38,16 +38,28 @@ class Menu extends NB_Controller {
 		));
 	}
 	public function order(){
-		$list = $this->order_mdl->list_by_status();
+		$page = $this->get('page');
+		if(!isset($page)){
+			$page=1;
+		}
+		// $list = $this->order_mdl->list_by_status();
+		$allNum = $this->order_mdl->countSearch();
+		$list = $this->order_mdl->search($page);
+		foreach ($list as $k => $v) {
+			$orderInit = $this->order->init_order($v);
+			$list[$k] = $orderInit;
+		}
+		$orderStatusColor = $this->config->item('orderStatusColor');
 
-		// $user_list = $this->user_mdl->list_by_roleid(array(3), TRUE);
-		// $dish_list = $this->dish_mdl->list_all(TRUE);
 		$this->output_data(array(
 			'list' => $list,
+			'allNum'          => intval($allNum),
+			'page'            => intval($page),
+			'orderStatusColor'=> $orderStatusColor,
 		));
 	}
 	public function order_list(){
-		$list = $this->order_mdl->list_by_status();
+		//$list = $this->order_mdl->list_by_status();
 		foreach ($list as $k => $v) {
 			$orderInit = $this->order->init_order($v);
 			$list[$k] = $orderInit;

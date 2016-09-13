@@ -25,10 +25,10 @@ $this->load->view ( 'common/admin_top', array (
 			<td style="width:80px;">菜品详情</td>
 			<td><?=$detail['desc']?></td>
 		</tr>
-		<tr>
+		<!-- <tr>
 			<td>订单金额</td>
 			<td><b><?=$detail['amount']?></b></td>
-		</tr>
+		</tr> -->
 		<tr>
 			<td>状态</td>
 			<td><b style="color:<?=$detail['reserveStatusColor']?>"><?=$detail['reserveStatusName']?></b></td>
