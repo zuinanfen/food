@@ -35,8 +35,9 @@ $this->load->view ( 'common/h5_top', array (
 		
 	</tfoot>
 </table>
-<footer class="footer"></footer>
  <div id="pagination"></div>
+
+<footer class="footer"></footer>
 
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
 <script type="text/javascript">
