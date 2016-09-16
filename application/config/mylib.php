@@ -76,16 +76,16 @@ $config['payType'] =  array(
 //用戶角色
 $config['roleType']  = array(
 	0 => '未分配',
-	1 => '店铺管理员',
 
 	2 => '厨师',
 	3 => '点餐员',
 	4 => '上菜员',
 
+	10 => '代理商',
+
 	90 => '财务',
 	100 => '系统管理员',
-
-
+	1 => '店铺管理员',
 
 );
 //用戶狀態
@@ -114,7 +114,10 @@ $config['express'] = array(
 	1 => '顺丰',
 	2 => '人人快递',
 	3 => 'UU跑腿',
-	4 => '亿翔快递'
+	4 => '亿翔快递',
+	5 => '达达',
+	6 => '圆通',
+	7 => '申通',
 );
 //店铺名称
 $config['shopList'] = array(
@@ -220,6 +223,11 @@ $config['privilegeList'] = array(
 			'menu'         => array(),
 			'dishoption'   => array(),
 			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
+			'reserve'       => array(),
+		),
+	10  => array( //代理员
+			'logon'        => array(),
+			'menu'         => array(),
 			'reserve'       => array(),
 		),
 );

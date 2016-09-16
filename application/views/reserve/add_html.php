@@ -24,6 +24,10 @@ $this->load->view ( 'common/admin_top', array (
       <span class="input-group-addon">菜品描述</span>
       <textarea rows="3" id="desc" class="form-control" placeholder="输入菜品描述"></textarea>
     </div>
+    <div class="input-group" style="margin-top:8px">
+      <span class="input-group-addon">发货日期</span>
+      <input type="date" id="sendtime" class="form-control" value="<?=date('Y-m-d',time())?>" placeholder="选择发货日期">
+    </div>
     <!-- <div class="input-group" style="margin-top:8px">
       <span class="input-group-addon">费用金额</span>
       <input type="number" id="amount" class="form-control" placeholder="输入金额">
@@ -41,6 +45,7 @@ $this->load->view ( 'common/admin_top', array (
 		var addr = $('#addr').val();
 		var desc = $('#desc').val();
 		var amount = $('#amount').val();
+		var sendtime = $('#sendtime').val();
 
 		if(phone==''){
 			alert('请输入手机号码！');
@@ -54,7 +59,10 @@ $this->load->view ( 'common/admin_top', array (
 			alert('请输入菜品详细说明！');
 			return;
 		}
-
+		if(sendtime==''){
+			alert('请选择发货日期！');
+			return;
+		}
 		// if(amount==''){
 		// 	alert('请输入订单金额！');
 		// 	return;
@@ -65,7 +73,8 @@ $this->load->view ( 'common/admin_top', array (
 			name: $.trim(name),
 			addr:addr,
 			amount:0,
-			desc:$.trim(desc)
+			desc:$.trim(desc),
+			sendtime: sendtime
 		}
 		if(confirm('确定提交该预订单？')){
 			Reverve.add(data);

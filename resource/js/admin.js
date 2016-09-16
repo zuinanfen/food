@@ -134,6 +134,23 @@ var Reverve = {
 
         });
     },
+    edit:function(data){
+        $.ajax({
+             type: 'post',
+             url: '../reserve/edit',
+             data: data,
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('修改预订单成功！');
+                    window.location.reload;
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
+    },
     cancel:function(id){
         $.ajax({
              type: 'post',

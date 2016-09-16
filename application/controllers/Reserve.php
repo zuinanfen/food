@@ -43,6 +43,11 @@ class Reserve extends NB_Controller {
 			$where['status']  = $status;
 		}
 
+		//代理商只能看自己的订单
+		if($this->sysData['role_id']==10){
+			$where['user_id']  = $this->sysData['user_id'];
+		}
+
 		$allNum = $this->reserve_mdl->countSearch($where);
 		$list = $this->reserve_mdl->search($page,$where);
 
@@ -86,6 +91,11 @@ class Reserve extends NB_Controller {
 			$this->set_error(static::RET_WRONG_INPUT, "联系人姓名不能为空！");	
 			return $this->output_json();
 		}
+		$sendtime = $this->post('sendtime');
+		if(empty($sendtime)){
+			$this->set_error(static::RET_WRONG_INPUT, "请选择发货日期！");	
+			return $this->output_json();
+		}
 
 		$addr = $this->post('addr');
 		if(empty($addr)){
@@ -109,6 +119,7 @@ class Reserve extends NB_Controller {
 		$obj->addr = $addr;
 		$obj->desc = $desc;
 		$obj->amount = $amount;
+		$obj->sendtime = $sendtime;
 		$obj->ctime = date('Y-m-d H:i:s');
 		$obj->user_id = $this->sysData['user_id'];
 
@@ -119,6 +130,75 @@ class Reserve extends NB_Controller {
 		$this->reserve_mdl->set($obj);
 		
 		return $this->output_json();
+	}
+	public function edit(){
+
+		$id = $this->post('id');
+		if(empty($id)){
+			$this->set_error(static::RET_WRONG_INPUT, "单号不正确！");	
+			return $this->output_json();
+		}
+		$id = intval($id);
+		$res = $this->reserve_mdl->get($id);
+
+
+		//判断状态是否可以确认
+		if($res->status!=0){
+			$this->set_error(static::RET_WRONG_INPUT, "该报销单状态不允许更改！");	
+			return $this->output_json();
+		}
+
+		
+
+		$phone = $this->post('phone');
+		if(empty($phone)){
+			$this->set_error(static::RET_WRONG_INPUT, "联系人手机号码不能为空！");	
+			return $this->output_json();
+		}
+		$sendtime = $this->post('sendtime');
+		if(empty($sendtime)){
+			$this->set_error(static::RET_WRONG_INPUT, "请选择发货日期！");	
+			return $this->output_json();
+		}
+		$name = $this->post('name');
+		if(empty($name)){
+			$this->set_error(static::RET_WRONG_INPUT, "联系人姓名不能为空！");	
+			return $this->output_json();
+		}
+
+		$addr = $this->post('addr');
+		if(empty($addr)){
+			$addr = ' ';
+		}
+
+		$desc = $this->post('desc');
+		if(empty($desc)){
+			$this->set_error(static::RET_WRONG_INPUT, "请写菜品详细说明！");	
+			return $this->output_json();
+		}
+
+		$amount = $this->post('amount');
+		if(!empty($amount) && !preg_match("/^[0-9]+(.[0-9]{2})?$/", $amount)){
+			$this->set_error(static::RET_WRONG_INPUT, "金额不正确，小数点后应为2位");	
+			return $this->output_json();
+		}
+		$obj = array(
+			'phone'  => $phone,
+			'name'   => $name,
+			'addr'   => $addr,
+			'desc'   => $desc,
+			'amount' => $amount,
+			'sendtime' => $sendtime,
+
+		);
+
+		$this->reserve_mdl->update($id,$obj);
+		return $this->output_json();
+
+		
+
+		
+
 	}
 	public function show(){
 		$id = $this->get('id');

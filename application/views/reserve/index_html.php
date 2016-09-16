@@ -50,10 +50,13 @@ $this->load->view ( 'common/admin_top', array (
       </thead>
       <tbody>
         <tr>
-          <td colspan="3">发货：<?=$v['addr']?></td>
+          <td colspan="3">地址：<?=$v['addr']?></td>
         </tr>
         <tr>
           <td colspan="3">描述：<?=$v['desc']?></td>
+        </tr>
+        <tr>
+          <td colspan="3">发货：<?=$v['sendtime']?></td>
         </tr>
       </tbody>
     </table>
