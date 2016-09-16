@@ -203,4 +203,51 @@ class Menu extends NB_Controller {
 			'dishStatusColor'  => $dishStatusColor,
 		));
 	}
+	//用户更改密码
+	public function user(){
+		$user_id = $this->sysData['user_id'];
+		$userInfo = $this->user_mdl->get_by_id($user_id);
+		$roleType = $this->config->item('roleType');
+
+
+		$this->output_data(array(
+			'info'   => $userInfo,
+			'roleType' => $roleType,
+		));
+	}
+	public function edit_user(){
+
+		$oldPwd = $this->post('oldPwd');
+		if(empty($oldPwd)){
+			$this->set_error(static::RET_WRONG_INPUT, "老的手机号码不能为空！");	
+			return $this->output_json();
+		}
+		$newPwd = $this->post('newPwd');
+		if(empty($newPwd)){
+			$this->set_error(static::RET_WRONG_INPUT, "新密码不能为空！");	
+			return $this->output_json();
+		}
+
+
+		$user_id = $this->sysData['user_id'];
+
+		$obj = $this->user_mdl->get($user_id);		
+
+		if (empty($obj)) {
+			$this->set_error(static::RET_ERROR_DATA, "找不到该用户信息");	
+			return $this->output_json();
+		}
+
+
+		$secretKey = $this->config->item('secretKey');
+
+		if ( md5($secretKey.$oldPwd) != $obj->password ) {
+			$this->set_error(static::RET_ERROR_DATA, "老密码错误");	
+			return $this->output_json();
+		}
+		
+		$obj->password = md5($secretKey.$newPwd);
+		$this->user_mdl->set($obj);
+		$this->output_json();
+	}
 }

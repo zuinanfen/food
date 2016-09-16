@@ -105,7 +105,9 @@ class Logon extends NB_Controller {
 		));
 	}
 	public function logout(){
+		$shop_id = $this->sysData['shop_id'];
 		$this->set_logout();
+		// header('Location: /index.php?shop_id='.$shop_id);
 		header('Location: /');
 	}
 }

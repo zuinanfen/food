@@ -78,16 +78,18 @@ class User extends NB_Controller {
 		}
 
 		$obj = $this->user_mdl->get($id);
+
+		if (empty($obj)) {
+			$this->set_error(static::RET_ERROR_DATA, "找不到该用户信息");	
+			return $this->output_json();
+		}
 		
 		$uid = $this->post("uid");
 		if (!empty($uid)) {
 			$obj->uid = $uid;
 		}
 
-		if (empty($obj)) {
-			$this->set_error(static::RET_ERROR_DATA, "找不到该用户信息");	
-			return $this->output_json();
-		}
+		
 
 		$secretKey = $this->config->item('secretKey');
 		$old_name = $obj->name;
