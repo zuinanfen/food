@@ -27,7 +27,7 @@ $this->load->view ( 'common/h5_top', array (
 			<td><?=$v['price']?></td>
 			<td><b class="total_price"><?=$v['total_price'] ?><b></td>
 			<td>
-				<input type="number" class="pay_amount" style="width:65px;" value="<?=$v['total_price']?>" />
+				<input type="number" class="pay_amount" style="width:65px;" value="<?=$v['pay_amount']?>" />
 				<button data-id="<?=$v['id']?>" type="button" class="btn btn-xs btn-danger change_amount">改</button>
 			</td>
 			<td style="color:<?=$dishStatusColor[$v['status']]?>;">

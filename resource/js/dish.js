@@ -430,7 +430,8 @@ var Cart = {
 					Data.del('order_src');
 					Data.del('order_table_seat');
 
-					window.location.href = '../menu/index';
+					// window.location.href = '../menu/index';
+					window.location.href='/index.php/menu/order_show?orderId='+json.orderId;
 					
 				} else {
 					alert("操作失败，请刷新重试！");

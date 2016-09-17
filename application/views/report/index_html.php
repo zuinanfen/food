@@ -38,8 +38,9 @@ $this->load->view ( 'common/admin_top', array (
           <th>处理中</th>
           <th>完成</th>
           <th>撤销</th>
-          <th>总数</th>
-          <th>应收款</th>
+          <th>单面金额</th>
+          <th>实收金额</th>
+
         </tr>
       </thead>
       <tbody>
@@ -50,8 +51,8 @@ $this->load->view ( 'common/admin_top', array (
           <td><?=$v['doNum']?></td>
           <td><?=$v['doneNum']?></td>
           <td><?=$v['cancelNum']?></td>
-          <td><?=$v['orderNum']?></td>
           <td><?=$v['amountNum']?></td>
+          <td <?if($v['pay_amount']!=$v['amountNum']){?> style="color:red"<?}?>><?=$v['pay_amount']?></td>
         </tr>
         <?}?>
       </tbody>

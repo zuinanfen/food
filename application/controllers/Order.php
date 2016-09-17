@@ -97,9 +97,10 @@ class Order extends NB_Controller {
         $amount = $this->insertOrderDish($orderId, $dish_list); //获取总价
 
         $obj->amount = $amount;
+        $obj->pay_amount = $amount;
         //继续插入订单
 		$this->order_mdl->set($obj);
-		$this->output_json();
+		$this->output_json(array('orderId'=>$orderId));
 	}
 	private function insertOrderDish($orderId, $dish_list){
 		$obj = $this->orderdish_mdl->gen_new();
@@ -130,6 +131,7 @@ class Order extends NB_Controller {
 			$obj->price = $v['dishPrice'];
 			$obj ->status = 0;
 			$obj->total_price = $totalPrice;
+			$obj->pay_amount = $totalPrice;
 			$obj->select_options = json_encode($select_options);
 			$this->orderdish_mdl->set($obj);
 
@@ -183,6 +185,7 @@ class Order extends NB_Controller {
 			'dish_num'  => $res['dish_num'],
 			'amount'    => $res['amount'],
 			'status'    => $res['status'],
+			'pay_amount'=> $res['pay_amount'],
 		);
 		$this->order_mdl->update($orderId, $update_data);
 		return $this->output_json();
@@ -263,6 +266,7 @@ class Order extends NB_Controller {
 			'status'   => $res['status'],
 			'dish_num' => $res['dish_num'],
 			'amount'   => $res['amount'],
+			'pay_amount' => $res['pay_amount'],
 		);
 
         //继续插入订单
@@ -270,6 +274,8 @@ class Order extends NB_Controller {
 		$this->output_json();
 
 	}
+
+	//初始化订单菜品，计算一些数据
 	private function orderDishInit($orderId){
 
 		//获取菜品列表
@@ -279,6 +285,7 @@ class Order extends NB_Controller {
         }
 
         $amount = 0;
+        $pay_amount = 0;
         $dish_num = count($db_dish_list);
 
 
@@ -293,11 +300,12 @@ class Order extends NB_Controller {
         if($dish_num>0){
 			foreach ($db_dish_list as $k => $v) {
         		$amount = bcadd($amount, $v['total_price'], 2);
+        		$pay_amount = bcadd($pay_amount, $v['pay_amount'], 2);
         		$status_arr[$v['status']] = intval($status_arr[$v['status']]) + 1;
         	}
         }
 
-        $res = array('amount'=>$amount,'dish_num'=>$dish_num,'status'=>8);
+        $res = array('amount'=>$amount,'dish_num'=>$dish_num,'pay_amount'=>$pay_amount,'status'=>8);
 
         //以菜品状态来决定订单状态
         if($status_arr[0]>0){ //有未完成的菜品
@@ -340,13 +348,41 @@ class Order extends NB_Controller {
 			$this->set_error(static::RET_WRONG_INPUT, "订单数据不存在！");
 			return $this->output_json();
 		}
+		$date = date('Y-m-d',time());
+		$order_date = date('Y-m-d', strtotime($detail['ctime']));
+		if($date != $order_date){
+			$this->set_error(static::RET_WRONG_INPUT, "无法更改当天之外的订单，请联系管理员！");
+			return $this->output_json();
+		}
 		$info = $this->orderdish_mdl->get($dishId);
 		if(empty($info)){
 			$this->set_error(static::RET_WRONG_INPUT, "菜品数据不存在！");
 			return $this->output_json();
 		}
-		$discount = ($pay_amount/$info['total_price']);
-		var_dump($discount);die;
-		$this->orderdish_mdl->update_pay($dishId,$pay_amount);
+		if($pay_amount == $info['total_price']){
+			$discount = 0;
+		}else{
+			$discount = ceil($pay_amount/$info['total_price']*10000)/100;
+		}
+		$this->orderdish_mdl->update_pay($dishId,$pay_amount,$discount);
+
+		//计算订单金额
+		//计算菜品总价，菜品数量，菜品list
+        $res = $this->orderDishInit($orderId);
+        if( $res['amount'] == $res['pay_amount']){
+			$discount = 0;
+		}else{
+			$discount = ceil($res['pay_amount']/$res['amount']*10000)/100;
+		}
+		$data = array(
+			'amount'   => $res['amount'],
+			'pay_amount' => $res['pay_amount'],
+			'discount'  => $discount,
+		);
+
+        //继续插入订单
+		$this->order_mdl->update($orderId, $data);
+		$this->output_json();		
+
 	}
 }

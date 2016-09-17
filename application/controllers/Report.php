@@ -41,6 +41,7 @@ class Report extends NB_Controller {
 					'doNum'      => 0, //处理中订单数量
 					'doneNum'    => 0,// 菜上齐订单数量
 					'payNum'     => 0, //已付款订单数量
+					'pay_amount' => 0, //折扣总金额
 				);
 			}
 			$data[$timeKey]['orderNum'] = $data[$timeKey]['orderNum'] + 1;
@@ -67,6 +68,7 @@ class Report extends NB_Controller {
 			}
 			
 			$data[$timeKey]['amountNum'] = bcadd($data[$timeKey]['amountNum'], $v['amount'], 2);
+			$data[$timeKey]['pay_amount'] = bcadd($data[$timeKey]['pay_amount'], $v['pay_amount'], 2);
 
 		
 
