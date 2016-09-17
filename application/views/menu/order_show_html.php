@@ -12,7 +12,7 @@ $this->load->view ( 'common/h5_top', array (
 		<tr>
 			<th>菜名</th>
 			<th>单价</th>
-			<th>结算价</th>
+			<th>结算</th>
 			<th>实收</th>
 			<th style="width:55px;">状态</th>
 			<th>操作</th>
@@ -27,7 +27,7 @@ $this->load->view ( 'common/h5_top', array (
 			<td><?=$v['price']?></td>
 			<td><b class="total_price"><?=$v['total_price'] ?><b></td>
 			<td>
-				<input type="number" class="pay_amount" style="width:65px;" value="<?=$v['pay_amount']?>" />
+				<input type="number" class="pay_amount" style="width:62px;" value="<?=$v['pay_amount']?>" />
 				<button data-id="<?=$v['id']?>" type="button" class="btn btn-xs btn-danger change_amount">改</button>
 			</td>
 			<td style="color:<?=$dishStatusColor[$v['status']]?>;">
