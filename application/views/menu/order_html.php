@@ -18,7 +18,7 @@ $this->load->view ( 'common/h5_top', array (
 	</thead>
 	<tbody id="dishList">
 		<?foreach($list as $k=>$v){?>
-		<tr id="<?=$v['id']?>">
+		<tr id="<?=$v['id']?>" <?if($v['amount']!=$v['pay_amount']){?>style="background:#f0ad4e"<?}?>>
 			<td><?=$v['sourceName']?><?if($v['src']==1){?>(<?=$v['table_id']?>号)<?}?></td>
 			<td><?=$v['dish_num']?></td>
 			<td><?=$v['orderTime']?></td>
