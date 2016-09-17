@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 	<a href="/index.php/menu/logon">首页</a>
 	<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-	<a href="/index.php/logon/logout"><?=$sysData['username']?></a>
+	<a href="/index.php/menu/user"><?=$sysData['username']?></a>
 </div>
 
 

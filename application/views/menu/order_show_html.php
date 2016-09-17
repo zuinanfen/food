@@ -7,12 +7,13 @@ $this->load->view ( 'common/h5_top', array (
 ?>
 
 <h3>菜品列表</h3>
-<table class="table table-condensed table-striped">
+<table class="table table-condensed table-striped"  data-orderid="<?=$detail['id']?>">
 	<thead>
 		<tr>
 			<th>菜名</th>
 			<th>单价</th>
 			<th>结算价</th>
+			<th>实收</th>
 			<th style="width:55px;">状态</th>
 			<th>操作</th>
 		</tr>
@@ -21,12 +22,16 @@ $this->load->view ( 'common/h5_top', array (
 	<tbody id="dishList">
 	<?if(count($dishList)>0){?>
 		<? foreach($dishList as $k=>$v){?>
-		<tr>
-			<td><strong><?php echo $v['name']?></strong></td>
-			<td><?php echo $v['price']?></td>
-			<td><b><?php echo $v['total_price'] ?><b></td>
+		<tr">
+			<td><strong><?=$v['name']?></strong></td>
+			<td><?=$v['price']?></td>
+			<td><b class="total_price"><?=$v['total_price'] ?><b></td>
+			<td>
+				<input type="number" class="pay_amount" style="width:65px;" value="<?=$v['total_price']?>" />
+				<button data-id="<?=$v['id']?>" type="button" class="btn btn-xs btn-danger change_amount">改</button>
+			</td>
 			<td style="color:<?=$dishStatusColor[$v['status']]?>;">
-			<?php echo $v['statusName'] ?></td>
+			<?=$v['statusName'] ?></td>
 			<td>
 				<?if($v['status']==0 || $v['status']==1){?>
 					<button type="button" data-dishkey="<?=$v['dish_key']?>" data-id="<?=$v['id']?>" data-orderid="<?=$v['order_id']?>" class="btn btn-sm btn-danger del_dish">撤销</button>
@@ -35,7 +40,7 @@ $this->load->view ( 'common/h5_top', array (
 			
 		</tr>
 		<tr>
-			<td colspan="5">
+			<td colspan="6">
 			<?php foreach ($v['select_options'] as $key => $value) {?>
 				<?php echo $value['name']?>
 				<?php if($value['price']!=0){?>
@@ -68,19 +73,25 @@ $this->load->view ( 'common/h5_top', array (
 	        <td>订单号</td>
 	        <td><b><?php echo $detail['id']?></b></td>
 	      </tr>
-	       <tr>
-	        <td>订单总金额</td>
-	        <td><b><?php echo $detail['amount']?></b></td>
-	      </tr>
-      
-    	<tr>
+	      <tr>
 	        <td>菜品数量</td>
 	        <td><b><?php echo $detail['dish_num']?></b></td>
 	    </tr>
-	     
+	       <tr>
+	        <td>结算金额</td>
+	        <td><?php echo $detail['amount']?></td>
+	      </tr>
+	     <tr>
+	        <td>需支付金额</td>
+	        <td><b style="color:red"><?php echo $detail['pay_amount']?></b></td>
+	    </tr>
+	    <tr>
+	        <td>结算折扣</td>
+	        <td><b><?php echo $detail['discount']?></b></td>
+	    </tr>
       <tr>
         <td>订单来源</td>
-        <td><b><?php echo $detail['sourceName']?></b></td>
+        <td><?php echo $detail['sourceName']?></td>
     </tr>
     <?if($detail['src']==1){?>
 	    <tr>
@@ -94,15 +105,15 @@ $this->load->view ( 'common/h5_top', array (
       </tr>
       <tr>
         <td>下单用户</td>
-        <td><b><?php echo $detail['username']?></b></td>
+        <td><?php echo $detail['username']?></td>
       </tr>
       <tr>
         <td>下单时间</td>
-        <td><b><?php echo $detail['ctime']?></b></td>
+        <td><?php echo $detail['ctime']?></td>
       </tr>
       <tr>
         <td>订单更新时间</td>
-        <td><b><?php echo $detail['mtime']?></b></td>
+        <td><?php echo $detail['mtime']?></td>
       </tr>
     </tbody>
   </table>

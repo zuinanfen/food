@@ -96,7 +96,7 @@ class Menu extends NB_Controller {
 				$dish_list[$k] = $this->order->init_dish($v);
 			}
 		}
-
+		// var_dump($dish_list);die;
 		$detail = json_decode(json_encode($detail), true);
 		$orderStatusColor = $this->config->item('orderStatusColor');
 		$dishStatusColor = $this->config->item('dishStatusColor');

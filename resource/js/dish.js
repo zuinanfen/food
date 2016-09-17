@@ -128,14 +128,7 @@ var Dish = {
 		var dishOptions = Dishoption.get(dishData.dishId);
 		var newOptions = [];
 		var totalPrice = parseFloat(dishData.dishPrice);
-		// console.log('2222',dishOptions);
-		// $.each(dishOptions,function(k,v){
-		// 	alert(v.id);
-		// 	if($.inArray(v.id,dishData.options)>-1){
-		// 		newOptions.push(v);
-		// 		dishPrice = Data.floatAdd(dishPrice, parseFloat(v.price));
-		// 	}
-		// });
+
 		for(var i=0;i<dishOptions.length;i++){
 			//if($.inArray(dishOptions[i].id, dishData.options)>-1){
 			if(dishData.options.indexOf(parseInt(dishOptions[i].id))>-1){
@@ -565,6 +558,33 @@ var OrderShow = {
 		$('#addDishBtn').click(function(){
 			var orderId = $(this).data('orderid');
 			OrderShow.addDish(orderId);
+		});
+		$('.change_amount').click(function(){
+			var dishId = $(this).data('id');
+			var orderId = $(this).parents('table').data('orderid');
+			var $par = $(this).parents('tr');
+			var total_price = parseFloat($par.find('.total_price').text());
+			var pay_amount = $par.find('.pay_amount').val();
+			if(total_price<pay_amount){
+				alert('实收金额不能大于结算金额！');
+				return false;
+			}
+			$.ajax({
+             type: 'post',
+             url: '../order/change_amount',
+             data:{dishId:dishId,orderId:orderId,pay_amount:pay_amount},
+             dataType: 'json',
+             success: function(json){
+             	if (json._ret == 0) {
+					alert('更改价格成功，请重新打印订单给顾客结算！');
+					window.location.reload();
+					
+				} else {
+					alert(json._log);
+				}
+             }
+
+        });
 		});
 	},
 	delDish: function(id, orderId, dishKey){

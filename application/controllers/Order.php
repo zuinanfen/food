@@ -315,5 +315,38 @@ class Order extends NB_Controller {
         }
         return $res;
 	}
-
+	public function change_amount(){
+		$pay_amount = $this->post('pay_amount');
+		if(empty($pay_amount)){
+			$this->set_error(static::RET_WRONG_INPUT, "实收金额不能为空");	
+			return $this->output_json();
+		}
+		if(!preg_match("/^[0-9]+(.[0-9]{2})?$/", $pay_amount)){
+			$this->set_error(static::RET_WRONG_INPUT, "实收金额格式不正确，小数点后面应该有两位数");	
+			return $this->output_json();
+		}
+		$dishId = $this->post('dishId');
+		if(empty($dishId)){
+			$this->set_error(static::RET_WRONG_INPUT, "数据出错，请联系管理员");	
+			return $this->output_json();
+		}
+		$orderId = $this->post('orderId');
+		if(empty($orderId)){
+			$this->set_error(static::RET_WRONG_INPUT, "订单id不能为空！");	
+			return $this->output_json();
+		}
+		$detail = $this->order_mdl->get($orderId);
+		if($detail == false){
+			$this->set_error(static::RET_WRONG_INPUT, "订单数据不存在！");
+			return $this->output_json();
+		}
+		$info = $this->orderdish_mdl->get($dishId);
+		if(empty($info)){
+			$this->set_error(static::RET_WRONG_INPUT, "菜品数据不存在！");
+			return $this->output_json();
+		}
+		$discount = ($pay_amount/$info['total_price']);
+		var_dump($discount);die;
+		$this->orderdish_mdl->update_pay($dishId,$pay_amount);
+	}
 }

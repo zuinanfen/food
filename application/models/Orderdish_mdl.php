@@ -141,4 +141,13 @@ class Orderdish_mdl extends NB_Model {
         }
 		return $row[0];
 	}
+	//更新收款金额
+	public function update_pay($id, $pay_amount, $discount){
+		$data = array(
+            'discount'    => $discount,
+            'pay_amount'  => $pay_amount,
+            'mTime'   => date('Y-m-d H:i:s'),
+        );
+        $this->db->update(self::T_NAME, $data, array('id'=>$id,'shop_id'=>$this->shop_id));
+	}
 }
