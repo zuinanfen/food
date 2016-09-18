@@ -325,10 +325,10 @@ class Order extends NB_Controller {
 	}
 	public function change_amount(){
 		$pay_amount = $this->post('pay_amount');
-		if(empty($pay_amount)){
-			$this->set_error(static::RET_WRONG_INPUT, "实收金额不能为空");	
-			return $this->output_json();
-		}
+		// if(empty($pay_amount)){
+		// 	$this->set_error(static::RET_WRONG_INPUT, "实收金额不能为空");	
+		// 	return $this->output_json();
+		// }
 		if(!preg_match("/^[0-9]+(.[0-9]{2})?$/", $pay_amount)){
 			$this->set_error(static::RET_WRONG_INPUT, "实收金额格式不正确，小数点后面应该有两位数");	
 			return $this->output_json();
