@@ -57,6 +57,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   </ul>
 </nav>
 <?}?>
+<?if($funcname=='discount'){?>
+<nav>
+  <ul class="nav nav-pills pull-right navi">
+	<li <?if($sysData['action']=='index'){?>class="active"<?}?>><a href="index">创建卡券</a></li>
+	<li <?if($sysData['action']=='listall'){?>class="active"<?}?>><a href="listall">卡券列表</a></li>
+  </ul>
+</nav>
+<?}?>
 
 
 </div>

@@ -203,3 +203,63 @@ var Reverve = {
         });
     }
 };
+var Discount = {
+    addInit:function(){
+        $('#type').change(function(){
+            var val = $(this).val();
+            var $dish_id = $('#dish_id');   
+            $dish_id.val('');       
+            if(val==1){
+                $dish_id.parents('.input-group').show();
+            }else{
+                $dish_id.parents('.input-group').hide();
+            }
+        });
+
+        $('#add_btn').click(function(){
+            var data = {
+                name: $('#name').val(),
+                type: $('#type').val(),
+                desc: $('#desc').val(),
+                pic: $('#pic').val(),
+                discount: $('#discount').val(),
+                dish_id: $('#dish_id').val(),
+                expire_day: $('#expire_day').val()
+            }
+
+            $.ajax({
+                 type: 'post',
+                 url: '/index.php/discount/add',
+                 data:data,
+                 dataType: 'json',
+                 success: function(json){
+                    if (json._ret == 0) {
+                        alert('创建优惠券成功！');
+                        window.location.reload();
+                    } else {
+                        alert(json._log);
+                    }
+                 }
+
+            });
+        });
+    },
+    getCard: function(id){
+        $.ajax({
+             type: 'post',
+             url: '/index.php/discount/get_card',
+             data:{id:id},
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    alert('生成优惠券成功！');
+                    var cardId = json.cardId;
+                    window.location.href = '/index.php/discount/show?id='+cardId;
+                } else {
+                    alert(json._log);
+                }
+             }
+
+        });
+    }
+}

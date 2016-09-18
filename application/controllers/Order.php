@@ -348,10 +348,10 @@ class Order extends NB_Controller {
 			$this->set_error(static::RET_WRONG_INPUT, "订单数据不存在！");
 			return $this->output_json();
 		}
-		$date = date('Y-m-d',time());
-		$order_date = date('Y-m-d', strtotime($detail['ctime']));
-		if($date != $order_date){
-			$this->set_error(static::RET_WRONG_INPUT, "无法更改当天之外的订单，请联系管理员！");
+		$now = time();
+		$order_date = strtotime($detail['ctime']);
+		if($now - $order_date > 60*60*24){
+			$this->set_error(static::RET_WRONG_INPUT, "无法更改12小时之前的菜品价格，请联系管理员！");
 			return $this->output_json();
 		}
 		$info = $this->orderdish_mdl->get($dishId);

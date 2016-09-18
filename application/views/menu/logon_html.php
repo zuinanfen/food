@@ -34,6 +34,7 @@ $this->load->view ( 'common/h5_top', array (
 	          <span class="glyphicon-class">订单列表</span>
 	        </a>
         </li>
+        
         <?}?>
         <li>
           <a href="/index.php/reserve/index">
@@ -66,6 +67,12 @@ $this->load->view ( 'common/h5_top', array (
             <span class="glyphicon-class">报销管理</span>
            </a>
         </li>
+        <li>
+              <a href="/index.php/discount/listall">
+                <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span>
+                <span class="glyphicon-class">卡券管理</span>
+              </a>
+            </li>
             <?if($sysData['role_id']==100){?>
             <li>
                 <a href="/index.php/user/index">
@@ -73,6 +80,7 @@ $this->load->view ( 'common/h5_top', array (
                   <span class="glyphicon-class">用户管理</span>
                  </a>
             </li>
+
             <?}?>
         <?}?>
     </ul>

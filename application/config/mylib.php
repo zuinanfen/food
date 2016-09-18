@@ -167,7 +167,13 @@ $config['reserveStatusColor'] = array(
 	// 3 => '#dff0d8',
 	4 => '#d44950'
 );
-
+//优惠券类型配置
+$config['discountType'] = array(
+	1   => '固定菜品折扣券',
+	2   => '所有菜品折扣券',
+	// 3   => '订单折扣券',
+	// 4   => '订单代金券',
+);
 //用户权限表, 白名单方法，若controller未定义，则拦截，若action未定义，则放行，定义的则白名单，
 $config['privilegeList'] = array(
 	100   => array(  //开发者
@@ -180,8 +186,9 @@ $config['privilegeList'] = array(
 			'user'         => array(),
 			'report'       => array(),
 			'income'       => array(),
-			'invoice'       => array(),
-			'reserve'       => array(),
+			'invoice'      => array(),
+			'reserve'      => array(),
+			'discount'     => array(),
 		),
 	90   => array(  //财务
 			'logon'        => array(),
@@ -202,28 +209,29 @@ $config['privilegeList'] = array(
 			'income'       => array(),
 			'invoice'       => array(),
 			'reserve'       => array(),
+			'discount'     => array(),
 		),
 	2   => array(  //厨师
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount'),
 		
 		),
 	3   => array( //点餐员
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
-			'reserve'       => array(),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount'),
+			'reserve'      => array(),
 
 		),
 	4   => array( //上菜
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish','addDish'),
-			'reserve'       => array(),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount'),
+			'reserve'      => array(),
 		),
 	10  => array( //代理员
 			'logon'        => array(),

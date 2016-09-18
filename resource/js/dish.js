@@ -561,6 +561,9 @@ var OrderShow = {
 			OrderShow.addDish(orderId);
 		});
 		$('.change_amount').click(function(){
+			if(!confirm('确定给该菜品打折吗？')){
+				return false;
+			}
 			var dishId = $(this).data('id');
 			var orderId = $(this).parents('table').data('orderid');
 			var $par = $(this).parents('tr');

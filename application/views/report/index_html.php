@@ -39,7 +39,7 @@ $this->load->view ( 'common/admin_top', array (
           <th>完成</th>
           <th>撤销</th>
           <th>单面金额</th>
-          <th>实收金额</th>
+          <th>应收金额</th>
 
         </tr>
       </thead>
