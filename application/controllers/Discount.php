@@ -66,6 +66,9 @@ class Discount extends NB_Controller {
 			$this->set_error(static::RET_WRONG_INPUT, "请输入折扣券对应的菜品id");	
 			return $this->output_json();
 		}
+		if(empty($dish_id)){
+			$dish_id = 0;
+		}
 		//查看菜品id存在不
 		if($type==1){
 			$dish_detail = $this->dish_mdl->get($dish_id);
@@ -94,7 +97,7 @@ class Discount extends NB_Controller {
 		$obj->user_id = $this->sysData['user_id'];
 		$obj->status = 1;
 
-	
+		// var_dump($obj);die;
 		$this->discountconfig_mdl->set($obj);
 		
 		return $this->output_json();
@@ -190,8 +193,10 @@ class Discount extends NB_Controller {
 		$font = '/resource/fonts/msyh.ttf';//字体
 		$color = imagecolorallocate($dst, 0xffff, 0xffff, 0xffff);//字体颜色
 
-		$text = '                             有效期至：'.date('Y/m/d', strtotime($info->expire_time));
-		imagefttext($dst, 35, 0, 50, $dst_h-50, $color, $font, $info->id);
+		$id = $this->init_id($info->id);
+
+		$text = '                          有效期至：'.date('Y/m/d', strtotime($info->expire_time));
+		imagefttext($dst, 40, 0, 50, $dst_h-50, $color, $font, $id);
 		imagefttext($dst, 22, 0, 400, $dst_h-55, $color, $font, $text);
 		//输出图片
 
@@ -212,6 +217,19 @@ class Discount extends NB_Controller {
 		        break;
 		}
 		imagedestroy($dst);
+	}
+	private function init_id($id){
+		$id_arr = str_split($id,1); 
+		$new_id = '';
+		foreach ($id_arr as $k=>$v) {
+			if(($k+1)%4==0){
+				$new_id = $new_id.$v.'  ';
+			}else{
+				$new_id = $new_id.$v;
+			}
+
+		}
+		return $new_id;
 	}
 	
 }

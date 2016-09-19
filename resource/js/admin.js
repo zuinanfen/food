@@ -235,7 +235,7 @@ var Discount = {
                  success: function(json){
                     if (json._ret == 0) {
                         alert('创建优惠券成功！');
-                        window.location.reload();
+                        window.location.href='/index.php/discount/listall';
                     } else {
                         alert(json._log);
                     }
