@@ -128,7 +128,14 @@ class Discount extends NB_Controller {
 		}
 		$mtime=explode(' ',microtime());
 		$id = substr($mtime[1],5).($mtime[0]*10000000).mt_rand(1000,9999);
-		
+		if(mb_strlen($id)!=16){
+			$len = mb_strlen($id);
+			$zero = '';
+			for($i=$len;$i<16;$i++){
+				$zero .= '0';
+			}
+			$id = $id.$zero;
+		}
 
 		$obj = $this->discountcard_mdl->gen_new();
 		$obj->id = $id;
@@ -190,14 +197,14 @@ class Discount extends NB_Controller {
 		$dst = imagecreatefromstring(file_get_contents($dst_path));
 		list($dst_w, $dst_h, $dst_type) = getimagesize($dst_path);
 		//打上文字
-		$font = '/resource/fonts/msyh.ttf';//字体
+		$font = '/resource/fonts/consola.ttf';//字体
+		$font2 = '/resource/fonts/arial.ttf';
 		$color = imagecolorallocate($dst, 0xffff, 0xffff, 0xffff);//字体颜色
-
 		$id = $this->init_id($info->id);
 
-		$text = '                          有效期至：'.date('Y/m/d', strtotime($info->expire_time));
-		imagefttext($dst, 40, 0, 50, $dst_h-50, $color, $font, $id);
-		imagefttext($dst, 22, 0, 400, $dst_h-55, $color, $font, $text);
+		$text = '                   Expiration Date: '.date('Y/m/d', strtotime($info->expire_time));
+		imagefttext($dst, 38, 0, 40, $dst_h-50, $color, $font, $id);
+		imagefttext($dst, 20, 0, $dst_w/2, $dst_h-55, $color, $font2, $text);
 		//输出图片
 
 		switch ($dst_type) {
@@ -223,7 +230,7 @@ class Discount extends NB_Controller {
 		$new_id = '';
 		foreach ($id_arr as $k=>$v) {
 			if(($k+1)%4==0){
-				$new_id = $new_id.$v.'  ';
+				$new_id = $new_id.$v.' ';
 			}else{
 				$new_id = $new_id.$v;
 			}
