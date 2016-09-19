@@ -4,7 +4,6 @@ require APPPATH.'third_party/excel/PHPExcel.php';
 
 class Excel extends CI_Controller {
     function __construct() {
-        // parent::__construct();
         $this->ci = & get_instance();
        
     }

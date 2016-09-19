@@ -9,6 +9,7 @@ class Discount extends NB_Controller {
 		$this->load->model('discountconfig_mdl');
 		$this->load->model('discountcard_mdl');
 		$this->load->model('dish_mdl');
+		// $this->load->library('Imagemark');
 	}
 
 	public function index () {
@@ -123,7 +124,7 @@ class Discount extends NB_Controller {
 			return $this->output_json();
 		}
 		$mtime=explode(' ',microtime());
-		$id = substr($mtime[1],6).($mtime[0]*100000000).mt_rand(1000,9999);
+		$id = substr($mtime[1],5).($mtime[0]*10000000).mt_rand(1000,9999);
 		
 
 		$obj = $this->discountcard_mdl->gen_new();
@@ -131,6 +132,7 @@ class Discount extends NB_Controller {
 		$obj->ctime = date('Y-m-d H:i:s');
 		$obj->discount_id = $info->id;
 		$obj->expire_time = date('Y-m-d H:i:s',strtotime("+{$info->expire_day} day"));
+		$obj->get_uid = $this->sysData['user_id'];
 
 		$res = $this->discountcard_mdl->set($obj);
 		if(!$res){
@@ -143,10 +145,14 @@ class Discount extends NB_Controller {
 	public function show(){
 		$id = $this->get('id');
 		if(!preg_match("/^[0-9]*$/", $id)){
-			$this->set_error(static::RET_WRONG_INPUT, "id 不正确，请联系管理员！");	
-			return $this->output_json();
+			echo 'id 不正确，请联系管理员！';
+			die;
 		}
 		$info = $this->discountcard_mdl->get($id);
+		if(empty($info)){
+			echo '该卡券不存在，请联系管理员！';
+			die;
+		}
 		// var_dump($info);
 		$discountInfo = $this->discountconfig_mdl->get($info->discount_id);
 		// var_dump($discountInfo);
@@ -159,6 +165,53 @@ class Discount extends NB_Controller {
 				'discountType' => $discountType, 
 			)
 		);
+	}
+	public function pic_show(){
+		$id = $this->get('id');
+		if(!preg_match("/^[0-9]*$/", $id)){
+			echo 'id 不正确，请联系管理员！';
+			die;
+		}
+		$info = $this->discountcard_mdl->get($id);
+		if(empty($info)){
+			echo '该卡券不存在，请联系管理员！';
+			die;
+		}
+		$discountInfo = $this->discountconfig_mdl->get($info->discount_id);
+
+
+
+		$dst_path = $discountInfo->pic;
+
+		//创建图片的实例
+		$dst = imagecreatefromstring(file_get_contents($dst_path));
+		list($dst_w, $dst_h, $dst_type) = getimagesize($dst_path);
+		//打上文字
+		$font = '/resource/fonts/msyh.ttf';//字体
+		$color = imagecolorallocate($dst, 0xffff, 0xffff, 0xffff);//字体颜色
+
+		$text = '                             有效期至：'.date('Y/m/d', strtotime($info->expire_time));
+		imagefttext($dst, 35, 0, 50, $dst_h-50, $color, $font, $info->id);
+		imagefttext($dst, 22, 0, 400, $dst_h-55, $color, $font, $text);
+		//输出图片
+
+		switch ($dst_type) {
+		    case 1://GIF
+		        header('Content-Type: image/gif');
+		        imagegif($dst);
+		        break;
+		    case 2://JPG
+		        header('Content-Type: image/jpeg');
+		        imagejpeg($dst);
+		        break;
+		    case 3://PNG
+		        header('Content-Type: image/png');
+		        imagepng($dst);
+		        break;
+		    default:
+		        break;
+		}
+		imagedestroy($dst);
 	}
 	
 }

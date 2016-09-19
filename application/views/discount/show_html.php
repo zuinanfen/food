@@ -31,7 +31,7 @@ $this->load->view ( 'common/admin_top', array (
             <td colspan="2">卡券说明：<?=$discountInfo->desc?></td>
           </tr>
           <tr>
-            <td colspan="2"><img src="<?=$discountInfo->pic?>" width="100%"/></td>
+            <td colspan="2"><img src="/index.php/discount/pic_show?id=<?=$info->id?>" width="100%"/></td>
           </tr>
         </tbody>
       </table>
