@@ -9,7 +9,7 @@ class Discount extends NB_Controller {
 		$this->load->model('discountconfig_mdl');
 		$this->load->model('discountcard_mdl');
 		$this->load->model('dish_mdl');
-		// $this->load->library('Imagemark');
+		$this->load->library('Qr');
 	}
 
 	public function index () {
@@ -247,6 +247,7 @@ class Discount extends NB_Controller {
 
 	}
 	public function show(){
+
 		$id = $this->get('id');
 		if(!preg_match("/^[0-9]*$/", $id)){
 			echo 'id 不正确，请联系管理员！';
@@ -299,6 +300,21 @@ class Discount extends NB_Controller {
 		$text = '                   Expiration Date: '.date('Y/m/d', strtotime($info->expire_time));
 		imagefttext($dst, 38, 0, 40, $dst_h-50, $color, $font, $id);
 		imagefttext($dst, 20, 0, $dst_w/2, $dst_h-55, $color, $font2, $text);
+
+
+		//加上二维码水印
+		$secretKey = $this->config->item('secretKey');
+		$token = md5($secretKey.$info->id);
+		$this->qr->save($info->id,'http://a.zuinanfen.com/discount.php?n='.$info->id.'&k='.$token);
+		$src_path = APPPATH.'cache/qrcode/'.$info->id.'.png';
+		//创建图片的实例
+		// $dst = imagecreatefromstring(file_get_contents($dst_path));
+		$src = imagecreatefromstring(file_get_contents($src_path));
+		//获取水印图片的宽高
+		list($src_w, $src_h) = getimagesize($src_path);
+		//将水印图片复制到目标图片上，最后个参数50是设置透明度，这里实现半透明效果
+		imagecopymerge($dst, $src, $dst_w-150, 50, 0, 0, $src_w, $src_h, 100);
+
 		//输出图片
 
 		switch ($dst_type) {
@@ -318,6 +334,8 @@ class Discount extends NB_Controller {
 		        break;
 		}
 		imagedestroy($dst);
+		imagedestroy($src);
+		@unlink ($src_path);
 	}
 	private function init_id($id){
 		$id_arr = str_split($id,1); 
