@@ -134,7 +134,7 @@ class Logon extends NB_Controller {
 			echo '该卡券不存在！';
 			die;
 		}
-		$content = ''；
+		$content = '';
 		if(strtotime($info->expire_time > time())){
 			$content .= '该卡券已经过期！<br/>';
 			echo $content;
