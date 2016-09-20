@@ -88,6 +88,8 @@ class NB_Controller extends CI_Controller {
 			$this->sysData['perPage'] = $this->config->item('perPage');
 			$this->shop_id = intval($this->input->cookie('shop_id'));
 			$this->sysData['shop_id'] = $this->shop_id;
+			$version = $this->config->item('version');
+			$this->sysData['version'] = $version;
 		}
 		$this->read_params();
     }

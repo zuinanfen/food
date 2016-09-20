@@ -574,21 +574,54 @@ var OrderShow = {
 				return false;
 			}
 			$.ajax({
-             type: 'post',
-             url: '../order/change_amount',
-             data:{dishId:dishId,orderId:orderId,pay_amount:pay_amount},
-             dataType: 'json',
-             success: function(json){
-             	if (json._ret == 0) {
-					alert('更改价格成功，请重新打印订单给顾客结算！');
-					window.location.reload();
-					
-				} else {
-					alert(json._log);
-				}
-             }
+	             type: 'post',
+	             url: '../order/change_amount',
+	             data:{dishId:dishId,orderId:orderId,pay_amount:pay_amount},
+	             dataType: 'json',
+	             success: function(json){
+	             	if (json._ret == 0) {
+						alert('更改价格成功，请重新打印订单给顾客结算！');
+						window.location.reload();
+						
+					} else {
+						alert(json._log);
+					}
+	             }
 
-        });
+	        });
+		});
+		$('.use_discount').click(function(){
+			var dish_id = $(this).data('id');
+			var dialog = $.dialog({
+		        title: '请输入优惠券号码',
+		        content:'<div id="option-dialog"><input id="discount_number" class="form-control" type="number" value=""/></div>',
+		        okValue: '确定使用',
+		        lock: true,
+			    fixed:true,
+		        ok: function () {
+		        	var discount_number = $('#discount_number').val();
+		        	if(discount_number.length!=16){
+		        		alert('您输入的优惠券号码不是16位，请查证后再输入！');
+		        		return false;
+		        	}
+		        	$.ajax({
+			             type: 'post',
+			             url: '../order/use_discount',
+			             data:{dish_id:dish_id,discount_number:discount_number},
+			             dataType: 'json',
+			             success: function(json){
+			             	if (json._ret == 0) {
+								alert('使用优惠券成功，请重新根据最新的订单价格进行结算！');
+								window.location.reload();
+								
+							} else {
+								alert(json._log);
+							}
+			             }
+
+			        });
+			  	}
+    		});
 		});
 	},
 	delDish: function(id, orderId, dishKey){

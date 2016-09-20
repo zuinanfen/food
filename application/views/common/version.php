@@ -1,1 +1,1 @@
-<small>&copy; <?=$sysData['shop_name']?>餐饮管理有限公司 V1.6.4</small>
+<small>&copy; <?=$sysData['shop_name']?>餐饮管理有限公司 V<?=$sysData['version']?></small>

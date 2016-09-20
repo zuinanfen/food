@@ -141,13 +141,17 @@ class Orderdish_mdl extends NB_Model {
         }
 		return $row[0];
 	}
+	
+	public function update( $id, $update_data= array()){
+		$update_data['mTime'] = date('Y-m-d H:i:s');
+        $this->db->update(self::T_NAME, $update_data, array('id'=>$id));
+	}
 	//更新收款金额
 	public function update_pay($id, $pay_amount, $discount){
 		$data = array(
             'discount'    => $discount,
             'pay_amount'  => $pay_amount,
-            'mTime'   => date('Y-m-d H:i:s'),
         );
-        $this->db->update(self::T_NAME, $data, array('id'=>$id,'shop_id'=>$this->shop_id));
+        $this->update($id,$data);
 	}
 }

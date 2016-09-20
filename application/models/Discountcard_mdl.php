@@ -34,5 +34,9 @@ class Discountcard_mdl extends NB_Model {
 	// 	}
 	// 	return $res;
 	// }
+	public function update($id, $update_data= array()){
+		$update_data['mTime'] = date('Y-m-d H:i:s');
+        $this->db->update(self::T_NAME, $update_data, array('id'=>$id));
+	}
 
 }

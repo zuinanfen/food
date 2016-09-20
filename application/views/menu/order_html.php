@@ -39,7 +39,7 @@ $this->load->view ( 'common/h5_top', array (
 
 <footer class="footer"></footer>
 
-<script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
+<script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
 <script type="text/javascript">
 	var paramString = '?page=';
 

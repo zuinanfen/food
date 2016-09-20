@@ -22,13 +22,16 @@ $this->load->view ( 'common/h5_top', array (
 	<tbody id="dishList">
 	<?if(count($dishList)>0){?>
 		<? foreach($dishList as $k=>$v){?>
-		<tr">
+		<tr>
 			<td><strong><?=$v['name']?></strong></td>
 			<td><?=$v['price']?></td>
 			<td><b class="total_price"><?=$v['total_price'] ?><b></td>
 			<td>
 				<input type="number" class="pay_amount" style="width:50px;" value="<?=$v['pay_amount']?>" />
+				<?if($v['discount_number']==''){?>
 				<button data-id="<?=$v['id']?>" type="button" class="btn btn-xs btn-danger change_amount">改</button>
+				<button data-id="<?=$v['id']?>" type="button" class="btn btn-xs btn-warning use_discount">券</button>
+				<?}?>
 			</td>
 			<td style="color:<?=$dishStatusColor[$v['status']]?>;">
 			<?=$v['statusName'] ?></td>

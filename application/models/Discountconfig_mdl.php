@@ -17,9 +17,11 @@ class Discountconfig_mdl extends NB_Model {
 
 		$this->db->from(self::T_NAME);
 		$this->db->where('shop_id',$this->shop_id);
-		if (!empty($status))
+		if (!empty($status)){
 			$this->db->where_in('status',$status);
-			$this->db->order_by('mtime','desc');
+
+		}
+		$this->db->order_by('mtime','desc');
 		$query = $this->db->get();
 		if($query && $query->num_rows() > 0){ 
 			$res = $query->result_object();
@@ -33,6 +35,11 @@ class Discountconfig_mdl extends NB_Model {
 			return $res_new;
 		}
 		return $res;
+	}
+
+	public function update( $id, $update_data= array()){
+		$update_data['mTime'] = date('Y-m-d H:i:s');
+        $this->db->update(self::T_NAME, $update_data, array('id'=>$id));
 	}
 
 }

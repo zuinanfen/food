@@ -95,7 +95,7 @@ $this->load->view ( 'common/admin_top', array (
 		</div>
 		<?}?>
 	</div>
-<script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
+<script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
 <script type="text/javascript">
 	$('#cancelInvoice').click(function(){
 		if(confirm("确定撤销该报销单？")){

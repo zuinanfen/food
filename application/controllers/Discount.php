@@ -14,13 +14,51 @@ class Discount extends NB_Controller {
 
 	public function index () {
 		
+		$list = $this->discountconfig_mdl->list_by_status();
+
+		
 		$discountType = $this->config->item('discountType');
 
 		$this->output_data(
 			array(
+				'list'  => $list,
 				'discountType' => $discountType, 
 			)
 		);
+	}
+	public function edit(){
+		$id = $this->get('id');
+		$discountType = $this->config->item('discountType');
+		if(!preg_match("/^[0-9]*$/", $id)){
+			echo  "id 不正确，请联系管理员！";
+			die;
+		}
+		$info = $this->discountconfig_mdl->get($id);
+		if(empty($info)){
+			echo "该优惠券异常，请联系管理员";	
+			die;
+		}
+
+
+		$this->output_data(
+			array(
+				'id'   => $id,
+				'info'  => $info,
+				'discountType' => $discountType, 
+			)
+		);
+		
+	}
+	public function add_new(){
+		$discountType = $this->config->item('discountType');
+		if(empty($id)){
+			$this->output_data(
+				array(
+					'discountType' => $discountType, 
+				)
+			);
+			return false;
+		}
 	}
 	public function add(){
 		if(!in_array($this->sysData['role_id'], array(100))){
@@ -102,10 +140,66 @@ class Discount extends NB_Controller {
 		
 		return $this->output_json();
 	}
+	public function edit_config(){
+		if(!in_array($this->sysData['role_id'], array(100))){
+			$this->set_error(static::RET_WRONG_INPUT, "权限不够编辑优惠券！");	
+			return $this->output_json();
+		}
+		$id = $this->post('id');
+		if(!preg_match("/^[0-9]*$/", $id)){
+			$this->set_error(static::RET_WRONG_INPUT, "id 不正确，请联系管理员！");	
+			return $this->output_json();
+		}
+		$info = $this->discountconfig_mdl->get($id);
+		if(empty($info)){
+			$this->set_error(static::RET_WRONG_INPUT, "查找不到该优惠券信息！");	
+			return $this->output_json();
+		}
+
+
+		$name = $this->post('name');
+		if(empty($name)){
+			$this->set_error(static::RET_WRONG_INPUT, "名称不能为空！");	
+			return $this->output_json();
+		}
+
+		$desc = $this->post('desc');
+		if(empty($desc)){
+			$this->set_error(static::RET_WRONG_INPUT, "请填写卡券描述！");	
+			return $this->output_json();
+		}
+
+		$pic = $this->post('pic');
+		if(empty($pic)){
+			$this->set_error(static::RET_WRONG_INPUT, "请输入卡券背景图片url！");	
+			return $this->output_json();
+		}
+
+		$expire_day = $this->post('expire_day');
+		if(!preg_match("/^[0-9]*$/", $expire_day)){
+			$this->set_error(static::RET_WRONG_INPUT, "过期天数，请输入整数");	
+			return $this->output_json();
+		}
+		$status = $this->post('status');
+		if(!in_array($status, array(0,1))){
+			$this->set_error(static::RET_WRONG_INPUT, "卡券状态选择不正确！");	
+			return $this->output_json();
+		}
+	
+		
+		$obj = array(
+			'name'  => $name,
+			'desc'   => $desc,
+			'pic'   => $pic,
+			'expire_day'   => $expire_day,
+			'status' => $status,
+		);
+
+		$this->discountconfig_mdl->update($id,$obj);
+		return $this->output_json();
+	}
 	public function listall(){
 		$list = $this->discountconfig_mdl->list_by_status(1);
-
-		// var_dump($list);
 
 		$discountType = $this->config->item('discountType');
 		$this->output_data(
@@ -238,5 +332,4 @@ class Discount extends NB_Controller {
 		}
 		return $new_id;
 	}
-	
 }

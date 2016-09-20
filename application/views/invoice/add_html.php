@@ -37,7 +37,7 @@ $this->load->view ( 'common/admin_top', array (
 	<button type="button" class="btn btn-warning btn-block" style="margin-top:8px" id="add_btn">提交</button>
 </div>
 
-<script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
+<script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
 
 <script type="text/javascript">
 	$('#add_btn').click(function(){

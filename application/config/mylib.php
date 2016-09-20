@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+$config['version'] = '1.7'; //系统版本号
+
 $config['secretKey']  = 'zuinanfen!@#$123' ; //站点通用秘钥
 //自动标注几个菜为制作中
 $config['autoUpdateDishNum'] = 3;
@@ -215,14 +217,14 @@ $config['privilegeList'] = array(
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount'),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount','use_discount'),
 		
 		),
 	3   => array( //点餐员
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount'),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount','use_discount'),
 			'reserve'      => array(),
 
 		),
@@ -230,7 +232,7 @@ $config['privilegeList'] = array(
 			'logon'        => array(),
 			'menu'         => array(),
 			'dishoption'   => array(),
-			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount'),
+			'order'        => array('add','delDish','cancelOrder','doneDish','addDish','change_amount','use_discount'),
 			'reserve'      => array(),
 		),
 	10  => array( //代理员

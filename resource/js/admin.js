@@ -216,8 +216,10 @@ var Discount = {
             }
         });
 
-        $('#add_btn').click(function(){
-            var data = {
+        
+    },
+    add:function(){
+        var data = {
                 name: $('#name').val(),
                 type: $('#type').val(),
                 desc: $('#desc').val(),
@@ -242,7 +244,32 @@ var Discount = {
                  }
 
             });
-        });
+    },
+    edit:function(){
+        var data = {
+                name: $('#name').val(),
+                desc: $('#desc').val(),
+                pic: $('#pic').val(),
+                expire_day: $('#expire_day').val(),
+                id: $('#id').val(),
+                status: $('#status').val(),
+            }
+
+            $.ajax({
+                 type: 'post',
+                 url: '/index.php/discount/edit_config',
+                 data:data,
+                 dataType: 'json',
+                 success: function(json){
+                    if (json._ret == 0) {
+                        alert('编辑优惠券成功！');
+                        window.location.href='/index.php/discount/index';
+                    } else {
+                        alert(json._log);
+                    }
+                 }
+
+            });
     },
     getCard: function(id){
         $.ajax({

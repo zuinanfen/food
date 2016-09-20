@@ -12,7 +12,9 @@ class Order extends NB_Controller {
 		// $this->load->model('option_mdl');
 		$this->load->model('dishoption_mdl');
 		$this->load->model('orderdish_mdl');
-		// $this->load->library('session');
+		$this->load->model('discountcard_mdl');
+		$this->load->model('discountconfig_mdl');
+		
 	}
 
 	public function index () {
@@ -383,6 +385,92 @@ class Order extends NB_Controller {
         //继续插入订单
 		$this->order_mdl->update($orderId, $data);
 		$this->output_json();		
+
+	}
+	public function use_discount(){
+		$dish_id = $this->post('dish_id');
+		$discount_number = $this->post('discount_number');
+
+		//校验优惠券是否正常可用
+		if(!preg_match("/^[0-9]*$/", $discount_number)){
+			$this->set_error(static::RET_WRONG_INPUT, "优惠券账号输入不正确，请查验后重新输入！");
+			return $this->output_json();
+		}
+		$info = $this->discountcard_mdl->get($discount_number);
+		if(empty($info)){
+			$this->set_error(static::RET_WRONG_INPUT, "该优惠券号码不存在，请联系管理员！");
+			return $this->output_json();
+		}
+		
+
+		// var_dump($info);die;
+		$dishInfo = $this->orderdish_mdl->get($dish_id);
+		if(empty($dishInfo)){
+			$this->set_error(static::RET_WRONG_INPUT, "该菜品异常，请联系管理员！");
+			return $this->output_json();
+		}
+		// var_dump($dishInfo);die;
+		//判断状态是否可用
+		if($info->status!=0){
+			$this->set_error(static::RET_WRONG_INPUT, "该优惠券已经使用过了，不能再次使用！");
+			return $this->output_json();
+		}
+		//判断是否过期
+		if(strtotime($info->expire_time)<time()){
+			$this->set_error(static::RET_WRONG_INPUT, "该优惠券已过期！");
+			return $this->output_json();
+		}
+		$discountInfo = $this->discountconfig_mdl->get($info->discount_id);
+		//判断优惠券类型，是否可以使用在该菜品
+		if($discountInfo->type==1){ //假如是固定菜品优惠券，则判断菜品id是否一致
+			if($discountInfo->dish_id != $dishInfo['dish_id']){
+				$this->set_error(static::RET_WRONG_INPUT, "当前菜品，不能使用该优惠券！");
+				return $this->output_json();
+			}
+		}
+
+		//超过24小时的菜品不能用券
+		$now = time();
+		if($now - strtotime($dishInfo['ctime']) > 60*60*24){
+			$this->set_error(static::RET_WRONG_INPUT, "24小时之前的菜品不能使用优惠券！");
+			return $this->output_json();
+		}
+
+		//使用掉优惠券
+		$obj = array(
+			'status'  => 1,
+			'use_uid'   => $this->sysData['user_id'],
+		);
+
+		$this->discountcard_mdl->update($discount_number,$obj);
+
+		//给菜品打折
+		$pay_amount = round($dishInfo['total_price'] * $discountInfo->discount/100);
+		$discount = $discountInfo->discount;
+		$data = array(
+			'pay_amount'  => $pay_amount,
+			'discount'    => $discount,
+			'discount_number'  => $discount_number,
+		);
+		$this->orderdish_mdl->update($dish_id,$data);
+
+		//给订单重新结算
+		//计算菜品总价，菜品数量，菜品list
+		$orderId = $dishInfo['order_id'];
+        $res = $this->orderDishInit($orderId);
+        if( $res['amount'] == $res['pay_amount']){
+			$discount = 0;
+		}else{
+			$discount = ceil($res['pay_amount']/$res['amount']*10000)/100;
+		}
+		$data = array(
+			'amount'   => $res['amount'],
+			'pay_amount' => $res['pay_amount'],
+			'discount'  => $discount,
+		);
+        //继续插入订单
+		$this->order_mdl->update($orderId, $data);
+		$this->output_json();
 
 	}
 }

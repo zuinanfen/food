@@ -30,7 +30,7 @@ $this->load->view ( 'common/admin_top', array (
   <?}?>
 <?}?>
 <div id="pagination"></div>
-<script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
+<script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
 <script>
   $('.bs-example').click(function(){
     var id = $(this).data('id');

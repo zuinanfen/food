@@ -78,7 +78,7 @@ $this->load->view ( 'common/admin_top', array (
 </div>
 <?}?>
  <div id="pagination"></div>
-<script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
+<script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
 
 <script type="text/javascript">
   var paramString = 'startTime=<?=$startTime?>&endTime=<?=$endTime?>&type=<?=$type?>&status=<?=$status?>&user_id=<?=$user_id?>&page=';

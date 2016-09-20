@@ -12,8 +12,8 @@ $this->load->view ( 'common/admin_top', array (
           <tr>
             <th><?=$v->name?></th>
             <th><?=$discountType[$v->type]?> 
-            <button data-id="<?=$v->id?>" type="button" class="btn btn-xs btn-info get-card">领取</button>
-            <button data-id="<?=$v->id?>" type="button" class="btn btn-xs btn-danger">禁用</button>
+            <button data-id="<?=$v->id?>" type="button" class="btn btn-sm btn-info get-card">领 取</button>
+          
             </th>
           </tr>
         </thead>
@@ -37,7 +37,7 @@ $this->load->view ( 'common/admin_top', array (
       </table>
   </div>
 <?}?>
-<script src="<?php echo $_cdn_host?>/resource/js/admin.js"></script>
+<script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
 
 
 <script type="text/javascript">
