@@ -110,4 +110,47 @@ class Logon extends NB_Controller {
 		// header('Location: /index.php?shop_id='.$shop_id);
 		header('Location: /');
 	}
+	public function discount_api(){
+		$number = $this->get('number');
+		$token = $this->get('token');
+		
+		if(empty($number)){
+			echo '该优惠券号码异常！';
+			die;
+		}
+		if(empty($token)){
+			echo 'token 不正确！';
+			die;
+		}
+
+		$secretKey = $this->config->item('secretKey');
+		if(md5($secretKey.$number) != $token){
+			echo '非法请求！';
+			die;
+		}
+		$this->load->model('discountcard_mdl');
+		$info = $this->discountcard_mdl->get($number);
+		if(empty($info)){
+			echo '该卡券不存在！';
+			die;
+		}
+		$content = ''；
+		if(strtotime($info->expire_time > time())){
+			$content .= '该卡券已经过期！<br/>';
+			echo $content;
+			die;
+		}
+		if($info->status==0){
+			$content .= '该卡券还未使用，在有效期内可以正常使用！<br/>';
+			echo $content;
+			die;
+		}
+		if($info->status==1){
+			$content .= '该卡券无效，已经被使用过！<br/>';
+			echo $content;
+			die;
+		}
+		echo '未查到信息';
+		return false;
+	}
 }
