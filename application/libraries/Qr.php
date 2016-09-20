@@ -14,7 +14,7 @@ class Qr extends CI_Controller {
 		$size = 3;
 		$margin = 3;
 		$saveandprint = true;
-        QRcode::png($text, APPPATH.'cache/qrcode/'.$name.'.png', $level, $size, $margin, $saveandprint);  
+        QRcode::png($text, APPPATH.'cache/qrCode/'.$name.'.png', $level, $size, $margin, $saveandprint);  
     }
 
 }

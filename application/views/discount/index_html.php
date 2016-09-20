@@ -7,7 +7,7 @@ $this->load->view ( 'common/admin_top', array (
 ?>
 
 
-  <a href="/index.php/discount/edit"><button class="btn btn-primary btn-block" style="width:100%;margin-bottom:15px;"><span class="glyphicon glyphicon-plus"></span> 创建优惠券</button></a>
+  <a href="/index.php/discount/add_new"><button class="btn btn-primary btn-block" style="width:100%;margin-bottom:15px;"><span class="glyphicon glyphicon-plus"></span> 创建优惠券</button></a>
 <?foreach($list as $k=>$v){?>
 <div class="bs-example" data-id="<?=$v->id?>" style="position:relative">
       <table class="table ">

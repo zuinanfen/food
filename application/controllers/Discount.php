@@ -306,7 +306,7 @@ class Discount extends NB_Controller {
 		$secretKey = $this->config->item('secretKey');
 		$token = md5($secretKey.$info->id);
 		$this->qr->save($info->id,'http://a.zuinanfen.com/discount.php?n='.$info->id.'&k='.$token);
-		$src_path = APPPATH.'cache/qrcode/'.$info->id.'.png';
+		$src_path = APPPATH.'cache/qrCode/'.$info->id.'.png';
 		//创建图片的实例
 		// $dst = imagecreatefromstring(file_get_contents($dst_path));
 		$src = imagecreatefromstring(file_get_contents($src_path));
