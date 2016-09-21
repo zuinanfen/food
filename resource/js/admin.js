@@ -201,6 +201,28 @@ var Reverve = {
              }
 
         });
+    },
+    getExpress:function(expressId, number){
+        $.ajax({
+             type: 'get',
+             url: '../reserve/express_get',
+             data:{expressId:expressId,number:number},
+             dataType: 'json',
+             success: function(json){
+                if (json._ret == 0) {
+                    var _html = '';
+                    var _data = json.data;
+                    for(var i=0;i<_data.length;i++){
+                        _html += '<div class="express_list">' + _data[i].time + '：' + _data[i].context + '</div>';
+                    }
+                    _html += '<div style="color:red;margin-top:10px">数据由快递100提供</div>';
+                    $('#express_show').html(_html);
+                } else {
+                    $('#express_show').html(json._log);
+                }
+             }
+
+        });
     }
 };
 var Discount = {

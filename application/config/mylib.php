@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$config['version'] = '1.7'; //系统版本号
+$config['version'] = '1.7.1'; //系统版本号
 
 $config['secretKey']  = 'zuinanfen!@#$123' ; //站点通用秘钥
 //自动标注几个菜为制作中
@@ -120,6 +120,14 @@ $config['express'] = array(
 	5 => '达达',
 	6 => '圆通',
 	7 => '申通',
+	8 => '韵达',
+);
+//快递100查询对应代码
+$config['express_code'] = array(
+	1 => 'shunfeng',
+	6 => 'yuantong',
+	7 => 'shentong',
+	8 => 'yunda',
 );
 //店铺名称
 $config['shopList'] = array(

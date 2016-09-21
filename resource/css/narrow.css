@@ -3,6 +3,10 @@ body {
   padding-top: 20px;
   padding-bottom: 20px;
 }
+.express_list{
+  border-bottom: 1px dashed #ccc;
+  padding:5px 0;
+}
 .bs-example{
   border:1px solid #ddd;
   padding:0px 8px;

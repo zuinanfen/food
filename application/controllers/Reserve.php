@@ -320,4 +320,29 @@ class Reserve extends NB_Controller {
 		$this->reserve_mdl->update($id,$obj);
 		return $this->output_json();
 	}
+	//查询快递详情
+	public function express_get(){
+		$expressId = $this->get('expressId');
+		$number = $this->get('number');
+
+
+		$this->load->library('Express');
+		$express_code = $this->config->item('express_code');
+		if(!isset($express_code[$expressId])){
+			echo  json_encode(array('_ret'=>1,'_log'=>'该快递不支持自动查询状态！'));
+			die;
+		}
+		$code = $express_code[$expressId];
+
+		$res = $this->express->search($code, $number);
+		$json = json_decode($res, true);
+		if($json['status']==200){
+			$json['_ret'] = 0;
+			echo  json_encode($json);
+		}else{
+			$json['_ret'] = 1;
+			echo  json_encode(array('_ret'=>1,'_log'=>'查询接口异常，请联系管理员！'));
+		}
+		return true;
+	}
 }

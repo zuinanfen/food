@@ -47,14 +47,18 @@ $this->load->view ( 'common/admin_top', array (
 			<td><?=$detail['username']?></td>
 		</tr>
 		 <?if($detail['status']==2){?>
-		<tr>
-			<td>快递名称</td>
-			<td><b><?=$express[$detail['express']]?></b></td>
-		</tr>
-    	<tr>
-			<td>快递单号</td>
-			<td><?=$detail['expressNumber']?></td>
-		</tr>
+			<tr>
+				<td>快递名称</td>
+				<td><b><?=$express[$detail['express']]?></b></td>
+			</tr>
+	    	<tr>
+				<td>快递单号</td>
+				<td><?=$detail['expressNumber']?></td>
+			</tr>
+			<tr>
+				<td>快递详情</td>
+				<td id="express_show"></td>
+			</tr>
 		<?}?>
 
     </tbody>
@@ -161,5 +165,9 @@ $this->load->view ( 'common/admin_top', array (
 			Reverve.edit(data);
 		}
 	});
+
+	<?if($detail['status']==2){?>
+		Reverve.getExpress('<?=$detail['express']?>','<?=$detail['expressNumber']?>');
+	<?}?>
 </script>
 <?php $this->load->view ( 'common/h5_bottom' ); ?>
