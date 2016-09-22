@@ -54,7 +54,6 @@ $this->load->view ( 'common/admin_top', array (
 		if(checkPwd != newPwd){
 			alert('两次输入新密码不一致！');
 			return false;
-		}
 		$.post('/index.php/menu/edit_user', {
 			oldPwd: oldPwd,
 			newPwd: newPwd
@@ -68,8 +67,7 @@ $this->load->view ( 'common/admin_top', array (
 		});
 	});
 </script>
-<?
-$this->load->view ('common/version');
-?>
-</h6>
+
 <?php $this->load->view ( 'common/h5_bottom' ); ?>
+
+		}

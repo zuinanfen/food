@@ -103,7 +103,7 @@ $autoload['helper'] = array();
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('mylib');
+$autoload['config'] = array('mylib','secret.php');
 
 /*
 | -------------------------------------------------------------------

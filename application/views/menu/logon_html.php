@@ -85,9 +85,5 @@ $this->load->view ( 'common/h5_top', array (
         <?}?>
     </ul>
   </div>
-<h6 class="text-center" style="bottom:0;position:absolute;width:100%">
-<?
-$this->load->view ('common/version');
-?>
-</h6>
+
 <?php $this->load->view ( 'common/h5_bottom' ); ?>
