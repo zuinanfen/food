@@ -9,4 +9,4 @@
 	<script src="<?= $_cdn_host?>/resource/js/artDialog/jquery.artDialog.min.js?skin=twitter"></script>
 	<script src="<?= $_cdn_host?>/resource/js/template-native.js?v=<?=$sysData['version']?>"></script>
 	<script src="<?= $_cdn_host?>/resource/js/dish.js?v=<?=$sysData['version']?>"></script>
-	<script src="http://shop.zuinanfen.com/resource/js/jquery.simplePagination.js?v=<?=$sysData['version']?>"></script>
+	<script src="<?= $_cdn_host?>/resource/js/jquery.simplePagination.js?v=<?=$sysData['version']?>"></script>

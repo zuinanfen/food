@@ -42,9 +42,7 @@ $this->load->view ( 'common/h5_top', array (
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
 <script type="text/javascript">
 	var paramString = '?page=';
-
-	$(function(){
-		//Order.init();
+	$(document).ready(function(){
 		Page.init({
 			items: <?=$allNum?>,
 			itemsOnPage:<?=$sysData['perPage']?>,
@@ -52,6 +50,5 @@ $this->load->view ( 'common/h5_top', array (
 			hrefTextPrefix:'/index.php/menu/order'+paramString
 		});
 	});
-	
 </script>
 <?php $this->load->view ( 'common/h5_bottom' ); ?>
