@@ -69,5 +69,3 @@ $this->load->view ( 'common/admin_top', array (
 </script>
 
 <?php $this->load->view ( 'common/h5_bottom' ); ?>
-
-		}
