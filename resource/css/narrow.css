@@ -3,6 +3,26 @@ body {
   padding-top: 20px;
   padding-bottom: 20px;
 }
+#loading{
+  width:100%;
+  height:100%;
+  position: absolute;
+  z-index: 100000;
+  background: #000;
+  top:0;
+  left:0;
+  opacity: 0.4;
+}
+#loading img {
+  width:100px;
+  height:100px;
+  position: absolute;
+  z-index: 100;
+  left: 50%;
+  top:50%;
+  margin-left:-50px;
+  margin-top:-50px;
+}
 .express_list{
   border-bottom: 1px dashed #ccc;
   padding:5px 0;
@@ -121,6 +141,9 @@ body {
   z-index: 1000000;
   left:12px;
   top:-5px;
+  /*-webkit-animation: flow 1.0s linear;*/
+}
+.animateControll{
   -webkit-animation: flow 1.0s linear;
 }
 @-webkit-keyframes flow {

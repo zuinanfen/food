@@ -7,6 +7,7 @@ class Order extends NB_Controller {
 	function __construct () {
 		parent::__construct();
 		$this->load->model('order_mdl');
+		$this->load->model('reserve_mdl');
 		$this->load->model('user_mdl');
 		$this->load->model('dish_mdl');
 		// $this->load->model('option_mdl');
@@ -67,6 +68,18 @@ class Order extends NB_Controller {
 		if(empty($order_table_seat)){
 			$order_table_seat = '';
 		}
+		$reserve_id = $this->post('reserve_id');
+
+		if(empty($reserve_id)){
+			$reserve_id = '';
+		}else{ //查询预订单是否存在
+			$reserve_id = intval($reserve_id);
+			$res = $this->reserve_mdl->get($reserve_id);
+			if(empty($res)){
+				$this->set_error(static::RET_WRONG_INPUT, "查询不到该预订单号，请查证再下单！");	
+				return $this->output_json();
+			}
+		}
 
 		$dish_list = $_POST['dish_list'];// 不知道为毛用$this->post('dish_list');接收不到数据，估计是xss拦截
 		if(empty($dish_list)){
@@ -87,6 +100,7 @@ class Order extends NB_Controller {
         $obj->id = $orderId;
         $obj->src = $order_src;
         $obj->table_id = $order_table_seat;
+        $obj->reserve_id = $reserve_id;
         $obj->uid = $cookies['id'];
         $obj->status = 0;
         // $obj->dish_list = json_encode($dish_list);

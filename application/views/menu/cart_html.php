@@ -22,6 +22,12 @@ $this->load->view ( 'common/h5_top', array (
 				</div>
 				
 			</th>
+			<th colspan="4" id="reserve_id" style="display:none" >
+				<div class="show">
+					预定单号：<input size="5" type="number" />
+				</div>
+				
+			</th>
 		</tr>
 	<tr>
 	</thead>

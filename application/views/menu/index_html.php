@@ -27,7 +27,7 @@ $this->load->view ( 'common/h5_top', array (
 	</tbody>
 </table>
 <div class="marketing">
-	<div id="dish_num"><img src="<?php echo $_cdn_host?>/resource/images/buy.png" /> </div>
+	<div id="dish_num"><img src="<?php echo $_cdn_host?>/resource/images/buy.png" /> <span></span></div>
 	<div style="display:inline-block;width:68%">
 		<button type="button" class="btn btn-warning btn-block" id="checkOrder">下订单</button>
 	</div>

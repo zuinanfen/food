@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$config['version'] = '1.7.2'; //系统版本号
+$config['version'] = '1.7.3'; //系统版本号
 
 //自动标注几个菜为制作中
 $config['autoUpdateDishNum'] = 3;
@@ -60,6 +60,7 @@ $config['orderSource'] = array(
 		3 => '美团外卖',
 		4 => '饿了么外卖',
 		5 => '打包',
+		6 => '预定',
 );
 
 //支付手段

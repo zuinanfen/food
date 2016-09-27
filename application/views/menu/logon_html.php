@@ -43,12 +43,12 @@ $this->load->view ( 'common/h5_top', array (
            </a>
         </li>
       <?if(in_array($sysData['role_id'],array(1,90,100))){?>
-        <li>
+        <!--<li>
         	<a href="/index.php/report/index">
 	          <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
 	          <span class="glyphicon-class">订单统计</span>
 	        </a>
-        </li>
+        </li>-->
         <li>
         	<a href="/index.php/dish/index">
 	          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -58,7 +58,7 @@ $this->load->view ( 'common/h5_top', array (
         <li>
           <a href="/index.php/income/index">
             <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
-            <span class="glyphicon-class">收入记账</span>
+            <span class="glyphicon-class">运营统计</span>
            </a>
         </li>
          <li>

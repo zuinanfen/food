@@ -9,7 +9,7 @@ $this->load->view ( 'common/admin_top', array (
 	<div>
 		<div class="input-group" style="margin:8px 0;">
 	      <span class="input-group-addon">收款方式</span>
-	      <select id="type" class="form-control">
+	      <select id="type" class="form-control" disabled="">
 	      	<option value="0">全部</option>
 	      	<?foreach($incomeType as $k=>$v){?>
 	      	<option value="<?=$k?>" <?if($type==$k){?> selected<?}?>><?=$v?></option>
@@ -37,8 +37,14 @@ $this->load->view ( 'common/admin_top', array (
       <thead>
         <tr>
           <th>日期</th>
-          <th>入账类型</th>
-          <th>金额</th>
+          <!-- <th>等待</th>
+          <th>处理中</th> -->
+          <th>完成单</th>
+          <th>撤销单</th>
+          <th>单面结算</th>
+          <th>应收</th>
+          <!-- <th>入账类型</th> -->
+          <th>实收</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -46,10 +52,16 @@ $this->load->view ( 'common/admin_top', array (
       <?foreach($list as $k=>$v){?>
         <tr>
           <td><?=$k?></td>
-          <td><?=$typeName?></td>
-          <td><?=$v?></td>
+          <!--<td><?=$v['report']['waitNum']?></td>
+          <td><?=$v['report']['doNum']?></td>-->
+          <td><?=$v['report']['doneNum']?></td>
+          <td><?=$v['report']['cancelNum']?></td>
+          <td><?=$v['report']['amountNum']?></td>
+          <td <?if($v['report']['pay_amount']!=$v['report']['amountNum']){?> style="color:red"<?}?>><?=$v['report']['pay_amount']?></td>
+          <!--<td><?=$typeName?></td>-->
+          <td <?if($v['report']['pay_amount'] !=$v['totalNum']){?>style="color:orange"<?}?>><?=$v['totalNum']?></td>
           <td>
-          <a href="show?date=<?=$k?>"><button type="button" class="btn btn-sm btn-success">查看</button></a>
+          <a href="show?date=<?=$k?>"><button type="button" class="btn btn-sm btn-success">看</button></a>
           </td>
         </tr>
         <?}?>

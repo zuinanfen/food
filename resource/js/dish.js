@@ -64,6 +64,15 @@ var Template = {
 	getHtml: function(scriptId, data){
 		var html = template(scriptId ,data);
 		return html;
+	},
+	loading:function(){
+		var html = '<div id="loading"><img src="/resource/images/loading.gif" /></div>';
+		$('body').append(html);
+	},
+	loadingRemove:function(){
+		if($('#loading').length>0){
+			$('#loading').remove();
+		}
 	}
 }
 
@@ -116,11 +125,15 @@ var Dish = {
 	},
 	animate: function(dish_id){
 		//创建+1
-		var $animateContent = $('<div class="animateNum">+1</div>');
-		$animateContent.insertAfter($('#dish_'+dish_id).find('button'));
+		var $animateContent = $('<div >+1</div>');
+		$animateContent.insertAfter($('#dish_'+dish_id).find('button')).addClass('animateNum');
+		window.setTimeout(function() {
+            $animateContent.addClass('animateControll');
+        },150);
+		//$animateContent.addClass('animateControll');
 		window.setTimeout(function() {
             $animateContent.remove()
-        },1000);
+        },1150);
         var dishLength = Data.objLength(this.dish_list);
 		$('#dish_num').find('span').hide().text(dishLength).fadeIn();
 	},
@@ -270,6 +283,11 @@ var Cart = {
 			}else{
 				$('#order_table_seat').hide();
 			}
+			if(order_src==6){
+				$('#reserve_id').show();
+			}else{
+				$('#reserve_id').hide();
+			}
 			Data.set('order_src',order_src);
 		});
 		$('#order_table_seat').find('input').blur(function(){
@@ -277,16 +295,27 @@ var Cart = {
 
 			Data.set('order_table_seat',order_table_seat);
 		});
+		$('#reserve_id').find('input').blur(function(){
+			var reserve_id = $(this).val();
+
+			Data.set('reserve_id',reserve_id);
+		});
 		var order_src = Data.get('order_src','string');
 		var order_table_seat = Data.get('order_table_seat','string');
+		var reserve_id = Data.get('reserve_id','string');
 		if(order_src != ''){
 			$('#order_src').val(order_src);
 		}
 		if(order_src == 1 || order_src == ''){
 			$('#order_table_seat').show();
+		}else if(order_src == 6){
+			$('#reserve_id').show();
 		}
 		if(order_table_seat != ''){
 			$('#order_table_seat').find('input').val(order_table_seat);
+		}
+		if(reserve_id != ''){
+			$('#reserve_id').find('input').val(reserve_id);
 		}
 
 		this.renderDish(dish_list);
@@ -399,11 +428,19 @@ var Cart = {
     	});
 	},
 	submit:function(){
+		Template.loading();
 		//字段检测
 		var order_src = $('#order_src').val();
 		var order_table_seat = $('#order_table_seat').find('input').val();
 		if(order_src==1 && order_table_seat.length<1){
 			alert('座位号不能为空！');
+			Template.loadingRemove();
+			return false;
+		}
+		var reserve_id = $('#reserve_id').find('input').val();
+		if(order_src==6 && reserve_id.length<1){
+			alert('预定单号不能为空！');
+			Template.loadingRemove();
 			return false;
 		}
 		//获取菜品
@@ -411,10 +448,12 @@ var Cart = {
 		var listLength = Data.objLength(dish_list);
 		if(listLength<1){
 			alert('您还未点菜！');
+			Template.loadingRemove();
 			return false;
 		}
 		var data = {
 			order_src: order_src,
+			reserve_id: reserve_id,
 			dish_list: JSON.stringify(dish_list),
 			order_table_seat: order_table_seat
 		}
@@ -434,7 +473,8 @@ var Cart = {
 					window.location.href='/index.php/menu/order_show?orderId='+json.orderId;
 					
 				} else {
-					alert("操作失败，请刷新重试！");
+					alert(json._log);
+					Template.loadingRemove();
 				}
              }
 

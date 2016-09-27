@@ -9,6 +9,10 @@ $this->load->view ( 'common/admin_top', array (
 <h3>订单明细</h3>
 <table class="table table-striped" style="border:1px solid #ccc">
     <tbody>
+    	<tr>
+			<td style="width:80px;">预订单ID</td>
+			<td><b><?=$detail['id']?></b></td>
+		</tr>
 		<tr>
 			<td style="width:80px;">收货姓名</td>
 			<td><input type="text" <?if($detail['status']!=0){?>disabled<?}?> id="name" value="<?=$detail['name']?>" class="form-control" placeholder="输入收货人姓名"></td>

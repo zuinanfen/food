@@ -102,6 +102,12 @@ $this->load->view ( 'common/h5_top', array (
 	        <td><b><?php echo $detail['table_id']?></b></td>
 	    </tr>
 	<?}?>
+	 <?if($detail['src']==6){?>
+	    <tr>
+	        <td>预订单号</td>
+	        <td><b><?php echo $detail['reserve_id']?></b> <a href="/index.php/reserve/show?id=<?=$detail['reserve_id']?>"><button type="button" class="btn btn-xs btn-warning">查看</button></a></td>
+	    </tr>
+	<?}?>
       <tr>
         <td>订单状态</td>
         <td><b style="color:<?=$orderStatusColor[$detail['status']]?>;"><?php echo $detail['statusName']?></b></td>
