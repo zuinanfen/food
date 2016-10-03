@@ -22,11 +22,12 @@ class Income extends NB_Controller {
 		$startTime = $startTime.' 00:00:01';
 		$endTime = $endTime.' 23:59:59';
 
-		if(strtotime($endTime) - strtotime($startTime) > 60*60*24*20){
-			$this->set_error(static::RET_WRONG_INPUT, "不能统计超过20天的数据");	
+		if(strtotime($endTime) - strtotime($startTime) > 60*60*24*40){
+			$this->set_error(static::RET_WRONG_INPUT, "不能统计超过40天的数据");	
 			return $this->output_json();
 		}
 		$reportData = $this->report($startTime, $endTime);
+
 		$incomeType = $this->config->item('incomeType');
 		$list = array();
 		$beginTimeStamp = strtotime($startTime);
@@ -91,8 +92,11 @@ class Income extends NB_Controller {
 					continue;
 				}
 				$data[$k]['orderNum'] = $data[$timeKey]['orderNum'] + 1;
-				$data[$k]['amountNum'] = bcadd($data[$k]['amountNum'], $value['amount'], 2);
-				$data[$k]['pay_amount'] = bcadd($data[$k]['pay_amount'], $value['pay_amount'], 2);
+				if($value['status']==2 || $value['status']==3){
+					$data[$k]['amountNum'] = bcadd($data[$k]['amountNum'], $value['amount'], 2);
+					$data[$k]['pay_amount'] = bcadd($data[$k]['pay_amount'], $value['pay_amount'], 2);
+				}
+				
 				switch ($value['status']) {
 					case '0':
 						$data[$k]['waitNum'] = $data[$k]['waitNum'] + 1;

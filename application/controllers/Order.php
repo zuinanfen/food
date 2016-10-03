@@ -232,6 +232,7 @@ class Order extends NB_Controller {
 			'status'  =>8,
 			'amount'  =>0,
 			'dish_num'=>0,
+			'pay_amount'=>0,
 		);
 		$this->order_mdl->update($orderId,$data);
 		return $this->output_json();

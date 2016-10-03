@@ -61,7 +61,6 @@ class Logon extends NB_Controller {
 		}
 
 		$secretKey = $this->config->item('secretKey');
-
 		if ( md5($secretKey.$password) != $obj->password ) {
 			$this->set_error(static::RET_ERROR_DATA, "密码错误");	
 			return $this->output_json();
