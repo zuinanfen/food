@@ -725,6 +725,9 @@ var OrderShow = {
 	             success: function(json){
 	             	if (json._ret == 0) {
 						alert('添加菜品成功，请以最新订单金额进行结算！');
+						Data.del('dish_list');
+						Data.del('order_src');
+						Data.del('order_table_seat');
 						window.location.href='/index.php/menu/order_show?orderId='+orderId;
 					} else {
 						alert(json._log);

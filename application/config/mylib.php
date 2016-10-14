@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$config['version'] = '1.7.3'; //系统版本号
+$config['version'] = '1.7.4'; //系统版本号
 
 //自动标注几个菜为制作中
 $config['autoUpdateDishNum'] = 3;

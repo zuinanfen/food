@@ -15,6 +15,7 @@ class Reserve extends NB_Controller {
 		$endTime = $this->get('endTime');
 		$status = $this->get('status');
 		$page = $this->get('page');
+		$user_id = $this->get('user_id');
 		if(!isset($page)){
 			$page=1;
 		}
@@ -43,6 +44,11 @@ class Reserve extends NB_Controller {
 			$where['status']  = $status;
 		}
 
+
+		if(!empty($user_id)){
+			$where['user_id']  = $user_id;
+		}
+
 		//代理商只能看自己的订单
 		if($this->sysData['role_id']==10){
 			$where['user_id']  = $this->sysData['user_id'];
@@ -61,7 +67,11 @@ class Reserve extends NB_Controller {
 				$list[$k]['reserveStatusColor'] = $reserveStatusColor[$v['status']];
 			}
 		}
-
+		$res = $this->user_mdl->list_by_roleid(array(1,2,3,4,10));
+		$user_list = array();
+		foreach ($res as $key => $value) {
+			$user_list[$value->id] = $value->name;
+		}
 		$data = array(
 			'reserveStatus'   => $reserveStatus,
 			'status'          => $status,
@@ -70,6 +80,8 @@ class Reserve extends NB_Controller {
 			'list'            => $list,
 			'allNum'          => intval($allNum),
 			'page'            => intval($page),
+			'user_list'       => $user_list,
+			'user_id'         => intval($user_id),
  		);
 		$this->output_data($data);
 	}

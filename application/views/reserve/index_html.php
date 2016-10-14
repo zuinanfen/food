@@ -7,6 +7,17 @@ $this->load->view ( 'common/admin_top', array (
 ?>
 <div class="main" style="margin-bottom:10px">
 	<div>
+  <?if($sysData['role_id']==1||$sysData['role_id']==100){?>
+    <div class="input-group" style="margin:8px 0;">
+        <span class="input-group-addon">下单用户</span>
+        <select id="user_id" class="form-control">
+          <option value="0" >全部</option>
+          <?foreach($user_list as $k=>$v){?>
+          <option value="<?=$k?>" <?if($user_id===$k){?> selected<?}?>><?=$v?></option>
+          <?}?>
+        </select>
+    </div>
+  <?}?>
 		<div class="input-group" style="margin:8px 0;">
 	      <span class="input-group-addon">订单状态</span>
 	      <select id="status" class="form-control">
@@ -66,12 +77,13 @@ $this->load->view ( 'common/admin_top', array (
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
 
 <script type="text/javascript">
-  var paramString = 'startTime=<?=$startTime?>&endTime=<?=$endTime?>&status=<?=$status?>&page=';
+  var paramString = 'startTime=<?=$startTime?>&endTime=<?=$endTime?>&user_id=<?=$user_id?>&status=<?=$status?>&page=';
 	$('#submit_btn').click(function(){
 		var startTime = $('#startTime').val();
 		var endTime = $('#endTime').val();
-    	var status = $('#status').val();
-		window.location.href = '/index.php/reserve/index?startTime='+startTime+'&endTime='+endTime+'&status='+status;
+    var status = $('#status').val();
+    var user_id = $('#user_id').val();
+		window.location.href = '/index.php/reserve/index?startTime='+startTime+'&endTime='+endTime+'&user_id='+user_id+'&status='+status;
 	});
   $('.bs-example').click(function(){
     var id = $(this).data('id');

@@ -37,9 +37,10 @@ class Income extends NB_Controller {
     		$list[$_date] = array();
 		}
 
-
+		$count = $reportData['count'];
+		$count['countTotalNum'] = 0;
 		foreach ($list as $k => $v) {
-			$list[$k]['report'] = $reportData[$k];
+			$list[$k]['report'] = $reportData['data'][$k];
 			$list[$k]['totalNum'] = 0;
 			$res = $this->income_mdl->list_by_date($k, $type);
 
@@ -49,6 +50,7 @@ class Income extends NB_Controller {
 			foreach ($res as $key => $value) {
 				$list[$k]['totalNum'] = bcadd($list[$k]['totalNum'], $value['amount'], 2);
 			}
+			$count['countTotalNum'] = bcadd($list[$k]['totalNum'], $count['countTotalNum'], 2);
 		}
 		
 		$data = array(
@@ -58,6 +60,7 @@ class Income extends NB_Controller {
 			'type'     => $type,
 			'list'   => $list,
 			'typeName'  => '全部',
+			'count'   => $count,
 		);
 		if($type!=0){
 			$data['typeName'] = $incomeType[$type];
@@ -75,7 +78,18 @@ class Income extends NB_Controller {
     		$_date = date('Y-m-d', $i);
     		$data[$_date] = array();
 		}
+		$count = array(
+			'countAmountNum'  => 0, //订单总金额
+			'countCancelNum'  => 0, //取消订单数量
+			'countWaitNum'    => 0, //待处理订单数量
+			'countDoNum'      => 0, //处理中订单数量
+			'countDoneNum'    => 0,// 菜上齐订单数量
+			'countPayNum'     => 0, //已付款订单数量
+			'countPay_amount' => 0, //折扣总金额
+
+		);
 		foreach ($data as $k => $v) {
+			
 			$data[$k] = array(
 				'orderNum'   => 0,  //订单总数
 				'amountNum'  => 0, //订单总金额
@@ -119,10 +133,21 @@ class Income extends NB_Controller {
 				}
 				
 			}
-			
-		
+			$count['countAmountNum']  = bcadd($data[$k]['amountNum'], $count['countAmountNum'], 2);
+			$count['countCancelNum']  = bcadd($data[$k]['cancelNum'], $count['countCancelNum'], 0);
+			$count['countWaitNum']  = bcadd($data[$k]['waitNum'], $count['countWaitNum'], 0);
+			$count['countDoNum']  = bcadd($data[$k]['doNum'], $count['countDoNum'], 0);
+			$count['countDoneNum']  = bcadd($data[$k]['doneNum'], $count['countDoneNum'], 0);
+			$count['countPayNum']  = bcadd($data[$k]['payNum'], $count['countPayNum'], 0);
+			$count['countPay_amount']  = bcadd($data[$k]['pay_amount'], $count['countPay_amount'], 2);
+
 		}
-		return $data;
+		$res = array(
+			'data'  => $data,
+			'count' => $count,
+
+		);
+		return $res;
 	}
 	public function show(){
 		$date = $this->get('date');

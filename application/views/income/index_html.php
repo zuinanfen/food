@@ -65,6 +65,17 @@ $this->load->view ( 'common/admin_top', array (
           </td>
         </tr>
         <?}?>
+        <tr style="font-weight:bold"> 
+          <td>总计</td>
+          <td><?=$count['countDoneNum']?></td>
+          <td><?=$count['countCancelNum']?></td>
+          <td><?=$count['countAmountNum']?></td>
+          <td <?if($count['countAmountNum']!=$count['countPay_amount']){?> style="color:red"<?}?>><?=$count['countPay_amount']?></td>
+          <td <?if($count['countTotalNum']!=$count['countPay_amount']){?> style="color:orange"<?}?>><?=$count['countTotalNum']?></td>
+          <td>
+          
+          </td>
+          </tr>
       </tbody>
     </table>
 <script src="<?php echo $_cdn_host?>/resource/js/admin.js?v=<?=$sysData['version']?>"></script>
