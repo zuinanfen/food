@@ -71,10 +71,7 @@ $this->load->view ( 'common/admin_top', array (
           <td><?=$count['countCancelNum']?></td>
           <td><?=$count['countAmountNum']?></td>
           <td <?if($count['countAmountNum']!=$count['countPay_amount']){?> style="color:red"<?}?>><?=$count['countPay_amount']?></td>
-          <td <?if($count['countTotalNum']!=$count['countPay_amount']){?> style="color:orange"<?}?>><?=$count['countTotalNum']?></td>
-          <td>
-          
-          </td>
+          <td colspan="2" <?if($count['countTotalNum']!=$count['countPay_amount']){?> style="color:orange"<?}?>><?=$count['countTotalNum']?></td>
           </tr>
       </tbody>
     </table>
