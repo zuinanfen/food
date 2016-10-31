@@ -69,7 +69,8 @@ class NB_Controller extends CI_Controller {
 			'action'      => $this->router->fetch_method(),
 		);
 
-		if($controller!='logon'){  //检查权限
+		//if($controller!='logon'){  //检查权限
+		if(!in_array($controller, array('logon','card'))){
 			if(!$this->check_logon()){
 				header('Location: /');
 				exit('登陆过期，访问被禁止！');
