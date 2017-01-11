@@ -70,7 +70,7 @@ class NB_Controller extends CI_Controller {
 		);
 
 		//if($controller!='logon'){  //检查权限
-		if(!in_array($controller, array('logon','card'))){
+		if(!in_array($controller, array('logon','card','api'))){
 			if(!$this->check_logon()){
 				header('Location: /');
 				exit('登陆过期，访问被禁止！');
